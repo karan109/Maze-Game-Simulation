@@ -1,7 +1,7 @@
 #pragma once
 
 #include "includes.hpp"
-
+#include "Entities.hpp"
 
 class Game{
 
@@ -18,6 +18,7 @@ public:
 	}
 	static SDL_Renderer * renderer;
 	static SDL_Event event;
+	static Entities * entities;
 
 private:
 	int ct = 0;

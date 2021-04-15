@@ -1,24 +1,34 @@
 #include "Player.hpp"
 #include "Game.hpp"
-#include "Entities.hpp"
 #include "Collision.hpp"
 
 Player::Player(SDL_Rect srcR_param, SDL_Rect destR_param) : Entity("../Images/man.png", srcR_param, destR_param){
 }
 
 void Player::Update(){
+	set<int> obstacles;
+	for(auto & u: * Game::entities->walls){
+		int dir = Collision::AABB(getBB(), u->getBB());
+		obstacles.insert(dir);
+		if(dir == 1 or dir == 2){
+			xv = 0;
+		}
+		if(dir == 3 or dir == 4){
+			yv = 0;
+		}
+	}
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
-		if(key == SDLK_UP){
+		if(key == SDLK_UP and obstacles.find(4) == obstacles.end()){
 			yv = -1;
 		}
-		else if(key == SDLK_DOWN){
+		else if(key == SDLK_DOWN and obstacles.find(3) == obstacles.end()){
 			yv = 1;
 		}
-		else if(key == SDLK_RIGHT){
+		else if(key == SDLK_RIGHT and obstacles.find(1) == obstacles.end()){
 			xv = 1;
 		}
-		else if(key == SDLK_LEFT){
+		else if(key == SDLK_LEFT and obstacles.find(2) == obstacles.end()){
 			xv = -1;
 		}
 	}
@@ -35,13 +45,6 @@ void Player::Update(){
 		}
 		else if(key == SDLK_LEFT){
 			xv = 0;
-		}
-	}
-	for(auto & u: *entities->walls){
-		if(Collision::AABB(getBB(), u->getBB())){
-			// xv = 0;
-			// yv = 0;
-			break;
 		}
 	}
 	xpos += xv * speed;

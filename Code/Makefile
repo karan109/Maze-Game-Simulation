@@ -14,9 +14,6 @@ Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 Collision.o : Collision.cpp Collision.hpp includes.hpp
 	$(COMPILE) -c Collision.cpp
 
-# Entities.o : Entities.cpp Entities.hpp Entity.hpp Player.hpp Wall.hpp includes.hpp
-# 	$(COMPILE) -c Entities.cpp
-
 Player.o : Player.cpp Player.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Player.cpp
 
