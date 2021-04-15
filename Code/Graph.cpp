@@ -1,8 +1,8 @@
 #include "Graph.hpp"
 
 Graph::Graph(int heightMtr, int widthMtr, int seed){
-	// srand(seed);
-	srand(time(0));
+	srand(seed);
+	// srand(time(0));
 	height = heightMtr;
 	width = widthMtr;
 	n = height * width;
@@ -16,7 +16,7 @@ Graph::Graph(int heightMtr, int widthMtr, int seed){
 		}
 	}
 	auto final_adj = MST("dfs");
-	removeLeaves(final_adj);
+	removeLeaves(final_adj, no_trap);
 	for(auto u : edges){
 		int p1 = u.first, p2 = u.second;
 		int r1, c1, r2, c2;
@@ -24,16 +24,16 @@ Graph::Graph(int heightMtr, int widthMtr, int seed){
 		r2 = p2 / width;
 		c1 = p1 % width;
 		c2 = p2 % width;
-		if(r1-r2 == 1){
+		if(r1-r2 == 1 and c1 == c2){
 			exportMtr[r1 * 2 - 1][c1 * 2] = 0;
 		}
-		else if(r1-r2 == -1){
+		else if(r1-r2 == -1 and c1 == c2){
 			exportMtr[r1 * 2 + 1][c1 * 2] = 0;
 		}
-		if(c1-c2 == 1){
+		if(c1-c2 == 1 and r1 == r2){
 			exportMtr[r1 * 2][c1 * 2 - 1] = 0;
 		}
-		else{
+		if(c1-c2 == -1 and r1 == r2){
 			exportMtr[r1 * 2][c1 * 2 + 1] = 0;
 		}
 	}
@@ -61,27 +61,29 @@ void Graph::dfs(int vertex, vector<pair<int, int>> & result, int & count, vector
 	}
 }
 
-void Graph::removeLeaves(vector<vector<int>> & final_adj){
-	set<int> leaves;
-	for(int i=0;i<n;i++){
-		if(final_adj[i].size() == 1){
-			leaves.insert(i);
-		}
-	}
-	while( !leaves.empty() ){
-		int leaf = * leaves.begin();
-		int current_neighbor = final_adj[leaf][0];
-		for(auto neighbor : adj[leaf]){
-			if(neighbor == current_neighbor) continue;
-			final_adj[neighbor].push_back(leaf);
-			final_adj[leaf].push_back(neighbor);
-			edges.push_back({neighbor, leaf});
-			if(final_adj[neighbor].size() == 1){
-				leaves.erase(neighbor);
+void Graph::removeLeaves(vector<vector<int>> & final_adj, bool remove){
+	if(remove){
+		set<int> leaves;
+		for(int i=0;i<n;i++){
+			if(final_adj[i].size() == 1){
+				leaves.insert(i);
 			}
-			break;
 		}
-		leaves.erase(leaf);
+		while( !leaves.empty() ){
+			int leaf = * leaves.begin();
+			int current_neighbor = final_adj[leaf][0];
+			for(auto neighbor : adj[leaf]){
+				if(neighbor == current_neighbor) continue;
+				final_adj[neighbor].push_back(leaf);
+				final_adj[leaf].push_back(neighbor);
+				edges.push_back({neighbor, leaf});
+				if(final_adj[neighbor].size() == 1){
+					leaves.erase(neighbor);
+				}
+				break;
+			}
+			leaves.erase(leaf);
+		}
 	}
 	adj = final_adj;
 }

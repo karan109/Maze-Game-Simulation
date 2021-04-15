@@ -14,5 +14,5 @@ private:
 	int n;
 	vector<vector<int>> MST(string algo);
 	void dfs(int vertex, vector<pair<int, int>> & result, int & count, vector<bool> & vis);
-	void removeLeaves(vector<vector<int>> & final_adj);
+	void removeLeaves(vector<vector<int>> & final_adj, bool remove);
 };

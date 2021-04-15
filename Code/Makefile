@@ -8,22 +8,22 @@ all: Game.o Texture.o Entity.o Maze.o Graph.o main.o
 	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o main.o
 	./game
 
-Graph.o : Graph.cpp Graph.hpp
+Graph.o : Graph.cpp Graph.hpp includes.hpp
 	$(COMPILE) -c Graph.cpp
 
-Maze.o : Maze.cpp Texture.hpp Maze.hpp Graph.hpp
+Maze.o : Maze.cpp Texture.hpp Maze.hpp Graph.hpp includes.hpp
 	$(COMPILE) -c Maze.cpp
 
-Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp
+Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp includes.hpp
 	$(COMPILE) -c Entity.cpp
 
-Texture.o : Texture.cpp Game.hpp Texture.hpp
+Texture.o : Texture.cpp Game.hpp Texture.hpp includes.hpp
 	$(COMPILE) -c Texture.cpp
 
-main.o : main.cpp Game.hpp
+main.o : main.cpp Game.hpp includes.hpp
 	$(COMPILE) -c main.cpp
 
-Game.o : Game.cpp Maze.hpp Entity.hpp Texture.hpp Game.hpp
+Game.o : Game.cpp Maze.hpp Entity.hpp Texture.hpp Game.hpp includes.hpp
 	$(COMPILE) -c Game.cpp
 
 run:
