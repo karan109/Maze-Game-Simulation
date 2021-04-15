@@ -7,7 +7,7 @@ public:
 	Maze();
 	~Maze();
 	void LoadMaze(vector<vector<int>> arr);
-	void DrawMaze();
+	void DrawMaze(bool made);
 private:
 	SDL_Rect path_src, path_dest, hor_wall_src, hor_wall_dest, vert_wall_src, vert_wall_dest;
 	SDL_Rect small_wall_src, small_wall_dest;

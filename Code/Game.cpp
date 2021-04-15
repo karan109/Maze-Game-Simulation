@@ -3,8 +3,11 @@
 #include "Texture.hpp"
 #include "Collision.hpp"
 #include "Game.hpp"
+#include "Player.hpp"
+#include "Entities.hpp"
 
-Entity * player;
+Entities * entities;
+Player * player;
 Maze * game_maze;
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
@@ -33,8 +36,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else{
 		isRunning = false;
 	}
-	player = new Entity("../Images/man.png", 0, 0);
+	// vector<Player * > * Entities::players = new vector<Player *>(0);
+	// vector<Wall * > * Entities::walls = new vector<Wall *>(0);
+	entities = new Entities();
+	player = new Player(SDL_Rect{0, 0, original_player_h, original_player_w}, SDL_Rect{0, 0, player_h, player_w});
+	entities->Add(player);
+	// Entities::Add(player);
+	// entities->Add(player);
 	game_maze = new Maze();
+	game_maze->DrawMaze(false);
 }
 void Game::handleEvents(){
 	
@@ -49,7 +59,7 @@ void Game::update(){
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
-	game_maze->DrawMaze();
+	game_maze->DrawMaze(true);
 	player->Render();
 	SDL_RenderPresent(renderer);
 }

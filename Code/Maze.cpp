@@ -1,6 +1,10 @@
 #include "Texture.hpp"
 #include "Maze.hpp"
 #include "Graph.hpp"
+#include "Entities.hpp"
+#include "Wall.hpp"
+#include "Game.hpp"
+
 
 Maze::Maze(){
 	dirt = Texture::LoadTexture("../Images/dirt.png");
@@ -41,8 +45,9 @@ Maze::~Maze(){
 void Maze::LoadMaze(vector<vector<int>> arr){
 	game_Maze = arr;
 }
-void Maze::DrawMaze(){
+void Maze::DrawMaze(bool made = true){
 	int type = 0;
+	Wall * wall;
 	for(int i = 0; i < game_Maze.size(); i++){
 		for(int j = 0; j < game_Maze[0].size(); j++){
 			type = game_Maze[i][j];
@@ -58,6 +63,10 @@ void Maze::DrawMaze(){
 					Texture::Draw(water, hor_wall_src, hor_wall_dest);
 				}
 				else{
+					if(!made){
+						wall = new Wall(hor_wall_src, hor_wall_dest);
+						entities->Add(wall);
+					}
 					Texture::Draw(grass, hor_wall_src, hor_wall_dest);
 				}
 			}
@@ -68,6 +77,10 @@ void Maze::DrawMaze(){
 					Texture::Draw(water, vert_wall_src, vert_wall_dest);
 				}
 				else{
+					if(!made){
+						wall = new Wall(vert_wall_src, vert_wall_dest);
+						entities->Add(wall);
+					}
 					Texture::Draw(grass, vert_wall_src, vert_wall_dest);
 				}
 			}
@@ -88,6 +101,10 @@ void Maze::DrawMaze(){
 					neighbor_walls ++;
 				}
 				if(neighbor_walls >= 1){
+					if(!made){
+						wall = new Wall(small_wall_src, small_wall_dest);
+						entities->Add(wall);
+					}
 					Texture::Draw(grass, small_wall_src, small_wall_dest);
 				}
 				else{
