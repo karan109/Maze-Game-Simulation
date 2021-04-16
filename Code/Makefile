@@ -4,8 +4,8 @@ SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL
 COMPILE := $(CC) $(CFLAGS) $(WARNINGS) $(SDLFLAGS)
 # -lSDL2_net
 
-all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o main.o
-	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o main.o
+all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o main.o
+	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o main.o
 	./game
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
@@ -13,6 +13,9 @@ Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 
 Collision.o : Collision.cpp Collision.hpp includes.hpp
 	$(COMPILE) -c Collision.cpp
+
+Drone.o : Drone.cpp Drone.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
+	$(COMPILE) -c Drone.cpp
 
 Player.o : Player.cpp Player.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Player.cpp

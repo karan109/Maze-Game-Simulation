@@ -1,6 +1,5 @@
 #include "Texture.hpp"
 #include "Maze.hpp"
-#include "Graph.hpp"
 #include "Entities.hpp"
 #include "Wall.hpp"
 #include "Game.hpp"
@@ -14,6 +13,7 @@ Maze::Maze(){
 	Graph g(rows, cols, 0);
 	auto lvl1 = g.exportMtr;
 	LoadMaze(lvl1);
+	graph = g;
 	path_src.x = path_src.y = 0;
 	path_src.w = original_w;
 	path_src.h = original_h;
@@ -49,14 +49,6 @@ void Maze::LoadMaze(vector<vector<int>> arr){
 void Maze::DrawMaze(){
 	int type = 0;
 	Wall * wall;
-	if(!made){
-		for(auto u:game_Maze){
-			for(auto x:u){
-				cout<<x<<" ";
-			}
-			cout<<endl;
-		}
-	}
 	for(int i = 0; i < game_Maze.size(); i++){
 		for(int j = 0; j < game_Maze[0].size(); j++){
 			type = game_Maze[i][j];

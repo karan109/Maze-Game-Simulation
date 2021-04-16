@@ -191,3 +191,23 @@ vector<vector<int>> Graph::MST(string algo = "prim"){
 	}
 	else return {{}};
 }
+vector<int> Graph::getPath(int src, int dest){
+	vector<bool> vis(n, 0);
+	vector<int> result;
+	getPathdfs(src, vis, result, dest);
+	return result;
+}
+bool Graph::getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int dest){
+	vis[vertex] = 1;
+	result.push_back(vertex);
+	if(vertex == dest){
+		return true;
+	}
+	for(auto neighbor : adj[vertex]){
+		if(!vis[neighbor]){
+			if(getPathdfs(neighbor, vis, result, dest)) return true;
+		}
+	}
+	result.pop_back();
+	return false;
+}

@@ -20,6 +20,8 @@ public:
 	static SDL_Event event;
 	static Entities * entities;
 	static Maze * game_maze;
+	static int width;
+	static int height;
 
 private:
 	int ct = 0;

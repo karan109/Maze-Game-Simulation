@@ -3,12 +3,15 @@
 #include "Collision.hpp"
 #include "Game.hpp"
 #include "Player.hpp"
+#include "Drone.hpp"
 
-Player * player;
+Drone * player;
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
 Entities * Game::entities = new Entities();
+int Game::width;
+int Game::height;
 
 Game::Game(){
 
@@ -17,7 +20,8 @@ Game::~Game(){
 
 }
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
-	
+	Game::width = width;
+	Game::height = height;
 	int flags = 0;
 	if(fullscrean){
 		flags = SDL_WINDOW_FULLSCREEN;
@@ -35,7 +39,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 	Game::game_maze = new Maze();
-	player = new Player(SDL_Rect{0, 0, original_player_h, original_player_w}, SDL_Rect{0, 0, player_h, player_w});
+	player = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, SDL_Rect{0, 0, player_h, player_w}, 499);
 	entities->Add(player);
 	Game::game_maze->DrawMaze();
 }
