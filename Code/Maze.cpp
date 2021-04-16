@@ -49,18 +49,28 @@ void Maze::LoadMaze(vector<vector<int>> arr){
 void Maze::DrawMaze(){
 	int type = 0;
 	Wall * wall;
+	if(!made){
+		for(auto u:game_Maze){
+			for(auto x:u){
+				cout<<x<<" ";
+			}
+			cout<<endl;
+		}
+	}
 	for(int i = 0; i < game_Maze.size(); i++){
 		for(int j = 0; j < game_Maze[0].size(); j++){
 			type = game_Maze[i][j];
 			if(i % 2 == 0 and j % 2 == 0){
 				path_dest.y = (i / 2) * (block_h + wall_thickness);
 				path_dest.x = (j / 2) * (block_w + wall_thickness);
+				game_Maze[i][j] = 0;
 				Texture::Draw(water, path_src, path_dest);
 			}
 			else if(i % 2 == 1 and j % 2 == 0){
 				hor_wall_dest.y = (i / 2) * (block_h + wall_thickness) + block_h;
 				hor_wall_dest.x = (j / 2) * (block_w + wall_thickness);
 				if(type == 0){
+					game_Maze[i][j] = 0;
 					Texture::Draw(water, hor_wall_src, hor_wall_dest);
 				}
 				else{
@@ -68,6 +78,7 @@ void Maze::DrawMaze(){
 						wall = new Wall(hor_wall_src, hor_wall_dest);
 						Game::entities->Add(wall);
 					}
+					game_Maze[i][j] = 1;
 					Texture::Draw(grass, hor_wall_src, hor_wall_dest);
 				}
 			}
@@ -75,6 +86,7 @@ void Maze::DrawMaze(){
 				vert_wall_dest.y = (i / 2) * (block_h + wall_thickness);
 				vert_wall_dest.x = (j / 2) * (block_w + wall_thickness) + block_w;
 				if(type == 0){
+					game_Maze[i][j] = 0;
 					Texture::Draw(water, vert_wall_src, vert_wall_dest);
 				}
 				else{
@@ -82,6 +94,7 @@ void Maze::DrawMaze(){
 						wall = new Wall(vert_wall_src, vert_wall_dest);
 						Game::entities->Add(wall);
 					}
+					game_Maze[i][j] = 1;
 					Texture::Draw(grass, vert_wall_src, vert_wall_dest);
 				}
 			}
@@ -106,9 +119,11 @@ void Maze::DrawMaze(){
 						wall = new Wall(small_wall_src, small_wall_dest);
 						Game::entities->Add(wall);
 					}
+					game_Maze[i][j] = 1;
 					Texture::Draw(grass, small_wall_src, small_wall_dest);
 				}
 				else{
+					game_Maze[i][j] = 0;
 					Texture::Draw(water, small_wall_src, small_wall_dest);
 				}
 			}

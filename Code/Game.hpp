@@ -2,7 +2,7 @@
 
 #include "includes.hpp"
 #include "Entities.hpp"
-
+#include "Maze.hpp"
 class Game{
 
 public:
@@ -19,6 +19,7 @@ public:
 	static SDL_Renderer * renderer;
 	static SDL_Event event;
 	static Entities * entities;
+	static Maze * game_maze;
 
 private:
 	int ct = 0;

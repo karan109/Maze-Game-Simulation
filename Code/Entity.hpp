@@ -4,7 +4,7 @@
 
 class Entity{
 public:
-	static const int speed = 3;
+	static const int speed = 1;
 	Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param);
 	~Entity();
 	int getX();

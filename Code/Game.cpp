@@ -1,4 +1,3 @@
-#include "Maze.hpp"
 #include "Entity.hpp"
 #include "Texture.hpp"
 #include "Collision.hpp"
@@ -6,7 +5,7 @@
 #include "Player.hpp"
 
 Player * player;
-Maze * game_maze;
+Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
 Entities * Game::entities = new Entities();
@@ -35,10 +34,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else{
 		isRunning = false;
 	}
+	Game::game_maze = new Maze();
 	player = new Player(SDL_Rect{0, 0, original_player_h, original_player_w}, SDL_Rect{0, 0, player_h, player_w});
 	entities->Add(player);
-	game_maze = new Maze();
-	game_maze->DrawMaze();
+	Game::game_maze->DrawMaze();
 }
 void Game::handleEvents(){
 	SDL_PollEvent(& event);
@@ -51,7 +50,7 @@ void Game::update(){
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
-	game_maze->DrawMaze();
+	Game::game_maze->DrawMaze();
 	player->Render();
 	SDL_RenderPresent(renderer);
 }
