@@ -4,6 +4,6 @@
 
 class Player : public Entity{
 public:
-	Player(SDL_Rect srcR_param, SDL_Rect destR_param);
+	Player(SDL_Rect srcR_param, int start);
 	void Update() override;
 };

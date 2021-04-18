@@ -1,8 +1,9 @@
 #include "Graph.hpp"
+#include "Game.hpp"
 
 Graph::Graph(int heightMtr, int widthMtr, int seed){
-	srand(seed);
-	// srand(time(0));
+	// srand(seed);
+	srand(time(0));
 	height = heightMtr;
 	width = widthMtr;
 	n = height * width;
@@ -15,8 +16,8 @@ Graph::Graph(int heightMtr, int widthMtr, int seed){
 			}
 		}
 	}
-	auto final_adj = MST("dfs");
-	removeLeaves(final_adj, no_trap);
+	auto final_adj = MST("prim");
+	removeLeaves(final_adj, Game::no_trap);
 	for(auto u : edges){
 		int p1 = u.first, p2 = u.second;
 		int r1, c1, r2, c2;
@@ -194,7 +195,8 @@ vector<vector<int>> Graph::MST(string algo = "prim"){
 vector<int> Graph::getPath(int src, int dest){
 	vector<bool> vis(n, 0);
 	vector<int> result;
-	getPathdfs(src, vis, result, dest);
+	// getPathdfs(src, vis, result, dest);
+	getPathbfs(src, vis, result, dest);
 	return result;
 }
 bool Graph::getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int dest){
@@ -210,4 +212,29 @@ bool Graph::getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int
 	}
 	result.pop_back();
 	return false;
+}
+void Graph::getPathbfs(int src, vector<bool> & vis, vector<int> & result, int dest){
+	queue<int> q;
+	q.push(src);
+	vis[src] = 1;
+	vector<int> parent(n);
+	parent[src] = -1;
+	while( !q.empty() ){
+		int front = q.front();
+		q.pop();
+		for(auto neighbor : adj[front]){
+			if( !vis[neighbor] ){
+				q.push(neighbor);
+				parent[neighbor] = front;
+				vis[neighbor] = 1;
+				if(neighbor == dest) break;
+			}
+		}
+	}
+	int vertex = dest;
+	while(vertex != -1){
+		result.push_back(vertex);
+		vertex = parent[vertex];
+	}
+	reverse(result.begin(), result.end());
 }

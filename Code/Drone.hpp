@@ -1,26 +1,10 @@
 #pragma once
 
 #include "Entity.hpp"
+#include "Automated.hpp"
 
-class Drone : public Entity{
+class Drone : public Automated{
 public:
-	Drone(SDL_Rect srcR_param, SDL_Rect destR_param, int dest);
+	Drone(SDL_Rect srcR_param, int start);
 	void Update() override;
-private:
-	queue<int> path;
-	int current;
-	pair<int, int> getAutoBlockCoords();
-	void print_path(){
-		vector<int> temp;
-		while(!path.empty()){
-			int front = path.front();
-			temp.push_back(front);
-			cout<<front<<" ";
-			path.pop();
-		}
-		for(auto vertex : temp){
-			path.push(vertex);
-		}
-		cout<<endl;
-	}
 };

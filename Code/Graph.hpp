@@ -18,4 +18,5 @@ private:
 	void dfs(int vertex, vector<pair<int, int>> & result, int & count, vector<bool> & vis);
 	void removeLeaves(vector<vector<int>> & final_adj, bool remove);
 	bool getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int dest);
+	void getPathbfs(int src, vector<bool> & vis, vector<int> & result, int dest);
 };

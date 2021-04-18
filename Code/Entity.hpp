@@ -4,7 +4,8 @@
 
 class Entity{
 public:
-	static const int speed = 3;
+	double speed = 3;
+	Entity(const char * texturesheet, SDL_Rect srcR_param, int start);
 	Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param);
 	~Entity();
 	int getX();
@@ -24,10 +25,13 @@ public:
 	bool getDown();
 	void keepInside();
 	pair<int, int> getCurrentBlockCoords();
+	pair<int, int> getAutoBlockCoords();
+	pair<int, int> getAutoBlockCoords(int block_num);
 	void Render();
 	int xpos;
 	int ypos;
 protected:
+	int mag = 1;
 	int xv;
 	int yv;
 	SDL_Rect srcR, destR;

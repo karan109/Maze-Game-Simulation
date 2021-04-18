@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 
-Player::Player(SDL_Rect srcR_param, SDL_Rect destR_param) : Entity("../Images/man.png", srcR_param, destR_param){
+Player::Player(SDL_Rect srcR_param, int start) : Entity("../Images/pacman.png", srcR_param, start){
 }
 
 void Player::Update(){
@@ -15,41 +15,37 @@ void Player::Update(){
 		obstacles.insert(dir);
 		if(dir == 1){
 			xv = 0;
-			xpos = u->getBB().x - block_w / 2 - destR.w / 2;
-			// ypos = coords.first + block_h / 2 - destR.h / 2;
+			xpos = u->getBB().x - Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 2){
 			xv = 0;
-			xpos = u->getBB().x + u->getBB().w + block_w / 2 - destR.w / 2;
-			// ypos = coords.first + block_h / 2 - destR.h / 2;
+			xpos = u->getBB().x + u->getBB().w + Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 3){
 			yv = 0;
-			ypos = u->getBB().y - block_h / 2 - destR.h / 2;
-			xpos = coords.second + block_w / 2 - destR.w / 2;
+			ypos = u->getBB().y - Game::block_h / 2 - destR.h / 2;
 		}
 		else if(dir == 4){
 			yv = 0;
-			ypos = u->getBB().y + u->getBB().h + block_h / 2 - destR.h / 2;
-			// xpos = coords.second + block_w / 2 - destR.w / 2;
+			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
 		}
 	}
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_UP and obstacles.find(4) == obstacles.end()){
-			yv = -1;
+			yv = -mag;
 			xv = 0;
 		}
 		else if(key == SDLK_DOWN and obstacles.find(3) == obstacles.end()){
-			yv = 1;
+			yv = mag;
 			xv = 0;
 		}
 		else if(key == SDLK_RIGHT and obstacles.find(1) == obstacles.end()){
-			xv = 1;
+			xv = mag;
 			yv = 0;
 		}
 		else if(key == SDLK_LEFT and obstacles.find(2) == obstacles.end()){
-			xv = -1;
+			xv = -mag;
 			yv = 0;
 		}
 	}
@@ -68,17 +64,23 @@ void Player::Update(){
 			xv = 0;
 		}
 	}
-	int row = block_num / cols;
-	int col = block_num % cols;
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
 	coords = Entity::getCurrentBlockCoords();
+	int centre_x = xpos + destR.w / 2;
+	int centre_y = ypos + destR.h / 2;
+	int block_centre_y = coords.first + Game::block_h / 2;
+	int block_centre_x = coords.second + Game::block_w / 2;
 	if(yv == 0 and xv != 0){
-		if( (xv == 1 and Entity::getRight() != 1) or (xv == -1 and Entity::getLeft() != 1) ){
-			ypos = coords.first + block_h / 2 - destR.h / 2;
+		if( (xv == mag and Entity::getRight() != 1) or (xv == -mag and Entity::getLeft() != 1) ){
+			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)
+				ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 		}
 	}
 	if(xv == 0 and yv != 0){
-		if( (yv == 1 and Entity::getDown() != 1) or (yv == -1 and Entity::getUp() != 1) ){
-			xpos = coords.second + block_w / 2 - destR.w / 2;
+		if( (yv == mag and Entity::getDown() != 1) or (yv == -mag and Entity::getUp() != 1) ){
+			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)
+				xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 		}
 	}
 	xpos += xv * speed;

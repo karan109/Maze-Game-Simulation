@@ -22,6 +22,18 @@ public:
 	static Maze * game_maze;
 	static int width;
 	static int height;
+	static int rows;
+	static int cols;
+	static int original_h;
+	static int original_w;
+	static int block_h;
+	static int block_w;
+	static int wall_thickness;
+	static bool no_trap;
+	static int player_h;
+	static int player_w;
+	static int original_player_h;
+	static int original_player_w;
 
 private:
 	int ct = 0;

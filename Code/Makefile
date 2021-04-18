@@ -1,11 +1,10 @@
 CC := g++
-CFLAGS := -std=c++14 -w
-SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
+CFLAGS := -std=c++11 -w
+SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net
 COMPILE := $(CC) $(CFLAGS) $(WARNINGS) $(SDLFLAGS)
-# -lSDL2_net
 
-all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o main.o
-	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o main.o
+all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o main.o
+	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o main.o
 	./game
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
@@ -13,6 +12,12 @@ Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 
 Collision.o : Collision.cpp Collision.hpp includes.hpp
 	$(COMPILE) -c Collision.cpp
+
+Monster.o : Monster.cpp Monster.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
+	$(COMPILE) -c Monster.cpp
+
+Automated.o : Automated.cpp Automated.hpp Entity.hpp includes.hpp Game.hpp
+	$(COMPILE) -c Automated.cpp
 
 Drone.o : Drone.cpp Drone.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Drone.cpp

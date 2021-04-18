@@ -1,13 +1,16 @@
-#include "Drone.hpp"
+#include "Monster.hpp"
 #include "Game.hpp"
 #include "Collision.hpp"
 
 
-Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.png", srcR_param, start){
-	speed = 4;
+Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.png", srcR_param, start){
+	speed = 2.5;
+	target = nullptr;
 }
 
-void Drone::Update(){
+void Monster::Update(){
+	if(target == nullptr) return;
+	set_dest(target);
 	if(path.empty()) return;
 	Entity::keepInside();
 	for(auto & u: * Game::entities->walls){
@@ -80,4 +83,18 @@ void Drone::Update(){
 	
 	destR.x = xpos;
 	destR.y = ypos;
+}
+void Monster::set_dest(Entity * target_param){
+	while (!path.empty()){
+		path.pop();
+	}
+	target = target_param;
+	dest = target->getBlock();
+	int init = Entity::getBlock();
+	auto path_vector = Game::game_maze->graph.getPath(init, dest);
+	for(auto vertex : path_vector){
+		path.push(vertex);
+	}
+	current = path.front();
+	path.pop();
 }

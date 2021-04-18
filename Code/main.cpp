@@ -6,8 +6,8 @@ int main(int argc, char* argv[]){
 
     const int FPS = 60;
     const int frameDelay = 1000 / FPS;
-    const int window_h = block_h * rows + (rows - 1) * wall_thickness;
-    const int window_w = block_w * cols + (cols - 1) * wall_thickness;
+    const int window_h = Game::block_h * Game::rows + (Game::rows - 1) * Game::wall_thickness;
+    const int window_w = Game::block_w * Game::cols + (Game::cols - 1) * Game::wall_thickness;
     unsigned int frameStart;
     int frameTime;
 
