@@ -3,8 +3,8 @@ CFLAGS := -std=c++11 -w
 SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net -lSDL2
 COMPILE := $(CC) $(CFLAGS) $(WARNINGS) $(SDLFLAGS)
 
-all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o
-	$(COMPILE) Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o -o game
+all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o
+	$(COMPILE) -o game main.cpp Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o
 	./game
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
