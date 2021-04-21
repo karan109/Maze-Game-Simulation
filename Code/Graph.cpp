@@ -16,7 +16,7 @@ Graph::Graph(int heightMtr, int widthMtr, int seed){
 			}
 		}
 	}
-	auto final_adj = MST("prim");
+	auto final_adj = MST("dfs");
 	removeLeaves(final_adj, Game::no_trap);
 	for(auto u : edges){
 		int p1 = u.first, p2 = u.second;
@@ -237,4 +237,55 @@ void Graph::getPathbfs(int src, vector<bool> & vis, vector<int> & result, int de
 		vertex = parent[vertex];
 	}
 	reverse(result.begin(), result.end());
+}
+vector<int> Graph::getDistances(int src, vector<int> & dests){
+	vector<bool> vis(n, 0);
+	queue<int> q;
+	q.push(src);
+	vis[src] = 1;
+	vector<int> dist(n);
+	dist[src] = 0;
+	while( !q.empty() ){
+		int front = q.front();
+		q.pop();
+		for(auto neighbor : adj[front]){
+			if( !vis[neighbor] ){
+				q.push(neighbor);
+				dist[neighbor] = dist[front] + 1;
+				vis[neighbor] = 1;
+			}
+		}
+	}
+	vector<int> result;
+	for(auto u : dests){
+		result.push_back(dist[u]);
+	}
+	return result;
+}
+vector<vector<int>> Graph::getAdjMtr(vector<int> points){
+	vector<vector<int>> result;
+	for(auto u : points){
+		result.push_back(Graph::getDistances(u, points));
+	}
+	return result;
+}
+vector<vector<int>> Graph::permute(int n){
+	if(n == 1) return {{1}};
+	auto small = permute(n-1);
+	vector<vector<int>> result;
+	for(auto u : small){
+		for(int i=0;i<n;i++){
+			vector<int> temp(n);
+			temp[i] = n;
+			int ct = 0;
+			for(int j=0;j<i;j++){
+				temp[j] = u[ct++];
+			}
+			for(int j=i+1;j<n;j++){
+				temp[j] = u[ct++];
+			}
+			result.push_back(temp);
+		}
+	}
+	return result;
 }

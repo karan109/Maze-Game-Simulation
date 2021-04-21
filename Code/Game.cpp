@@ -5,28 +5,32 @@
 #include "Player.hpp"
 #include "Drone.hpp"
 #include "Monster.hpp"
-
+#include "Stone.hpp"
 Drone * drone;
 Monster * monster;
 Player * player;
+Stone * stone;
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
 Entities * Game::entities = new Entities();
 int Game::width;
 int Game::height;
-int Game::rows = 10;
-int Game::cols = 15;
+int Game::rows = 20;
+int Game::cols = 35;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
 int Game::block_w = 32;
-int Game::wall_thickness = 32;
+int Game::wall_thickness = 5;
 bool Game::no_trap = true;
 int Game::player_h = 30;
 int Game::player_w = 30;
 int Game::original_player_h = 32;
 int Game::original_player_w = 32;
+int Game::stone_w = 32;
+int Game::stone_h = 32;
+int Game::num_stones = 7;
 
 Game::Game(){
 
@@ -53,13 +57,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else{
 		isRunning = false;
 	}
+	srand(time(0));
 	Game::game_maze = new Maze();
+	for(int i=0;i<num_stones;i++){
+		stone = new Stone("../Images/stone.png", SDL_Rect{0, 0, stone_h, stone_w}, rand() % (Game::rows * Game::cols), 15, 10);
+		entities->Add(stone);
+	}
+	
 	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 100);
 	monster = new Monster(SDL_Rect{0, 0, original_player_h, original_player_w}, 50);
 	player = new Player(SDL_Rect{0, 0, original_player_h, original_player_w}, 0);
-	drone->set_dest(rows * cols - 1);
+	drone->set_stones();
 	monster->set_dest(player);
-	
 	entities->Add(drone);
 	entities->Add(player);
 	entities->Add(monster);
@@ -72,6 +81,9 @@ void Game::handleEvents(){
 	}
 }
 void Game::update(){
+	for(auto & stone : * entities->stones){
+		stone->Update();
+	}
 	for(auto & player : * entities->players){
 		player->Update();
 	}
@@ -85,6 +97,9 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	Game::game_maze->DrawMaze();
+	for(auto & stone : * entities->stones){
+		stone->Render();
+	}
 	for(auto & player : * entities->players){
 		player->Render();
 	}

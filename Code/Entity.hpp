@@ -35,6 +35,5 @@ protected:
 	int xv;
 	int yv;
 	SDL_Rect srcR, destR;
-private:
 	SDL_Texture * objTexture;
 };

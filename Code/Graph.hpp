@@ -9,6 +9,8 @@ public:
 	void generate();
 	vector<vector<int>> exportMtr;
 	vector<int> getPath(int src, int dest);
+	vector<vector<int>> getAdjMtr(vector<int> points);
+	vector<vector<int>> permute(int n);
 private:
 	int height, width;
 	vector<vector<int>> adj;
@@ -19,4 +21,5 @@ private:
 	void removeLeaves(vector<vector<int>> & final_adj, bool remove);
 	bool getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int dest);
 	void getPathbfs(int src, vector<bool> & vis, vector<int> & result, int dest);
+	vector<int> getDistances(int src, vector<int> & dests);
 };

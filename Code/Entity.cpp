@@ -5,9 +5,10 @@
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	objTexture = Texture::LoadTexture(texturesheet);
 	auto coords = getAutoBlockCoords(start);
-	destR = SDL_Rect{0, 0, Game::player_h, Game::player_w};
-	destR.x = coords.second;
-	destR.y = coords.first;
+	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
+	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
+	destR.w = Game::player_w;
+	destR.h = Game::player_h;
 	srcR = srcR_param;
 	xpos = destR.x;
 	ypos = destR.y;

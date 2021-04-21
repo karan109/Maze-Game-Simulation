@@ -7,4 +7,6 @@ class Drone : public Automated{
 public:
 	Drone(SDL_Rect srcR_param, int start);
 	void Update() override;
+private:
+	bool reached = false;
 };

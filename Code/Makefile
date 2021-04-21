@@ -1,10 +1,10 @@
 CC := g++
 CFLAGS := -std=c++11 -w
-SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net
+SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net -lSDL2
 COMPILE := $(CC) $(CFLAGS) $(WARNINGS) $(SDLFLAGS)
 
-all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o main.o
-	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o main.o
+all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o
+	$(COMPILE) Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o -o game
 	./game
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
@@ -12,6 +12,9 @@ Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 
 Collision.o : Collision.cpp Collision.hpp includes.hpp
 	$(COMPILE) -c Collision.cpp
+
+Stone.o : Stone.cpp Stone.hpp Entity.hpp includes.hpp Game.hpp Texture.hpp
+	$(COMPILE) -c Stone.cpp
 
 Monster.o : Monster.cpp Monster.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Monster.cpp

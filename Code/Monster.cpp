@@ -11,7 +11,6 @@ Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.p
 void Monster::Update(){
 	if(target == nullptr) return;
 	set_dest(target);
-	if(path.empty()) return;
 	Entity::keepInside();
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
@@ -36,26 +35,41 @@ void Monster::Update(){
 			return;
 		}
 	}
+	int dir = Collision::AABB(getBB(), target->getBB(), getXV(), getYV(), target->getXV(), target->getYV());
+	if(dir != 0){
+		// if(dir == 1){
+		// 	xpos = target->xpos - Game::player_w;
+		// }
+		// if(dir == 2){
+		// 	xpos = target->xpos + Game::player_w;
+		// }
+		// if(dir == 3){
+		// 	ypos = target->ypos - Game::player_h;
+		// }
+		// if(dir == 4){
+		// 	ypos = target->ypos + Game::player_h;
+		// }
+		// destR.x = xpos;
+		// destR.y = ypos;
+		return;
+	}
 	auto coords = getAutoBlockCoords();
 	int current = getBlock();
-	int next = path.front();
-	if(next == current){
-		path.pop();
+	int next = -1;
+	if(!path.empty()){
 		next = path.front();
+		if(next == current){
+			path.pop();
+			next = path.front();
+		}
 	}
 	int centre_x = xpos + destR.w / 2;
 	int centre_y = ypos + destR.h / 2;
 	int block_centre_y = coords.first + Game::block_h / 2;
 	int block_centre_x = coords.second + Game::block_w / 2;
+	// int target_centre_x = target->xpos + Game::player_w / 2;
+	// int target_centre_y = target->ypos + Game::player_h / 2;
 	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
-		if(path.empty()){
-			xv = 0;
-			yv = 0;
-			coords = getAutoBlockCoords();
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-			return;
-		}
 		if(next == current + 1){
 			xv = mag;
 			yv = 0;
@@ -76,8 +90,8 @@ void Monster::Update(){
 			yv = -mag;
 			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 		}
-
 	}
+
 	xpos += xv * speed;
 	ypos += yv * speed;
 	

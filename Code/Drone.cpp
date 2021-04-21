@@ -8,7 +8,7 @@ Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.png",
 }
 
 void Drone::Update(){
-	if(path.empty()) return;
+	if(reached) return;
 	Entity::keepInside();
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
@@ -35,10 +35,13 @@ void Drone::Update(){
 	}
 	auto coords = getAutoBlockCoords();
 	int current = getBlock();
-	int next = path.front();
-	if(next == current){
-		path.pop();
+	int next = -1;
+	if(!path.empty()){
 		next = path.front();
+		if(next == current){
+			path.pop();
+			next = path.front();
+		}
 	}
 	int centre_x = xpos + destR.w / 2;
 	int centre_y = ypos + destR.h / 2;
@@ -46,11 +49,15 @@ void Drone::Update(){
 	int block_centre_x = coords.second + Game::block_w / 2;
 	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
 		if(path.empty()){
+			// cout<<"hi"<<endl;
 			xv = 0;
 			yv = 0;
 			coords = getAutoBlockCoords();
 			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+			destR.x = xpos;
+			destR.y = ypos;
+			reached = true;
 			return;
 		}
 		if(next == current + 1){

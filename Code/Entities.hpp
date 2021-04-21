@@ -6,6 +6,7 @@
 #include "Wall.hpp"
 #include "Drone.hpp"
 #include "Monster.hpp"
+#include "Stone.hpp"
 
 class Entities{
 public:
@@ -13,11 +14,13 @@ public:
 	vector<Wall * > * walls;
 	vector<Drone * > * drones;
 	vector<Monster * > * monsters;
+	vector<Stone * > * stones;
 	Entities(){
 		players = new vector<Player *>(0);
 		walls = new vector<Wall *>(0);
 		drones = new vector<Drone *>(0);
 		monsters = new vector<Monster *>(0);
+		stones = new vector<Stone *>(0);
 	}
 	void Add(Player * player){
 		players->push_back(player);
@@ -31,4 +34,8 @@ public:
 	void Add(Monster * monster){
 		monsters->push_back(monster);
 	}
+	void Add(Stone * stone){
+		stones->push_back(stone);
+	}
+
 };

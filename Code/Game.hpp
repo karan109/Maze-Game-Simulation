@@ -34,6 +34,9 @@ public:
 	static int player_w;
 	static int original_player_h;
 	static int original_player_w;
+	static int stone_w;
+	static int stone_h;
+	static int num_stones;
 
 private:
 	int ct = 0;
