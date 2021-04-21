@@ -37,20 +37,6 @@ void Monster::Update(){
 	}
 	int dir = Collision::AABB(getBB(), target->getBB(), getXV(), getYV(), target->getXV(), target->getYV());
 	if(dir != 0){
-		// if(dir == 1){
-		// 	xpos = target->xpos - Game::player_w;
-		// }
-		// if(dir == 2){
-		// 	xpos = target->xpos + Game::player_w;
-		// }
-		// if(dir == 3){
-		// 	ypos = target->ypos - Game::player_h;
-		// }
-		// if(dir == 4){
-		// 	ypos = target->ypos + Game::player_h;
-		// }
-		// destR.x = xpos;
-		// destR.y = ypos;
 		return;
 	}
 	auto coords = getAutoBlockCoords();
@@ -67,8 +53,6 @@ void Monster::Update(){
 	int centre_y = ypos + destR.h / 2;
 	int block_centre_y = coords.first + Game::block_h / 2;
 	int block_centre_x = coords.second + Game::block_w / 2;
-	// int target_centre_x = target->xpos + Game::player_w / 2;
-	// int target_centre_y = target->ypos + Game::player_h / 2;
 	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
 		if(next == current + 1){
 			xv = mag;

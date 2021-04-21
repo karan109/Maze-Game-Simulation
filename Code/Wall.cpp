@@ -5,5 +5,5 @@ Wall::Wall(SDL_Rect srcR_param, SDL_Rect destR_param) : Entity("../Images/grass.
 }
 
 void Wall::Update(){
-	cout<<"ok";
+	
 }

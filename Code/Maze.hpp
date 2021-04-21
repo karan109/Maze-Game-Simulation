@@ -7,7 +7,7 @@ public:
 	Maze();
 	~Maze();
 	void LoadMaze(vector<vector<int>> arr);
-	void DrawMaze();
+	void DrawMaze(); // Draw maze
 	bool made;
 	vector<vector<int>> game_Maze;
 	Graph graph;

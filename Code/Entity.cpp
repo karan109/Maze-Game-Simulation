@@ -2,6 +2,7 @@
 #include "Entity.hpp"
 #include "Texture.hpp"
 
+// Constructor when start node number is given (for moving entities)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	objTexture = Texture::LoadTexture(texturesheet);
 	auto coords = getAutoBlockCoords(start);
@@ -15,6 +16,8 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	xv = 0;
 	yv = 0;
 }
+
+// Constructor when start coordinates are given as Rect (destR_param)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param){
 	objTexture = Texture::LoadTexture(texturesheet);
 	srcR = srcR_param;
@@ -57,9 +60,13 @@ void Entity::setXV(int xv_param){
 void Entity::setYV(int yv_param){
 	yv = yv_param;
 }
+
+// Returns bounding box
 SDL_Rect Entity::getBB(){
 	return destR;
 }
+
+// Get currrent node number
 int Entity::getBlock(){
 	int centre_x = xpos + destR.w / 2;
 	int centre_y = ypos + destR.h / 2;
@@ -67,6 +74,8 @@ int Entity::getBlock(){
 	int col = centre_x / (Game::block_w + Game::wall_thickness);
 	return row * Game::cols + col;
 }
+
+// Get coords of current block
 pair<int, int> Entity::getCurrentBlockCoords(){
 	int block_num = getBlock();
 	int row = block_num / Game::cols;
@@ -89,6 +98,8 @@ pair<int, int> Entity::getCurrentBlockCoords(){
 	}
 	else return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
 }
+
+// 1 if wall is present towards right, 0 otherwise
 bool Entity::getRight(){
 	int block_num = getBlock();
 	int row = block_num / Game::cols;
@@ -145,6 +156,8 @@ bool Entity::getDown(){
 	if(mtr_row + 1 < game_Maze.size()) return game_Maze[mtr_row + 1][mtr_col];
 	else return 1;
 }
+
+// Keep entity inside main window
 void Entity::keepInside(){
 	auto coords = Entity::getCurrentBlockCoords();
 	if(xpos + destR.w >= Game::width){
@@ -160,6 +173,8 @@ void Entity::keepInside(){
 		ypos = Game::block_h / 2 - destR.h / 2;
 	}
 }
+
+// Coordinates of current approximate block
 pair<int, int> Entity::getAutoBlockCoords(){
 	int block_num = getBlock();
 	int row = block_num / Game::cols;
@@ -180,6 +195,8 @@ pair<int, int> Entity::getAutoBlockCoords(){
 	}
 	else return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
 }
+
+// Coordinates of a block given its node number
 pair<int, int> Entity::getAutoBlockCoords(int block_num){
 	int row = block_num / Game::cols;
 	int col = block_num % Game::cols;

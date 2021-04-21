@@ -8,6 +8,8 @@
 #include "Monster.hpp"
 #include "Stone.hpp"
 
+
+// Maintain a list of all entities
 class Entities{
 public:
 	vector<Player * > * players;

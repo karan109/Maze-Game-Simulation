@@ -6,6 +6,8 @@
 #include "Drone.hpp"
 #include "Monster.hpp"
 #include "Stone.hpp"
+
+
 Drone * drone;
 Monster * monster;
 Player * player;
@@ -13,7 +15,11 @@ Stone * stone;
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
+
+// Initialize entities object to store all entities
 Entities * Game::entities = new Entities();
+
+// Constants
 int Game::width;
 int Game::height;
 int Game::rows = 20;

@@ -11,5 +11,6 @@ extern "C" {
 #include <set>
 #include <map>
 #include <queue>
+#include <climits>
 #include <time.h>
 using namespace std;

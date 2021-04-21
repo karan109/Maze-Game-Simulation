@@ -8,5 +8,5 @@ public:
 	Drone(SDL_Rect srcR_param, int start);
 	void Update() override;
 private:
-	bool reached = false;
+	bool reached = false; // True if drone has reached final destination and path is empty
 };

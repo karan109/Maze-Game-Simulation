@@ -28,12 +28,12 @@ public:
 	pair<int, int> getAutoBlockCoords();
 	pair<int, int> getAutoBlockCoords(int block_num);
 	void Render();
-	int xpos;
-	int ypos;
+	int xpos; // x coordinate
+	int ypos; // y coordinate
 protected:
-	int mag = 1;
-	int xv;
-	int yv;
-	SDL_Rect srcR, destR;
-	SDL_Texture * objTexture;
+	int mag = 1; // Magnitude of velocity
+	int xv; // x component of velocity
+	int yv; // y component of velocity
+	SDL_Rect srcR, destR; // destR is bounding box of entity
+	SDL_Texture * objTexture; // Texture
 };
