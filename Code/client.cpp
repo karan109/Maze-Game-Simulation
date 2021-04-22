@@ -32,16 +32,22 @@ int main(int argc, char* argv[]){
     memset(buf, 0, 4096);
     int bytesRecv = recv(sock, buf, 4096, 0);
     Game::seed = stoi(string(buf, bytesRecv));
-    cout<<"aca"<<endl;
-    // cout<<"SERVER> "<<string(buf, bytesRecv)<<endl;
-    
 
 
     game = new Game();
     game->init("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
-    while(game->running()){
+    
+    game->player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 60);
+    game->player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0);
+    
+    Game::entities->Add(game->player1);
+    Game::entities->Add(game->player2);
+    game->monster->set_dest(game->player1);
 
-        command = "aca";
+
+    while(game->running()){
+        if (Game::response < 0) Game::response = 0;
+        command = to_string(Game::send);
         int sendRes = send(sock, command.c_str(), command.size()+1, 0);
         if(sendRes == -1){
             cout<<"Could not send through server"<<endl;
@@ -49,6 +55,7 @@ int main(int argc, char* argv[]){
         memset(buf, 0, 4096);
         int bytesRecv = recv(sock, buf, 4096, 0);
         string response = string(buf, bytesRecv);
+        Game::response = stoi(response);
         cout<<response<<endl;
         frameStart = SDL_GetTicks();
 

@@ -42,6 +42,13 @@ public:
 	static int frameDelay;
 	static int window_h;
 	static int window_w;
+	static int response;
+	static int send;
+	Player * player1;
+	Remote * player2;
+	Drone * drone;
+	Monster * monster;
+	Stone * stone;
 
 private:
 	int ct = 0;

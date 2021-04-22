@@ -111,7 +111,7 @@ bool Entity::getRight(){
 	int centre_y = ypos + destR.h / 2;
 	if(centre_y >= (row * (Game::block_h + Game::wall_thickness) + Game::block_h) ) mtr_row++;
 	if(centre_x >= (col * (Game::block_w + Game::wall_thickness) + Game::block_w) ) mtr_col++;
-	if(mtr_col + 1 < Game::cols * 2) return game_Maze[mtr_row][mtr_col + 1];
+	if(mtr_col + 1 < game_Maze[0].size()) return game_Maze[mtr_row][mtr_col + 1];
 	else return 1;
 }
 bool Entity::getLeft(){

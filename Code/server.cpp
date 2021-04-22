@@ -77,8 +77,13 @@ int main(int argc, char* argv[]){
         }
     }
     game->init("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
+    game->player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0);
+    game->player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 60);
+    Game::entities->Add(game->player1);
+    Game::entities->Add(game->player2);
+    game->monster->set_dest(game->player2);
     while(game->running()){
-
+        if (Game::response < 0) Game::response = 0;
         memset(buf, 0, 4096);
         int bytesRecv = recv(clientSocket, buf, 4096, 0);
         if(bytesRecv == -1){
@@ -90,8 +95,12 @@ int main(int argc, char* argv[]){
             break;
         }
         string command = string(buf, 0, bytesRecv);
-        cout<<"Received: "<<command<<endl;
-        send(clientSocket, buf, bytesRecv + 1, 0);
+        Game::response = stoi(command);
+        cout<<Game::response<<endl;
+        int sendRes = send(clientSocket, to_string(Game::send).c_str(), command.size()+1, 0);
+        if(sendRes == -1){
+            cout<<"Could not send through server"<<endl;
+        }
 
         frameStart = SDL_GetTicks();
 

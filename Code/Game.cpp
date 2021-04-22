@@ -8,10 +8,6 @@
 #include "Stone.hpp"
 
 
-Drone * drone;
-Monster * monster;
-Player * player;
-Stone * stone;
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
 SDL_Event Game::event;
@@ -22,13 +18,13 @@ Entities * Game::entities = new Entities();
 // Constants
 int Game::width;
 int Game::height;
-int Game::rows = 20;
-int Game::cols = 35;
+int Game::rows = 10;
+int Game::cols = 10;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
 int Game::block_w = 32;
-int Game::wall_thickness = 5;
+int Game::wall_thickness = 32;
 bool Game::no_trap = true;
 int Game::player_h = 30;
 int Game::player_w = 30;
@@ -38,6 +34,8 @@ int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
 int Game::seed = 0;
+int Game::response = 0;
+int Game::send = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
 int Game::window_h = block_h * rows + (rows - 1) * wall_thickness;
@@ -75,13 +73,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		entities->Add(stone);
 	}
 	
-	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 100);
+	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 80);
 	monster = new Monster(SDL_Rect{0, 0, original_player_h, original_player_w}, 50);
-	player = new Player(SDL_Rect{0, 0, original_player_h, original_player_w}, 0);
+	
 	drone->set_stones();
-	monster->set_dest(player);
 	entities->Add(drone);
-	entities->Add(player);
 	entities->Add(monster);
 	Game::game_maze->DrawMaze();
 }
@@ -98,6 +94,9 @@ void Game::update(){
 	for(auto & player : * entities->players){
 		player->Update();
 	}
+	for(auto & remote : * entities->remotes){
+		remote->Update();
+	}
 	for(auto & monster : * entities->monsters){
 		monster->Update();
 	}
@@ -113,6 +112,9 @@ void Game::render(){
 	}
 	for(auto & player : * entities->players){
 		player->Render();
+	}
+	for(auto & remote : * entities->remotes){
+		remote->Render();
 	}
 	for(auto & monster : * entities->monsters){
 		monster->Render();
