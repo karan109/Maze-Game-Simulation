@@ -96,7 +96,6 @@ int main(int argc, char* argv[]){
         }
         string command = string(buf, 0, bytesRecv);
         Game::response = stoi(command);
-        cout<<Game::response<<endl;
         int sendRes = send(clientSocket, to_string(Game::send).c_str(), command.size()+1, 0);
         if(sendRes == -1){
             cout<<"Could not send through server"<<endl;

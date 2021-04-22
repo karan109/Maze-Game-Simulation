@@ -56,7 +56,6 @@ int main(int argc, char* argv[]){
         int bytesRecv = recv(sock, buf, 4096, 0);
         string response = string(buf, bytesRecv);
         Game::response = stoi(response);
-        cout<<response<<endl;
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
