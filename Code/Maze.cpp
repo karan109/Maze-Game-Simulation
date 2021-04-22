@@ -12,7 +12,7 @@ Maze::Maze(){
 	water = Texture::LoadTexture("../Images/water.png");
 	white = Texture::LoadTexture("../Images/white.png");
 	black = Texture::LoadTexture("../Images/black.png");
-	Graph g(Game::rows, Game::cols, 0);
+	Graph g(Game::rows, Game::cols, Game::seed);
 	auto lvl1 = g.exportMtr;
 	LoadMaze(lvl1);
 	graph = g;

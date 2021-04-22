@@ -1,10 +1,13 @@
 CC := g++
 CFLAGS := -std=c++11 -w
-SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2_net -lSDL2
+SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2_image -lSDL2_mixer -lSDL2_ttf -lSDL2
 COMPILE := $(CC) $(CFLAGS)
+OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o
 
-all: Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o
-	$(COMPILE) -o game Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o main.o $(SDLFLAGS)
+all: $(OBJS) server.o client.o main.o
+	$(COMPILE) -o game $(OBJS) main.o $(SDLFLAGS)
+	$(COMPILE) -o server $(OBJS) server.o $(SDLFLAGS)
+	$(COMPILE) -o client $(OBJS) client.o $(SDLFLAGS)
 	./game
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
@@ -43,6 +46,12 @@ Texture.o : Texture.cpp Game.hpp Texture.hpp includes.hpp
 main.o : main.cpp Game.hpp includes.hpp
 	$(COMPILE) -c main.cpp $(SDLFLAGS)
 
+server.o : server.cpp Game.hpp includes.hpp
+	$(COMPILE) -c server.cpp $(SDLFLAGS)
+
+client.o : client.cpp Game.hpp includes.hpp
+	$(COMPILE) -c client.cpp $(SDLFLAGS)
+
 Game.o : Game.cpp Maze.hpp Entity.hpp Texture.hpp Game.hpp Entities.hpp Entity.hpp Player.hpp includes.hpp
 	$(COMPILE) -c Game.cpp $(SDLFLAGS)
 
@@ -51,4 +60,4 @@ run:
 
 clean:
 	rm *.o
-	rm game
+	rm game server client

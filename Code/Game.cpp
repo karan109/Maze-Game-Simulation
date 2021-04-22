@@ -37,6 +37,11 @@ int Game::original_player_w = 32;
 int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
+int Game::seed = 0;
+int Game::FPS = 60;
+int Game::frameDelay = 1000 / FPS;
+int Game::window_h = block_h * rows + (rows - 1) * wall_thickness;
+int Game::window_w = block_w * cols + (cols - 1) * wall_thickness;
 
 Game::Game(){
 
@@ -63,7 +68,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	else{
 		isRunning = false;
 	}
-	srand(time(0));
+	srand(seed);
 	Game::game_maze = new Maze();
 	for(int i=0;i<num_stones;i++){
 		stone = new Stone("../Images/stone.png", SDL_Rect{0, 0, stone_h, stone_w}, rand() % (Game::rows * Game::cols), 15, 10);

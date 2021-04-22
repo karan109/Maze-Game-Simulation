@@ -2,8 +2,8 @@
 #include "Game.hpp"
 
 Graph::Graph(int heightMtr, int widthMtr, int seed){
-	// srand(seed);
-	srand(time(0));
+	srand(seed);
+	// srand(time(0));
 	height = heightMtr;
 	width = widthMtr;
 	n = height * width;
@@ -78,7 +78,7 @@ void Graph::removeLeaves(vector<vector<int>> & final_adj, bool remove){
 				final_adj[neighbor].push_back(leaf);
 				final_adj[leaf].push_back(neighbor);
 				edges.push_back({neighbor, leaf});
-				if(final_adj[neighbor].size() == 1){
+				if(final_adj[neighbor].size() == 2){
 					leaves.erase(neighbor);
 				}
 				break;

@@ -37,6 +37,11 @@ public:
 	static int stone_w;
 	static int stone_h;
 	static int num_stones;
+	static int seed;
+	static int FPS;
+	static int frameDelay;
+	static int window_h;
+	static int window_w;
 
 private:
 	int ct = 0;
