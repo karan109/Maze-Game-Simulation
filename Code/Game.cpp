@@ -6,6 +6,7 @@
 #include "Drone.hpp"
 #include "Monster.hpp"
 #include "Stone.hpp"
+#include "Snitch.hpp"
 
 
 Maze * Game::game_maze = new Maze();
@@ -33,13 +34,18 @@ int Game::original_player_w = 32;
 int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
-int Game::seed = 0;
-int Game::response = 0;
-int Game::send = 0;
+// int Game::seed = 0;
+int Game::seed = time(0);
+// int Game::response = 0;
+// int Game::send = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
 int Game::window_h = block_h * rows + (rows - 1) * wall_thickness;
 int Game::window_w = block_w * cols + (cols - 1) * wall_thickness;
+
+int Game::original_snitch_h = 414;
+int Game::original_snitch_w = 874;
+
 
 Game::Game(){
 
@@ -75,10 +81,21 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 80);
 	monster = new Monster(SDL_Rect{0, 0, original_player_h, original_player_w}, 50);
-	
+	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
+
+
+
+
+	drone->set_mode_id(3);
 	drone->set_stones();
+	
+	// monster motion. (in main)
+	// monster->setmode0()
+
 	entities->Add(drone);
 	entities->Add(monster);
+	entities->Add(snitch);
+
 	Game::game_maze->DrawMaze();
 }
 void Game::handleEvents(){
@@ -122,6 +139,10 @@ void Game::render(){
 	for(auto & drone : * entities->drones){
 		drone->Render();
 	}
+	for(auto & snitch : * entities->snitches){
+		snitch->Render();
+	}
+
 	SDL_RenderPresent(renderer);
 }
 void Game::clean(){

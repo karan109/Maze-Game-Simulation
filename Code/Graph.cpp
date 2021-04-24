@@ -4,6 +4,7 @@
 Graph::Graph(int heightMtr, int widthMtr, int seed){
 	srand(seed);
 	// srand(time(0));
+
 	height = heightMtr;
 	width = widthMtr;
 	n = height * width;

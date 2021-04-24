@@ -42,13 +42,25 @@ public:
 	static int frameDelay;
 	static int window_h;
 	static int window_w;
-	static int response;
-	static int send;
+	// static int response;
+	// static int send;
+
+	// static int drone_starting_node = 
+	// static int monster_starting_node = 
+	// static int snitch_starting_node = 
+
+	static int original_snitch_h;
+	static int original_snitch_w;
+
 	Player * player1;
-	Remote * player2;
+	// Player * player2;
+
+	// Remote * player2;
 	Drone * drone;
 	Monster * monster;
 	Stone * stone;
+	Snitch * snitch;
+
 
 private:
 	int ct = 0;

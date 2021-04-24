@@ -36,22 +36,22 @@ void Player::Update(){
 		auto key = Game::event.key.keysym.sym;
 		// if no collision originally then change velocity
 		if(key == SDLK_UP and obstacles.find(4) == obstacles.end()){
-			Game::send = 1;
+			// Game::send = 1;
 			yv = -mag;
 			xv = 0;
 		}
 		else if(key == SDLK_DOWN and obstacles.find(3) == obstacles.end()){
-			Game::send = 2;
+			// Game::send = 2;
 			yv = mag;
 			xv = 0;
 		}
 		else if(key == SDLK_RIGHT and obstacles.find(1) == obstacles.end()){
-			Game::send = 3;
+			// Game::send = 3;
 			xv = mag;
 			yv = 0;
 		}
 		else if(key == SDLK_LEFT and obstacles.find(2) == obstacles.end()){
-			Game::send = 4;
+			// Game::send = 4;
 			xv = -mag;
 			yv = 0;
 		}
@@ -60,19 +60,19 @@ void Player::Update(){
 	if(Game::event.type == SDL_KEYUP){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_UP){
-			Game::send = -1;
+			// Game::send = -1;
 			yv = 0;
 		}
 		else if(key == SDLK_DOWN){
-			Game::send = -2;
+			// Game::send = -2;
 			yv = 0;
 		}
 		else if(key == SDLK_RIGHT){
-			Game::send = -3;
+			// Game::send = -3;
 			xv = 0;
 		}
 		else if(key == SDLK_LEFT){
-			Game::send = -4;
+			// Game::send = -4;
 			xv = 0;
 		}
 	}
@@ -85,7 +85,7 @@ void Player::Update(){
 	int block_centre_x = coords.second + Game::block_w / 2;
 	if(yv == 0 and xv != 0){
 		if( (xv == mag and Entity::getRight() != 1) or (xv == -mag and Entity::getLeft() != 1) ){
-			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)   // why?
+			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)   // smooth turn
 				ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 		}
 	}

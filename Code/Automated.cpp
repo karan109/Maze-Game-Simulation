@@ -1,5 +1,6 @@
 #include "Automated.hpp"
 #include "Game.hpp"
+#include "Collision.hpp"
 #include "Stone.hpp"
 #include "Entities.hpp"
 #include "Graph.hpp"
@@ -66,4 +67,91 @@ void Automated::set_stones(){
 	}
 	current = path.front();
 	path.pop();
+}
+
+
+void Automated::set_dest(Entity * target_param){
+	while (!path.empty()){
+		path.pop();
+	}
+	target = target_param;
+	dest = target->getBlock();
+	int init = Entity::getBlock();
+	auto path_vector = Game::game_maze->graph.getPath(init, dest);
+	for(auto vertex : path_vector){
+		path.push(vertex);
+	}
+	current = path.front();
+	path.pop();
+}
+
+// void Automated::set_mode (int mode_id, Entity * target_param) {
+// 	if (mode_id != 0) return;
+// 	mode = 0;
+// 	target = target_param;
+// 	Automated::set_dest(target_param);
+// }
+
+// void Automated::set_mode (int mode_id, int dest_param) {
+// 	if (mode_id != 1) return;
+// 	mode = 1;
+// 	dest = dest_param;
+// 	Automated::set_dest(dest_param);
+// }
+
+
+// void Automated::set_mode(int mode_id) {
+// 	if (mode_id == 2) {
+// 		mode = 2;
+
+// 		// set initial velocity
+// 		xv = mag;
+// 	}
+
+// 	if (mode_id == 3) {
+// 		mode = 3;
+// 		Automated::set_stones();
+// 	}
+
+// }
+
+// void Automated::set_mode3() {
+// 	mode = 3;
+// 	Automated::set_stones();
+// }
+
+void Automated::set_mode_id(int mode_id) {
+	mode = mode_id;
+}
+
+
+
+void Automated::Update(){
+
+
+	if (mode == 0) {
+
+
+	}
+
+
+	if (mode == 1) {
+
+	}
+
+
+	if (mode == 2) {
+
+
+	}
+
+
+
+	if (mode == 3) {
+
+
+		
+	}
+
+
 }

@@ -15,7 +15,7 @@ void Drone::Update(){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		if(dir == 1){
 			xv = 0;
-			xpos -= mag * speed;
+			xpos -= mag * speed;		// different from player
 			return;
 		}
 		else if(dir == 2){
@@ -36,7 +36,7 @@ void Drone::Update(){
 	}
 	auto coords = getAutoBlockCoords();
 	int current = getBlock();
-	int next = -1;
+	int next = INT_MIN;
 	if(!path.empty()){
 		next = path.front();
 		if(next == current){
