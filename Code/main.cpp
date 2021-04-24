@@ -14,7 +14,7 @@ int main(int argc, char* argv[]){
     Game::entities->Add(game->player1);
     Game::entities->Add(game->player2);
 
-    game->monster->set_dest(game->player1);
+    game->monster->set_dest(game->player2);
 
     while(game->running()){
 

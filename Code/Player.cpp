@@ -10,6 +10,7 @@ void Player::Update(){
 	set<int> obstacles;
 	Entity::keepInside();
 	auto coords = Entity::getCurrentBlockCoords();
+	// if collision w wall then bring back to centre of path
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		obstacles.insert(dir);
@@ -30,8 +31,10 @@ void Player::Update(){
 			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
 		}
 	}
+	// if arrow key pressed
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
+		// if no collision originally then change velocity
 		if(key == SDLK_UP and obstacles.find(4) == obstacles.end()){
 			Game::send = 1;
 			yv = -mag;
@@ -53,6 +56,7 @@ void Player::Update(){
 			yv = 0;
 		}
 	}
+	// if arrow key released
 	if(Game::event.type == SDL_KEYUP){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_UP){
@@ -81,7 +85,7 @@ void Player::Update(){
 	int block_centre_x = coords.second + Game::block_w / 2;
 	if(yv == 0 and xv != 0){
 		if( (xv == mag and Entity::getRight() != 1) or (xv == -mag and Entity::getLeft() != 1) ){
-			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)
+			if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 20)   // why?
 				ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 		}
 	}

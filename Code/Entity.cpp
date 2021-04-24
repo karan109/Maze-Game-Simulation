@@ -66,7 +66,7 @@ SDL_Rect Entity::getBB(){
 	return destR;
 }
 
-// Get currrent node number
+// Get currrent node number ie the big block number
 int Entity::getBlock(){
 	int centre_x = xpos + destR.w / 2;
 	int centre_y = ypos + destR.h / 2;
@@ -100,6 +100,7 @@ pair<int, int> Entity::getCurrentBlockCoords(){
 }
 
 // 1 if wall is present towards right, 0 otherwise
+// the right entry of whatever mtr block this entity is in. in case nothing on right then also return 1.
 bool Entity::getRight(){
 	int block_num = getBlock();
 	int row = block_num / Game::cols;
@@ -174,45 +175,18 @@ void Entity::keepInside(){
 	}
 }
 
-// Coordinates of current approximate block
+// Coordinates of current approximate block (big block)
 pair<int, int> Entity::getAutoBlockCoords(){
 	int block_num = getBlock();
 	int row = block_num / Game::cols;
 	int col = block_num % Game::cols;
-	auto & game_Maze = Game::game_maze->game_Maze;
-	int mtr_row = row * 2;
-	int mtr_col = col * 2;
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	if(mtr_row % 2 == 0 and mtr_col % 2 == 0){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness), (mtr_col / 2) * (Game::block_w + Game::wall_thickness) };
-	}
-	else if(mtr_row % 2 == 1 and mtr_col % 2 == 0){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) };
-	}
-	else if(mtr_row % 2 == 0 and mtr_col % 2 == 1){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness), (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
-	}
-	else return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
+	return { (row) * (Game::block_h + Game::wall_thickness), (col) * (Game::block_w + Game::wall_thickness) };
+
 }
 
-// Coordinates of a block given its node number
+// Coordinates of a big block given its node number
 pair<int, int> Entity::getAutoBlockCoords(int block_num){
 	int row = block_num / Game::cols;
 	int col = block_num % Game::cols;
-	auto & game_Maze = Game::game_maze->game_Maze;
-	int mtr_row = row * 2;
-	int mtr_col = col * 2;
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	if(mtr_row % 2 == 0 and mtr_col % 2 == 0){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness), (mtr_col / 2) * (Game::block_w + Game::wall_thickness) };
-	}
-	else if(mtr_row % 2 == 1 and mtr_col % 2 == 0){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) };
-	}
-	else if(mtr_row % 2 == 0 and mtr_col % 2 == 1){
-		return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness), (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
-	}
-	else return { (mtr_row / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h, (mtr_col / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w };
+	return { (row) * (Game::block_h + Game::wall_thickness), (col) * (Game::block_w + Game::wall_thickness) };
 }

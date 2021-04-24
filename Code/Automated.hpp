@@ -9,7 +9,7 @@ public:
 	void set_stones(); // Set path to go to all stones
 protected:
 	int dest; // final destination (not needed in case of stones)
-	queue<int> path; // Paht as queue of node numbers
+	queue<int> path; // Path as queue of node numbers
 	int current; // Current node number of entity
 	void print_path(); // Prints path for debugging
 };

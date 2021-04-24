@@ -10,7 +10,9 @@ Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.p
 
 void Monster::Update(){
 	if(target == nullptr) return;
+	// changes path as target moves 
 	set_dest(target);
+	
 	Entity::keepInside();
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
@@ -35,8 +37,11 @@ void Monster::Update(){
 			return;
 		}
 	}
+	// if collides with target then return
 	int dir = Collision::AABB(getBB(), target->getBB(), getXV(), getYV(), target->getXV(), target->getYV());
 	if(dir != 0){
+		xv = 0;	//cleanup added
+		yv = 0;
 		return;
 	}
 	auto coords = getAutoBlockCoords();
