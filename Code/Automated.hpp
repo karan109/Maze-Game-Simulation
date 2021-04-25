@@ -22,18 +22,28 @@ void set_mode_id(int mode_id);
 // mode = 0
 Entity * target;
 void set_dest(Entity * target_param);
+void Update0();
+
 
 // mode = 1
 int dest;
 // bool reached = false;
 void set_dest(int dest_param);
+void Update1();
+
+
 
 // mode = 2
+void set_path_mode2();
+void Update2();
+
+
 
 
 //mode = 3
 bool reached = false;
 void set_stones();
+void Update3();
 
 
 
