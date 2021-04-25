@@ -23,7 +23,16 @@ public:
 	bool getLeft();
 	bool getUp();
 	bool getDown();
+
+	bool can_go_right(int block_num);
+	bool can_go_left(int block_num);
+	bool can_go_up(int block_num);
+	bool can_go_down(int block_num);
+
+	bool is_inside_node(); 
+
 	void keepInside();
+
 	pair<int, int> getCurrentBlockCoords();
 	pair<int, int> getAutoBlockCoords();
 	pair<int, int> getAutoBlockCoords(int block_num);

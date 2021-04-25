@@ -14,8 +14,8 @@ int main(int argc, char* argv[]){
     Game::entities->Add(game->player1);
     // Game::entities->Add(game->player2);
 
-    game->monster->set_mode_id(2);
-    // game->monster->set_dest(game->player1);
+    game->monster->set_mode_id(0);
+    game->monster->set_dest(game->player1);
 
 
 

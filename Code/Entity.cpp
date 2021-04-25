@@ -190,3 +190,67 @@ pair<int, int> Entity::getAutoBlockCoords(int block_num){
 	int col = block_num % Game::cols;
 	return { (row) * (Game::block_h + Game::wall_thickness), (col) * (Game::block_w + Game::wall_thickness) };
 }
+
+
+
+
+bool Entity::can_go_right(int block_num) {
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
+	int mtr_row = row * 2;
+	int mtr_col = col * 2;
+	auto & game_Maze = Game::game_maze->game_Maze;
+
+	if(mtr_col + 1 < game_Maze[0].size()) return !(game_Maze[mtr_row][mtr_col + 1]);
+	else return 0;
+}
+bool Entity::can_go_left(int block_num) {
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
+	int mtr_row = row * 2;
+	int mtr_col = col * 2;
+	auto & game_Maze = Game::game_maze->game_Maze;
+
+	if(mtr_col - 1 >= 0) return ! game_Maze[mtr_row][mtr_col - 1];
+	else return 0;
+
+}
+bool Entity::can_go_up(int block_num) {
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
+	int mtr_row = row * 2;
+	int mtr_col = col * 2;
+
+	auto & game_Maze = Game::game_maze->game_Maze;
+
+	if(mtr_row - 1 >= 0) return ! game_Maze[mtr_row - 1][mtr_col];
+	else return 0;
+}
+
+bool Entity::can_go_down(int block_num) {
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
+	int mtr_row = row * 2;
+	int mtr_col = col * 2;
+
+	auto & game_Maze = Game::game_maze->game_Maze;
+
+	if(mtr_row + 1 < game_Maze.size()) return !game_Maze[mtr_row + 1][mtr_col];
+	else return 0;
+}
+
+
+bool Entity::is_inside_node() {
+	int block_num = getBlock();
+	int row = block_num / Game::cols;
+	int col = block_num % Game::cols;
+	auto & game_Maze = Game::game_maze->game_Maze;
+	int mtr_row = row * 2;
+	int mtr_col = col * 2;
+	int centre_x = xpos + destR.w / 2;
+	int centre_y = ypos + destR.h / 2;
+
+	if(centre_y >= (row * (Game::block_h + Game::wall_thickness) + Game::block_h) ) return false;
+	if(centre_x >= (col * (Game::block_w + Game::wall_thickness) + Game::block_w) ) return false;
+	return true;
+}
