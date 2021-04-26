@@ -9,6 +9,7 @@
 #include "Stone.hpp"
 #include "Remote.hpp"
 #include "Snitch.hpp"
+#include "Health.hpp"
 
 
 // Maintain a list of all entities
@@ -21,6 +22,7 @@ public:
 	vector<Stone * > * stones;
 	vector<Remote * > * remotes;
 	vector<Snitch * > * snitches;
+	vector<Health * > * healths;
 	Entities(){
 		players = new vector<Player *>(0);
 		walls = new vector<Wall *>(0);
@@ -29,6 +31,7 @@ public:
 		stones = new vector<Stone *>(0);
 		remotes = new vector<Remote *>(0);
 		snitches = new vector<Snitch *>(0);
+		healths = new vector<Health *>(0);
 	}
 	void Add(Player * player){
 		players->push_back(player);
@@ -51,6 +54,8 @@ public:
 	void Add(Snitch * snitch){
 		snitches->push_back(snitch);
 	}
-
+	void Add(Health * health){
+		healths->push_back(health);
+	}
 
 };

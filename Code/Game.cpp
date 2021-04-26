@@ -19,13 +19,13 @@ Entities * Game::entities = new Entities();
 // Constants
 int Game::width;
 int Game::height;
-int Game::rows = 10;
-int Game::cols = 10;
+int Game::rows = 12;
+int Game::cols = 25;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
 int Game::block_w = 32;
-int Game::wall_thickness = 32;
+int Game::wall_thickness = 16;
 bool Game::no_trap = true;
 int Game::player_h = 30;
 int Game::player_w = 30;
@@ -34,13 +34,14 @@ int Game::original_player_w = 32;
 int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
+int Game::menu = 100;
 // int Game::seed = 0;
 int Game::seed = time(0);
 // int Game::response = 0;
 // int Game::send = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
-int Game::window_h = block_h * rows + (rows - 1) * wall_thickness;
+int Game::window_h = Game::menu + block_h * rows + (rows - 1) * wall_thickness;
 int Game::window_w = block_w * cols + (cols - 1) * wall_thickness;
 
 int Game::original_snitch_h = 414;
@@ -65,7 +66,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if(renderer){
-			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
 		}
 		isRunning = true;
 	}
@@ -96,6 +97,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	entities->Add(snitch);
 
 	Game::game_maze->DrawMaze();
+	auto background = Texture::LoadTexture("../Images/background.jpg");
+	// auto water = Texture::LoadTexture("../Images/water.png");
+	Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, menu, width, height - menu});
+	// Texture::Draw(water, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, 0, width, menu});
 }
 void Game::handleEvents(){
 	SDL_PollEvent(& event);
@@ -122,9 +127,13 @@ void Game::update(){
 	for(auto & snitch : * entities->snitches){
 		snitch->Update();
 	}
+	for(auto & health : * entities->healths){
+		health->Update();
+	}
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
+	
 	Game::game_maze->DrawMaze();
 	for(auto & stone : * entities->stones){
 		stone->Render();
@@ -144,6 +153,10 @@ void Game::render(){
 	for(auto & snitch : * entities->snitches){
 		snitch->Render();
 	}
+	for(auto & health : * entities->healths){
+		health->Render();
+	}
+	SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
 
 	SDL_RenderPresent(renderer);
 }

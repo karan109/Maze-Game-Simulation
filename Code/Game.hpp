@@ -42,6 +42,7 @@ public:
 	static int frameDelay;
 	static int window_h;
 	static int window_w;
+	static int menu;
 	// static int response;
 	// static int send;
 

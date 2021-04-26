@@ -3,6 +3,12 @@
 #include "Collision.hpp"
 
 Player::Player(SDL_Rect srcR_param, int start) : Entity("../Images/pacman.png", srcR_param, start){
+	showHealth = true;
+	health = 30;
+	if(showHealth){
+		health_box = new Health(srcR_param, this);
+		Game::entities->Add(health_box);
+	}
 }
 
 void Player::Update(){

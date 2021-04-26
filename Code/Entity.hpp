@@ -36,9 +36,11 @@ public:
 	pair<int, int> getCurrentBlockCoords();
 	pair<int, int> getAutoBlockCoords();
 	pair<int, int> getAutoBlockCoords(int block_num);
-	void Render();
+	virtual void Render();
 	int xpos; // x coordinate
 	int ypos; // y coordinate
+	bool showHealth;
+	int health = 100;
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity
