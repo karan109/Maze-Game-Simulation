@@ -47,12 +47,12 @@ void Snitch::Update() {
 		}
 	}
 	else if(counter == disapparation_time){
-		exists = false;
-		vanish = 1;
-		objTexture = vanish_texture;
-	}
+		// exists = false;
+		// vanish = 1;
+		// objTexture = vanish_texture;
+	// }
 
-	else if(counter == apparation_time){
+	// else if(counter == apparation_time){
 
 		counter = 0;
 		vanish_counter = 0;
@@ -64,7 +64,7 @@ void Snitch::Update() {
 		set_starting_node(starting_node);
 		set_path_mode2();
 
-		exists = true;
+		// exists = true;
 
 	}
 
