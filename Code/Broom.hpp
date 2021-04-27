@@ -1,0 +1,28 @@
+#pragma once
+
+#include "Entity.hpp"
+
+class Broom : public Entity{
+public:
+	Broom(SDL_Rect srcR_param, int start);
+	~Broom();
+
+	void Update();
+
+
+	SDL_Texture * vanish_texture;
+	SDL_Texture * broom_texture;
+
+
+	int disapparation_time;
+	int blinking_time;
+	int vanish_time;
+	int vanish_counter;
+	int apparation_time;
+
+	bool vanish;
+	bool exists = true;	
+
+private:
+
+};
