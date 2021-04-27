@@ -56,13 +56,13 @@ void Maze::DrawMaze(){
 			type = game_Maze[i][j];
 			if(i % 2 == 0 and j % 2 == 0){
 				path_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness);
-				path_dest.x = (j / 2) * (Game::block_w + Game::wall_thickness);
+				path_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness);
 				game_Maze[i][j] = 0;
 				Texture::Draw(water, path_src, path_dest);
 			}
 			else if(i % 2 == 1 and j % 2 == 0){
 				hor_wall_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h;
-				hor_wall_dest.x = (j / 2) * (Game::block_w + Game::wall_thickness);
+				hor_wall_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness);
 				if(type == 0){
 					game_Maze[i][j] = 0;
 					Texture::Draw(water, hor_wall_src, hor_wall_dest);
@@ -78,7 +78,7 @@ void Maze::DrawMaze(){
 			}
 			else if(i % 2 == 0 and j % 2 == 1){
 				vert_wall_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness);
-				vert_wall_dest.x = (j / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w;
+				vert_wall_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w;
 				if(type == 0){
 					game_Maze[i][j] = 0;
 					Texture::Draw(water, vert_wall_src, vert_wall_dest);
@@ -94,7 +94,7 @@ void Maze::DrawMaze(){
 			}
 			else{
 				small_wall_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h;
-				small_wall_dest.x = (j / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w;
+				small_wall_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w;
 				int neighbor_walls = 0;
 				if(game_Maze[i+1][j] == 1){
 					neighbor_walls ++;

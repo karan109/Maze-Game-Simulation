@@ -41,8 +41,8 @@ int Game::seed = time(0);
 // int Game::send = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
-int Game::window_h = Game::menu + block_h * rows + (rows - 1) * wall_thickness;
-int Game::window_w = block_w * cols + (cols - 1) * wall_thickness;
+int Game::window_h = Game::wall_thickness + Game::menu + block_h * rows + (rows - 1) * wall_thickness;
+int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wall_thickness;
 
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
@@ -133,7 +133,11 @@ void Game::update(){
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
-	
+	auto black = Texture::LoadTexture("../Images/black.png");
+	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
+	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu, wall_thickness, height - menu});
+	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{width - wall_thickness, menu, wall_thickness, height - menu});
+	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, height - wall_thickness, width, wall_thickness});
 	Game::game_maze->DrawMaze();
 	for(auto & stone : * entities->stones){
 		stone->Render();
