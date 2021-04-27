@@ -10,6 +10,8 @@
 #include "Remote.hpp"
 #include "Snitch.hpp"
 #include "Health.hpp"
+#include "Broom.hpp"
+
 
 
 // Maintain a list of all entities
@@ -23,6 +25,8 @@ public:
 	vector<Remote * > * remotes;
 	vector<Snitch * > * snitches;
 	vector<Health * > * healths;
+	vector<Broom * > * brooms;
+
 	Entities(){
 		players = new vector<Player *>(0);
 		walls = new vector<Wall *>(0);
@@ -32,6 +36,8 @@ public:
 		remotes = new vector<Remote *>(0);
 		snitches = new vector<Snitch *>(0);
 		healths = new vector<Health *>(0);
+		brooms = new vector<Broom *>(0);
+
 	}
 	void Add(Player * player){
 		players->push_back(player);
@@ -56,6 +62,15 @@ public:
 	}
 	void Add(Health * health){
 		healths->push_back(health);
+	}
+
+	void Add(Broom * broom){
+		brooms->push_back(broom);
+	}
+
+	void Delete (Broom * broom) {
+		auto position = find (brooms->begin(), brooms->end(), broom);
+		if (position != brooms->end()) brooms->erase(position);
 	}
 
 };
