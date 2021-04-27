@@ -6,6 +6,9 @@
 Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.png", srcR_param, start){
 	speed = 4;
 	// Set speed of drone
+
+	set_mode(3);
+
 }
 // Update function
 void Drone::Update(){

@@ -101,7 +101,12 @@ void Automated::set_mode (int mode_id, int dest_param) {
 
 void Automated::set_path_mode2() {
 
-	if (!path.empty()) return;
+	// if (!path.empty()) return;
+
+	// empty existing path
+	while(!path.empty()) {
+		path.pop();
+	}
 
 	vector <int> temp;
 	int current = getBlock();
@@ -172,6 +177,7 @@ void Automated::set_path_mode2() {
 void Automated::set_mode(int mode_id) {
 	if (mode_id == 2) {
 		mode = 2;
+
 
 		// set initial velocity
 		set_path_mode2();

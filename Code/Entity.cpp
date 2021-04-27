@@ -254,3 +254,14 @@ bool Entity::is_inside_node() {
 	if(centre_x >= (Game::wall_thickness + col * (Game::block_w + Game::wall_thickness) + Game::block_w) ) return false;
 	return true;
 }
+
+
+void Entity::set_starting_node(int start) {
+	auto coords = getAutoBlockCoords(start);
+	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
+	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
+	xpos = destR.x;
+	ypos = destR.y;
+	xv = 0;
+	yv = 0;
+}

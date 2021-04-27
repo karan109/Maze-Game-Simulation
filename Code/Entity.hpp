@@ -32,6 +32,7 @@ public:
 	bool is_inside_node(); 
 
 	void keepInside();
+	void set_starting_node(int start);
 
 	pair<int, int> getCurrentBlockCoords();
 	pair<int, int> getAutoBlockCoords();
