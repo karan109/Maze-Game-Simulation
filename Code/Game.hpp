@@ -54,6 +54,11 @@ public:
 	static int original_snitch_h;
 	static int original_snitch_w;
 
+	static int original_broom_h;
+	static int original_broom_w;
+	static bool broom_exists;
+	Broom * broom;
+
 	Player * player1;
 	// Player * player2;
 
