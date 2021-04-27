@@ -15,7 +15,7 @@ SDL_Event Game::event;
 
 // Initialize entities object to store all entities
 Entities * Game::entities = new Entities();
-
+TTF_Font* Game::font;
 // Constants
 int Game::width;
 int Game::height;
@@ -61,7 +61,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(fullscrean){
 		flags = SDL_WINDOW_FULLSCREEN;
 	}
-
 	if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		renderer = SDL_CreateRenderer(window, -1, 0);
@@ -69,11 +68,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
 		}
 		isRunning = true;
+		if(TTF_Init()==-1) {
+		    isRunning = false;
+		}
 	}
 	else{
 		isRunning = false;
 	}
 	srand(seed);
+	font = TTF_OpenFont("../Fonts/arial.ttf", 100);
 	Game::game_maze = new Maze();
 	for(int i=0;i<num_stones;i++){
 		stone = new Stone("../Images/stone.png", SDL_Rect{0, 0, stone_h, stone_w}, rand() % (Game::rows * Game::cols), 15, 10);
@@ -86,9 +89,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	drone->set_mode_id(3);
 	drone->set_stones();
-	
-	// monster motion. (in main)
-	// monster->setmode0()
 
 	snitch->set_mode_id(2);
 
@@ -97,9 +97,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	entities->Add(snitch);
 
 	Game::game_maze->DrawMaze();
-	auto background = Texture::LoadTexture("../Images/background.jpg");
+	// auto background = Texture::LoadTexture("../Images/background.jpg");
 	// auto water = Texture::LoadTexture("../Images/water.png");
-	Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, menu, width, height - menu});
+	// Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, menu, width, height - menu});
 	// Texture::Draw(water, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, 0, width, menu});
 }
 void Game::handleEvents(){
@@ -160,35 +160,14 @@ void Game::render(){
 	for(auto & health : * entities->healths){
 		health->Render();
 	}
-	SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
-
 	
-
-	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24); //this opens a font style and sets a size
-
-	SDL_Color White = {255, 0, 0};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
-
-	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "hello", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
-
-	SDL_Texture* Message = SDL_CreateTextureFromSurface(Game::renderer, surfaceMessage); //now you can convert it into a texture
-
-	SDL_Rect Message_rect; //create a rect
-	Message_rect.x = 10;  //controls the rect's x coordinate 
-	Message_rect.y = 50; // controls the rect's y coordinte
-	Message_rect.w = 1000; // controls the width of the rect
-	Message_rect.h = 1000; // controls the height of the rect
-
-	//Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understand
-
-	//Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
-
-	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
-
+	SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
 	SDL_RenderPresent(renderer);
 
 }
 void Game::clean(){
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	// SDL_DestroyTexture(renderer);
 	SDL_Quit();
 }

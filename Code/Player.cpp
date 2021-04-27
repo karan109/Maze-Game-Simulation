@@ -18,7 +18,7 @@ void Player::Update(){
 	counter++;
 	if(counter == Game::FPS / 2){
 		counter = 0;
-		if(health > 0) health--;
+		if(health > 0) health-= 5;
 	}
 	int block_num = Entity::getBlock();
 	set<int> obstacles;

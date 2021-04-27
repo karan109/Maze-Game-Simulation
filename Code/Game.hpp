@@ -43,6 +43,7 @@ public:
 	static int window_h;
 	static int window_w;
 	static int menu;
+	static TTF_Font* font;
 	// static int response;
 	// static int send;
 
