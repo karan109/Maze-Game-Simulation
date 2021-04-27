@@ -14,7 +14,27 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 	}
 }
 
+Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity("../Images/harry1.png", srcR_param, start){
+	animated = true;
+	srcR.y = srcR.h * 4;
+	frames = frames_param;
+	animate_speed = speed_param;
+	showHealth = true;
+	health = 100;
+	number = number_param;
+	if(showHealth){
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
+		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
+	}
+}
+
+
 void Player::Update(){
+	if(animated){
+		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
+	}
 	counter++;
 	if(counter == Game::FPS / 2){
 		counter = 0;
@@ -93,6 +113,35 @@ void Player::Update(){
 			// Game::send = -4;
 			xv = 0;
 		}
+	}
+	if(yv > 0){
+		srcR.y = srcR.h * 4;
+		face = 3;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(yv < 0){
+		srcR.y = srcR.h * 7;
+		face = 4;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv > 0){
+		srcR.y = srcR.h * 6;
+		face = 1;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv < 0){
+		srcR.y = srcR.h * 5;
+		face = 2;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else{
+		// srcR.y = srcR.h * 4;
+		// srcR.x = srcR.w * 7;
+		animated = false;
 	}
 	int row = block_num / Game::cols;
 	int col = block_num % Game::cols;

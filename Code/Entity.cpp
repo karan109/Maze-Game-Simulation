@@ -17,6 +17,10 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	yv = 0;
 }
 
+
+
+
+
 // Constructor when start coordinates are given as Rect (destR_param)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param){
 	objTexture = Texture::LoadTexture(texturesheet);

@@ -44,6 +44,10 @@ public:
 	int health = 100;
 	int counter = 0;
 	int number;
+	bool animated = false;
+	int frames = 0;
+	int animate_speed = 100;
+	int face = 3;
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

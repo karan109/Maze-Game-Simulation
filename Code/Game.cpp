@@ -97,7 +97,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	
 	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 80);
-	monster = new Monster(SDL_Rect{0, 0, original_player_h, original_player_w}, 50);
+	monster = new Monster(SDL_Rect{0, 0, 191, 161}, 50, 3, 80);
 	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
 	entities->Add(drone);
