@@ -63,6 +63,13 @@ public:
 	Stone * stone;
 	Snitch * snitch;
 
+	static Mix_Music * gMusic;
+	static Mix_Chunk * gScratch;
+	static Mix_Chunk * gHigh;
+	static Mix_Chunk * gMedium;
+	static Mix_Chunk * gLow;
+
+
 
 private:
 	int ct = 0;

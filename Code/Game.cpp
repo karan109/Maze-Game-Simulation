@@ -47,6 +47,12 @@ int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wa
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
 
+Mix_Music * Game::gMusic = nullptr;
+Mix_Chunk * Game::gScratch = nullptr;
+Mix_Chunk * Game::gHigh = nullptr;
+Mix_Chunk * Game::gMedium = nullptr;
+Mix_Chunk * Game::gLow = nullptr;
+
 
 Game::Game(){
 
@@ -71,6 +77,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		if(TTF_Init()==-1) {
 		    isRunning = false;
 		}
+		int imgFlags = IMG_INIT_PNG;
+        if( !( IMG_Init( imgFlags ) & imgFlags ) ){
+            isRunning = false;
+        }
+        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
+            isRunning = false;
+        }
 	}
 	else{
 		isRunning = false;
@@ -92,6 +105,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	entities->Add(snitch);
 
 	Game::game_maze->DrawMaze();
+
+	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
+	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
+	// gHigh = Mix_LoadWAV( "../Music/high.wav" );
+	// gMedium = Mix_LoadWAV( "../Music/medium.wav" );
+	// gLow = Mix_LoadWAV( "../Music/low.wav" );
+
 	// auto background = Texture::LoadTexture("../Images/background.jpg");
 	// auto water = Texture::LoadTexture("../Images/water.png");
 	// Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, menu, width, height - menu});
@@ -125,6 +145,7 @@ void Game::update(){
 	for(auto & health : * entities->healths){
 		health->Update();
 	}
+
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
@@ -163,6 +184,8 @@ void Game::render(){
 void Game::clean(){
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	// SDL_DestroyTexture(renderer);
+	Mix_Quit();
+	IMG_Quit();
+	TTF_Quit();
 	SDL_Quit();
 }

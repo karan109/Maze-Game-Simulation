@@ -20,7 +20,7 @@ int main(int argc, char* argv[]){
 
 
 
-
+    Mix_PlayMusic( Game::gMusic, -1 );
     while(game->running()){
 
         frameStart = SDL_GetTicks();
