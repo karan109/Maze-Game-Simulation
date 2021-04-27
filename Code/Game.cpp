@@ -162,7 +162,30 @@ void Game::render(){
 	}
 	SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
 
+	
+
+	TTF_Font* Sans = TTF_OpenFont("Sans.ttf", 24); //this opens a font style and sets a size
+
+	SDL_Color White = {255, 0, 0};  // this is the color in rgb format, maxing out all would give you the color white, and it will be your text's color
+
+	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "hello", White); // as TTF_RenderText_Solid could only be used on SDL_Surface then you have to create the surface first
+
+	SDL_Texture* Message = SDL_CreateTextureFromSurface(Game::renderer, surfaceMessage); //now you can convert it into a texture
+
+	SDL_Rect Message_rect; //create a rect
+	Message_rect.x = 10;  //controls the rect's x coordinate 
+	Message_rect.y = 50; // controls the rect's y coordinte
+	Message_rect.w = 1000; // controls the width of the rect
+	Message_rect.h = 1000; // controls the height of the rect
+
+	//Mind you that (0,0) is on the top left of the window/screen, think a rect as the text's box, that way it would be very simple to understand
+
+	//Now since it's a texture, you have to put RenderCopy in your game loop area, the area where the whole code executes
+
+	SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+
 	SDL_RenderPresent(renderer);
+
 }
 void Game::clean(){
 	SDL_DestroyWindow(window);

@@ -41,6 +41,8 @@ public:
 	int ypos; // y coordinate
 	bool showHealth;
 	int health = 100;
+	int counter = 0;
+	int number;
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

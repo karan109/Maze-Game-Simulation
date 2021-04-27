@@ -2,16 +2,24 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 
-Player::Player(SDL_Rect srcR_param, int start) : Entity("../Images/pacman.png", srcR_param, start){
+Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
 	showHealth = true;
-	health = 30;
+	health = 100;
+	number = number_param;
 	if(showHealth){
-		health_box = new Health(srcR_param, this);
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
 		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
 	}
 }
 
 void Player::Update(){
+	counter++;
+	if(counter == Game::FPS / 2){
+		counter = 0;
+		if(health > 0) health--;
+	}
 	int block_num = Entity::getBlock();
 	set<int> obstacles;
 	Entity::keepInside();
