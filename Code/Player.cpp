@@ -29,18 +29,22 @@ void Player::Update(){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		obstacles.insert(dir);
 		if(dir == 1){
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x - Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 2){
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x + u->getBB().w + Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 3){
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y - Game::block_h / 2 - destR.h / 2;
 		}
 		else if(dir == 4){
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
 		}
