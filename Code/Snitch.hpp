@@ -20,6 +20,7 @@ public:
 
 	bool vanish;
 	bool exists = true;	
+	bool disappearing_mode = 0;
 
 private:
 

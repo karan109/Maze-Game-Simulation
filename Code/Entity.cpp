@@ -269,3 +269,91 @@ void Entity::set_starting_node(int start) {
 	xv = 0;
 	yv = 0;
 }
+
+bool Entity::in_sight(Entity * e1, Entity * e2) {
+	auto & game_maze = Game::game_maze->game_Maze;
+
+	int n1 = e1->getBlock();
+	int row1 = n1 / Game::cols;
+	int col1 = n1 % Game::cols;
+
+	int n2 = e2->getBlock();
+	int row2 = n2 / Game::cols;
+	int col2 = n2 % Game::cols;
+
+	if (row1 == row2) {
+		for (int i = min(col1, col2) + 1 ; i < max (col1, col2) ; ++i) {
+			if (game_maze[row1][i] == 1) return false;
+		}
+		return true;
+	}
+	else if (col1 == col2) {
+		for (int i = min(row1, row2) + 1 ; i < max (row1, row2) ; ++i) {
+			if (game_maze[i][col1] == 1) return false;
+		}
+		return true;
+	}
+	return false;
+}
+int Entity::distance(Entity * e1, Entity * e2) {
+	auto & graph = Game::game_maze->graph;
+
+	int n1 = e1->getBlock();
+	int n2 = e2->getBlock();
+	
+	return graph.distance(n1, n2);
+
+} 
+
+int Entity::is_frightened(Entity * e1, Entity * e2) {
+	
+	int n1 = e1->getBlock();
+	int row1 = n1 / Game::cols;
+	int col1 = n1 % Game::cols;
+	int xv1 = e1->getXV();
+	int x1 = e1->getX();
+	int yv1 = e1->getYV();
+	int y1 = e1->getY();
+
+	int positive_xv1 = abs(xv1);
+	int negative_xv1 = -1*abs(xv1);
+	int positive_yv1 = abs(yv1);
+	int negative_yv1 = -1*abs(yv1);
+
+	int n2 = e2->getBlock();
+	int row2 = n2 / Game::cols;
+	int col2 = n2 % Game::cols;
+	int xv2 = e2->getXV();
+	int x2 = e2->getX();
+	int yv2 = e2->getYV();
+	int y2 = e2->getY();
+
+	
+	if (in_sight(e1, e2) and distance(e1, e2) <= 7) {
+		if (row1 == row2) {
+			if (x1 - x2 >= 0 and xv1 - xv2 < 0) {
+				//change xv1 from - to + cannot go left
+				// e1->setXV(positive_xv1);
+				return 3;
+			}
+			else if (x1 - x2 < 0 and xv1 - xv2 > 0) {
+				//change xv1 from + to - cannot go right
+				// e1->setXV(negtive_xv1);
+				return 1;
+			}
+		}
+		if (col1 == col2) {
+			if (y1 - y2 >= 0 and yv1 - yv2 < 0) {
+				//change yv1 from - to + cannot go down
+				// e1->setYV(positive_yv1);
+				return 2;
+			}
+			if (y1 - y2 < 0 and yv1 - yv2 >= 0) {
+				//change xv1 from + to - cannot go up
+				// e1->setYV(negative_yv1);
+				return 4;
+			}
+		}
+	}
+	return 0;
+}

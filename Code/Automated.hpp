@@ -34,7 +34,7 @@ void Update1();
 
 
 // mode = 2
-void set_path_mode2();
+void set_path_mode2(int x);
 void Update2();
 
 

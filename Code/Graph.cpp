@@ -290,3 +290,10 @@ vector<vector<int>> Graph::permute(int n){
 	}
 	return result;
 }
+int Graph::distance(int src, int des) {
+	vector<int> v;
+	v.push_back(des);
+	vector<int> ans = getDistances(src, v);
+	if (ans.empty()) return -1;
+	else return ans[0];
+}

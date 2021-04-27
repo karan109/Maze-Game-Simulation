@@ -99,7 +99,7 @@ void Automated::set_mode (int mode_id, int dest_param) {
 	Automated::set_dest(dest_param);
 }
 
-void Automated::set_path_mode2() {
+void Automated::set_path_mode2(int x) {
 
 	// if (!path.empty()) return;
 
@@ -114,38 +114,38 @@ void Automated::set_path_mode2() {
 
 
 	if (xv == mag and yv == 0) {
-		if (Entity::can_go_right(current)) temp.push_back(0);
-		if (Entity::can_go_down(current)) temp.push_back(1);
-		// if (Entity::can_go_left(current)) temp.push_back(2);
-		if (Entity::can_go_up(current)) temp.push_back(3);
+		if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
+		if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+		// if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+		if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
 	}
 
 	if (xv == -mag and yv == 0) {
-		// if (Entity::can_go_right(current)) temp.push_back(0);
-		if (Entity::can_go_down(current)) temp.push_back(1);
-		if (Entity::can_go_left(current)) temp.push_back(2);
-		if (Entity::can_go_up(current)) temp.push_back(3);
+		// if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
+		if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+		if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+		if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
 	}
 
 	if (yv == mag and xv == 0) {
-		if (Entity::can_go_right(current)) temp.push_back(0);
-		if (Entity::can_go_down(current)) temp.push_back(1);
-		if (Entity::can_go_left(current)) temp.push_back(2);
-		// if (Entity::can_go_up(current)) temp.push_back(3);
+		if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
+		if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+		if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+		// if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
 	}
 
 	if (yv == -mag and xv == 0) {
-		if (Entity::can_go_right(current)) temp.push_back(0);
-		// if (Entity::can_go_down(current)) temp.push_back(1);
-		if (Entity::can_go_left(current)) temp.push_back(2);
-		if (Entity::can_go_up(current)) temp.push_back(3);
+		if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
+		// if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+		if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+		if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
 	}
 
 	if (xv == 0 and yv == 0) {
-		if (Entity::can_go_right(current)) temp.push_back(0);
-		if (Entity::can_go_down(current)) temp.push_back(1);
-		if (Entity::can_go_left(current)) temp.push_back(2);
-		if (Entity::can_go_up(current)) temp.push_back(3);
+		if (Entity::can_go_right(current) and x!= 1) temp.push_back(1);
+		if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+		if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+		if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
 	}
 
 	// assert(temp.size()!=0);
@@ -153,23 +153,26 @@ void Automated::set_path_mode2() {
 	int temp_dir = temp[rand() % temp.size()];
 	xv = 0;
 	yv = 0;
-	if (temp_dir == 0) {
+	if (temp_dir == 1) {
 		next = current + 1;
 		xv = mag; 
 	} 
-	if (temp_dir == 1) {
+	if (temp_dir == 2) {
 		next = current + Game::cols;
 		yv = mag; 
 	}
-	if (temp_dir == 2) {
+	if (temp_dir == 3) {
 		next = current - 1;
 		xv = -mag; 
 	}
-	if (temp_dir == 3) {
+	if (temp_dir == 4) {
 		next = current - Game::cols;
 		yv = -mag; 
 	}
 	path.push(next);
+
+
+
 
 
 }
@@ -180,7 +183,7 @@ void Automated::set_mode(int mode_id) {
 
 
 		// set initial velocity
-		set_path_mode2();
+		set_path_mode2(0);
 	}
 
 	if (mode_id == 3) {
@@ -339,7 +342,7 @@ void Automated::Update2() {
 		
 		if(path.empty()){
 
-			set_path_mode2();
+			set_path_mode2(0);
 
 			coords = getAutoBlockCoords();
 			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
@@ -369,8 +372,15 @@ void Automated::Update2() {
 			yv = -mag;
 			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 		}
-
 	}
+
+	int x = Entity::is_frightened(this, Game::entities->players->at(0));
+	if (x != 0) {
+			xv = 0;
+			yv = 0;
+			set_path_mode2(x);
+	}
+	
 	xpos += xv * speed;
 	ypos += yv * speed;
 	

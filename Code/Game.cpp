@@ -48,18 +48,18 @@ int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wa
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
 
-// <<<<<<< HEAD
+
 Mix_Music * Game::gMusic = nullptr;
 Mix_Chunk * Game::gScratch = nullptr;
 Mix_Chunk * Game::gHigh = nullptr;
 Mix_Chunk * Game::gMedium = nullptr;
 Mix_Chunk * Game::gLow = nullptr;
-// =======
+
 int Game::original_broom_h = 1274;
 int Game::original_broom_w = 2393;
 bool Game::broom_exists = 0;
 
-// >>>>>>> samanyu
+
 
 
 Game::Game(){
@@ -154,8 +154,7 @@ void Game::update(){
 		health->Update();
 	}
 
-// <<<<<<< HEAD
-// =======
+
 	if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
 		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
 		entities->Add(broom);
@@ -165,7 +164,7 @@ void Game::update(){
 	for(auto & broom : * entities->brooms){
 		broom->Update();
 	}
-// >>>>>>> samanyu
+
 }
 void Game::render(){
 	SDL_RenderClear(renderer);

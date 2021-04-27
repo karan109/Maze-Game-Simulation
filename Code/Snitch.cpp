@@ -23,49 +23,50 @@ Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png
 void Snitch::Update() {
 
 	// srand(Game::seed); //already done in Game.cpp?
-	
-	counter++;
-	// int one = Game::FPS;
+	if (disappearing_mode == 1) {
+		counter++;
+		// int one = Game::FPS;
 
-	if (counter ==  blinking_time) {
-		vanish = 1;
-		vanish_counter = 0;
-		objTexture = vanish_texture;
-	}
-
-	else if (counter > blinking_time and counter < disapparation_time) {
-		++vanish_counter;
-		if (vanish_counter == vanish_time) {
+		if (counter ==  blinking_time) {
+			vanish = 1;
 			vanish_counter = 0;
-			vanish = ! vanish ;
-			if (vanish) {
-				objTexture = vanish_texture;
-			}
-			else {
-				objTexture = snitch_texture;
+			objTexture = vanish_texture;
+		}
+
+		else if (counter > blinking_time and counter < disapparation_time) {
+			++vanish_counter;
+			if (vanish_counter == vanish_time) {
+				vanish_counter = 0;
+				vanish = ! vanish ;
+				if (vanish) {
+					objTexture = vanish_texture;
+				}
+				else {
+					objTexture = snitch_texture;
+				}
 			}
 		}
-	}
-	else if(counter == disapparation_time){
-		// exists = false;
-		// vanish = 1;
-		// objTexture = vanish_texture;
-	// }
+		else if(counter == disapparation_time){
+			// exists = false;
+			// vanish = 1;
+			// objTexture = vanish_texture;
+		// }
 
-	// else if(counter == apparation_time){
+		// else if(counter == apparation_time){
 
-		counter = 0;
-		vanish_counter = 0;
-		vanish = 0;
-		objTexture = snitch_texture;
+			counter = 0;
+			vanish_counter = 0;
+			vanish = 0;
+			objTexture = snitch_texture;
 
-		// set new position and velocity/path
-		int starting_node = rand() % (Game::rows * Game::cols);
-		set_starting_node(starting_node);
-		set_path_mode2();
+			// set new position and velocity/path
+			int starting_node = rand() % (Game::rows * Game::cols);
+			set_starting_node(starting_node);
+			set_path_mode2(0);
 
-		// exists = true;
+			// exists = true;
 
+		}
 	}
 
 	Automated::Update();
