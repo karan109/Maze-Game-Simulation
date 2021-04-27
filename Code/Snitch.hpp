@@ -5,9 +5,21 @@
 
 class Snitch : public Automated{
 public:
-	int disapparation_time = 10;
 	Snitch(SDL_Rect srcR_param, int start);
 	void Update();
+
+
+	SDL_Texture * vanish_texture;
+	SDL_Texture * snitch_texture;
+
+	int disapparation_time;
+	int blinking_time;
+	int vanish_time;
+	int vanish_counter;
+	int apparation_time;
+
+	bool vanish;
+	bool exists = true;	
 
 private:
 
