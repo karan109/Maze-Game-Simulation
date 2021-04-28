@@ -14,7 +14,7 @@ OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Dro
 all: $(OBJS) main.o
 	$(COMPILE) -o game $(OBJS) main.o $(SDLFLAGS)
 
-Button.o : Game.hpp Button.hpp Button.cpp texture.hpp
+Button.o : Game.hpp Button.hpp Button.cpp Texture.hpp
 	$(COMPILE) -c Button.cpp $(SDLFLAGS)
 
 Health.o : Game.hpp Entity.hpp Health.hpp Health.cpp

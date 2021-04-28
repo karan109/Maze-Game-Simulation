@@ -154,8 +154,8 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
-		auto background = Texture::LoadTexture("../Images/background2.jpg");
-		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+		// auto background = Texture::LoadTexture("../Images/background2.jpg");
+		// Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
 	}
 	else{
 		// auto background = Texture::LoadTexture("../Images/bg2.webp");
