@@ -34,16 +34,21 @@ void Update1();
 
 
 // mode = 2
-void set_path_mode2(int x);
+void set_path_mode2();
 void Update2();
 
 
+// mode = 3
+Entity * scary_target;
+void set_path_mode3(Entity * scary_target);
+void Update3();
 
 
-//mode = 3
+
+//mode = 4
 bool reached = false;
 void set_stones();
-void Update3();
+void Update4();
 
 
 

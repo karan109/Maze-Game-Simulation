@@ -20,7 +20,10 @@ public:
 
 	bool vanish;
 	bool exists = true;	
-	bool disappearing_mode = 0;
+	bool disappearing_mode = 1;
+	int switch_distance;
+
+	void switch_mode();
 
 private:
 
