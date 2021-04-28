@@ -26,3 +26,6 @@ SDL_Texture * Texture::LoadTexture(SDL_Renderer * renderer, SDL_Surface * tempSu
 void Texture::Draw(SDL_Texture * tex, SDL_Rect src, SDL_Rect dest){
 	SDL_RenderCopy(Game::renderer, tex, & src, & dest);
 }
+void Texture::Draw(SDL_Renderer * renderer, SDL_Texture * tex, SDL_Rect src, SDL_Rect dest){
+	SDL_RenderCopy(renderer, tex, & src, & dest);
+}

@@ -147,7 +147,7 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	auto background = Texture::LoadTexture("../Images/background2.jpg");
-	Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, 0, width, height});
+	Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
 	auto black = Texture::LoadTexture("../Images/black.png");
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu, wall_thickness, height - menu});
