@@ -49,6 +49,9 @@ public:
 	int animate_speed = 100;
 	int face = 3;
 	int wall_ct = 0;
+	static bool in_sight(Entity * e1, Entity * e2);
+	static int distance(Entity * e1, Entity * e2);
+	static int is_frightened(Entity * e1, Entity * e2);
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

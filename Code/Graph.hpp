@@ -12,6 +12,7 @@ public:
 	vector<vector<int>> getAdjMtr(vector<int> points);
 	vector<vector<int>> permute(int n);
 	vector<int> getDistances(int src, vector<int> & dests); // Given a source and vector of destinations, returns distances to each element of dests as a vector
+	int distance (int src, int des);
 private:
 	int height, width; // Number of rows and columns of nodes grid
 	vector<vector<int>> adj; // Adjacency list of final graph

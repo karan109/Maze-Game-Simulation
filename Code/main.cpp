@@ -120,8 +120,9 @@ int main(int argc, char* argv[]){
        
         // Game::entities->Add(game->player2);
 
-        game->monster->set_mode_id(0);
-        game->monster->set_dest(game->player1);
+        game->monster->set_mode(0, game->player1);
+        game->snitch->scary_target = game->player1;
+
     }
 
     Mix_PlayMusic( Game::gMusic, -1 );
