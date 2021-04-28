@@ -3,7 +3,7 @@
 #include "Collision.hpp"
 
 // Inherites from Automated class
-Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/pacman.png", srcR_param, start){
+Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/drone2.png", srcR_param, start){
 	speed = 4;
 	// Set speed of drone
 

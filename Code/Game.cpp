@@ -48,6 +48,7 @@ int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wa
 
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
+int Game::task;
 
 // <<<<<<< HEAD
 Mix_Music * Game::gMusic = nullptr;
@@ -70,6 +71,7 @@ Game::~Game(){
 
 }
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
+	if(task == 2) no_trap = false;
 	Game::width = width;
 	Game::height = height;
 	int flags = 0;
@@ -85,22 +87,25 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 	srand(seed);
 	Game::game_maze = new Maze();
-	for(int i=0;i<num_stones;i++){
-		stone = new Stone("../Images/stone.png", SDL_Rect{0, 0, stone_h, stone_w}, rand() % (Game::rows * Game::cols), 15, 10);
-		entities->Add(stone);
+	if(Game::task == 2){
+		for(int i=0;i<num_stones;i++){
+			stone = new Stone("../Images/stone2.png", SDL_Rect{0, 0, 353, 300}, rand() % (Game::rows * Game::cols), 15, 15);
+			entities->Add(stone);
+		}
+		drone = new Drone(SDL_Rect{144, 288, 72, 72}, 0);
+		entities->Add(drone);
 	}
-	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 80);
-	monster = new Monster(SDL_Rect{0, 0, 191, 161}, 50, 3, 100);
-	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
-
-	entities->Add(drone);
-	entities->Add(monster);
-	entities->Add(snitch);
-
+	if(Game::task == 1){
+		monster = new Monster(SDL_Rect{0, 0, 191, 161}, Game::rows * Game::cols - 1, 3, 100);
+		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
+		entities->Add(monster);
+		entities->Add(snitch);
+	}
 	Game::game_maze->DrawMaze();
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
+
 }
 void Game::handleEvents(){
 	SDL_PollEvent(& event);
@@ -133,21 +138,28 @@ void Game::update(){
 
 // <<<<<<< HEAD
 // =======
-	if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
-		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
-		entities->Add(broom);
-		broom_exists = 1;
-	}
-
-	for(auto & broom : * entities->brooms){
-		broom->Update();
+	if(task == 1){
+		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
+			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
+			entities->Add(broom);
+			broom_exists = 1;
+		}
+		for(auto & broom : * entities->brooms){
+			broom->Update();
+		}
 	}
 // >>>>>>> samanyu
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
-	auto background = Texture::LoadTexture("../Images/background2.jpg");
-	Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+	if(task == 1){
+		auto background = Texture::LoadTexture("../Images/background2.jpg");
+		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+	}
+	else{
+		// auto background = Texture::LoadTexture("../Images/bg2.webp");
+		// Texture::Draw(background, SDL_Rect{0, 0, 400, 300}, SDL_Rect{0, 0, width, height});
+	}
 	auto black = Texture::LoadTexture("../Images/black.png");
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu, wall_thickness, height - menu});
@@ -181,6 +193,17 @@ void Game::render(){
 	}
 	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+	if(task == 2){
+		SDL_Surface* surfaceMessage = TTF_RenderText_Solid(font, "Simulation", SDL_Color{0, 0, 0, 255});
+	    SDL_Texture* Message = Texture::LoadTexture(surfaceMessage);
+	    SDL_Rect Message_rect;
+	    Message_rect.w = 300;
+	    Message_rect.h = 50;
+	    Message_rect.y = 10;
+	    Message_rect.x = window_w / 2 - Message_rect.w / 2;
+	    SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
+	}
+
 	SDL_RenderPresent(renderer);
 
 }

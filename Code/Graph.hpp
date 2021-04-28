@@ -11,6 +11,7 @@ public:
 	vector<int> getPath(int src, int dest);
 	vector<vector<int>> getAdjMtr(vector<int> points);
 	vector<vector<int>> permute(int n);
+	vector<int> getDistances(int src, vector<int> & dests); // Given a source and vector of destinations, returns distances to each element of dests as a vector
 private:
 	int height, width; // Number of rows and columns of nodes grid
 	vector<vector<int>> adj; // Adjacency list of final graph
@@ -21,5 +22,4 @@ private:
 	void removeLeaves(vector<vector<int>> & final_adj, bool remove); // Sets adj variable to adjecency list and adds some edges to "edges" depending on the bool argument
 	bool getPathdfs(int vertex, vector<bool> & vis, vector<int> & result, int dest);
 	void getPathbfs(int src, vector<bool> & vis, vector<int> & result, int dest);
-	vector<int> getDistances(int src, vector<int> & dests); // Given a source and vector of destinations, returns distances to each element of dests as a vector
 };

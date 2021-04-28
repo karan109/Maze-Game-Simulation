@@ -45,6 +45,7 @@ public:
 	static int menu;
 	static TTF_Font* font;
 	static bool isRunning;
+	static int task;
 	// static int response;
 	// static int send;
 

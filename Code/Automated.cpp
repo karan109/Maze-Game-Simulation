@@ -44,8 +44,9 @@ void Automated::set_stones(){
 	auto check = Game::game_maze->graph.permute(Game::entities->stones->size());
 	vector<int> indices;
 	int cost = INT_MAX;
+	vector<int> destination = {Game::rows * Game::cols - 1};
 	for(auto u : check){
-		int temp_cost = adj[0][u[0]];
+		int temp_cost = adj[0][u[0]] + Game::game_maze->graph.getDistances(points[u[u.size()-1]], destination)[0];
 		for(int i=1;i < u.size();i++){
 			temp_cost += adj[u[i]][u[i-1]];
 		}
@@ -61,6 +62,9 @@ void Automated::set_stones(){
 		for(int j=1;j<temp_path.size();j++){
 			path_vector.push_back(temp_path[j]);
 		}
+	}
+	for(auto vertex: Game::game_maze->graph.getPath(points[indices[indices.size()-1]], Game::rows * Game::cols - 1)){
+		path_vector.push_back(vertex);
 	}
 	for(auto vertex : path_vector){
 		path.push(vertex);

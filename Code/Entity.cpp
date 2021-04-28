@@ -164,21 +164,30 @@ bool Entity::getDown(){
 
 // Keep entity inside main window
 void Entity::keepInside(){
+	int delay = 5;
 	auto coords = Entity::getCurrentBlockCoords();
 	if(xpos + destR.w >= Game::width - Game::wall_thickness){
-		Mix_PlayChannel( -1, Game::gScratch, 0 );
+		wall_ct++;
+		if(wall_ct >= delay)
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		xpos = Game::width - Game::wall_thickness - Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos + destR.h >= Game::height - Game::wall_thickness){
-		Mix_PlayChannel( -1, Game::gScratch, 0 );
+		wall_ct++;
+		if(wall_ct >= delay)
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		ypos = Game::height - Game::wall_thickness - Game::block_h / 2 - destR.h / 2;
 	}
 	else if(xpos <= Game::wall_thickness){
-		Mix_PlayChannel( -1, Game::gScratch, 0 );
+		wall_ct++;
+		if(wall_ct >= delay)
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		xpos = Game::wall_thickness + Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos <= Game::menu){
-		Mix_PlayChannel( -1, Game::gScratch, 0 );
+		wall_ct++;
+		if(wall_ct >= delay)
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		ypos = Game::menu + Game::block_h / 2 - destR.h / 2;
 	}
 }
