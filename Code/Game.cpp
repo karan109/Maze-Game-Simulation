@@ -48,14 +48,9 @@ int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wa
 
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
-<<<<<<< HEAD
 int Game::task;
 string Game::player_name = "";
 // <<<<<<< HEAD
-=======
-
-
->>>>>>> origin/samanyu
 Mix_Music * Game::gMusic = nullptr;
 Mix_Chunk * Game::gScratch = nullptr;
 Mix_Chunk * Game::gHigh = nullptr;
@@ -144,14 +139,15 @@ void Game::update(){
 // <<<<<<< HEAD
 // =======
 	if(task == 1){
-	if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
-		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
-		entities->Add(broom);
-		broom_exists = 1;
-	}
+		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
+			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
+			entities->Add(broom);
+			broom_exists = 1;
+		}
 
-	for(auto & broom : * entities->brooms){
-		broom->Update();
+		for(auto & broom : * entities->brooms){
+			broom->Update();
+		}
 	}
 
 }
