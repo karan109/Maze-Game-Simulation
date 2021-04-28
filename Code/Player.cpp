@@ -48,22 +48,32 @@ void Player::Update(){
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		obstacles.insert(dir);
+		int delay = 5;
+		// cout<<wall_ct<<endl;
 		if(dir == 1){
+			wall_ct++;
+			if(wall_ct >= delay)
 			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x - Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 2){
+			wall_ct++;
+			if(wall_ct >= delay)
 			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x + u->getBB().w + Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 3){
+			wall_ct++;
+			if(wall_ct >= delay)
 			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y - Game::block_h / 2 - destR.h / 2;
 		}
 		else if(dir == 4){
+			wall_ct++;
+			if(wall_ct >= delay)
 			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
@@ -96,6 +106,7 @@ void Player::Update(){
 	}
 	// if arrow key released
 	if(Game::event.type == SDL_KEYUP){
+		wall_ct = 0;
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_UP){
 			// Game::send = -1;

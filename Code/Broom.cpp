@@ -14,7 +14,7 @@ Broom::~Broom(){
 Broom::Broom (SDL_Rect srcR_param, int start) : Entity("../Images/broom.png", srcR_param, start){
 
 	broom_texture = Texture::LoadTexture("../Images/broom.png");
-	vanish_texture = Texture::LoadTexture("../Images/water.png");
+	vanish_texture = Texture::LoadTexture("../Images/empty.png");
 
 
 	vanish_counter = 0;

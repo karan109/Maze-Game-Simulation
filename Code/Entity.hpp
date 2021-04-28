@@ -48,6 +48,7 @@ public:
 	int frames = 0;
 	int animate_speed = 100;
 	int face = 3;
+	int wall_ct = 0;
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

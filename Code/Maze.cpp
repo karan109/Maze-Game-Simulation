@@ -58,14 +58,14 @@ void Maze::DrawMaze(){
 				path_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness);
 				path_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness);
 				game_Maze[i][j] = 0;
-				Texture::Draw(water, path_src, path_dest);
+				// Texture::Draw(water, path_src, path_dest);
 			}
 			else if(i % 2 == 1 and j % 2 == 0){
 				hor_wall_dest.y = Game::menu + (i / 2) * (Game::block_h + Game::wall_thickness) + Game::block_h;
 				hor_wall_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness);
 				if(type == 0){
 					game_Maze[i][j] = 0;
-					Texture::Draw(water, hor_wall_src, hor_wall_dest);
+					// Texture::Draw(water, hor_wall_src, hor_wall_dest);
 				}
 				else{
 					if(!made){
@@ -81,7 +81,7 @@ void Maze::DrawMaze(){
 				vert_wall_dest.x = Game::wall_thickness + (j / 2) * (Game::block_w + Game::wall_thickness) + Game::block_w;
 				if(type == 0){
 					game_Maze[i][j] = 0;
-					Texture::Draw(water, vert_wall_src, vert_wall_dest);
+					// Texture::Draw(water, vert_wall_src, vert_wall_dest);
 				}
 				else{
 					if(!made){
@@ -118,7 +118,7 @@ void Maze::DrawMaze(){
 				}
 				else{
 					game_Maze[i][j] = 0;
-					Texture::Draw(water, small_wall_src, small_wall_dest);
+					// Texture::Draw(water, small_wall_src, small_wall_dest);
 				}
 			}
 		}

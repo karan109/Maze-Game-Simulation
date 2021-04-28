@@ -5,6 +5,7 @@
 Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param) : Entity("../Images/dirt.png", srcR_param, srcR_param){
 	target = target_param;
 	white = Texture::LoadTexture("../Images/white.png");
+	black = Texture::LoadTexture("../Images/black.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
@@ -54,11 +55,13 @@ void Health::Render(){
 	SDL_SetRenderDrawColor(Game::renderer, c1, c2, 0, 255);
 	SDL_RenderFillRect(Game::renderer, &destR);
 	int thick = 2;
-	Texture::Draw(white, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, length + 2 * thick, thick});
-	Texture::Draw(white, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y + destR.h, length + 2 * thick, thick});
-	Texture::Draw(white, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, thick, destR.h + thick * 2});
-	Texture::Draw(white, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + length, destR.y - thick, thick, destR.h + thick * 2});
-	Texture::Draw(white, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + destR.w, destR.y, length - destR.w, destR.h});
+	auto color = white;
+	// if(! move) color = black;
+	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, length + 2 * thick, thick});
+	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y + destR.h, length + 2 * thick, thick});
+	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, thick, destR.h + thick * 2});
+	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + length, destR.y - thick, thick, destR.h + thick * 2});
+	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + destR.w, destR.y, length - destR.w, destR.h});
 	if(move) return;
 	SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, (to_string(health) + " %").c_str(), SDL_Color{255, 255, 255, 255});
 	SDL_Texture* Message = Texture::LoadTexture(surfaceMessage);

@@ -6,7 +6,7 @@
 Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png", srcR_param, start){
 	speed = 2.5;
 	set_mode(2);
-	vanish_texture = Texture::LoadTexture("../Images/water.png");
+	vanish_texture = Texture::LoadTexture("../Images/empty.png");
 	snitch_texture = Texture::LoadTexture("../Images/snitch.png");
 
 	vanish_counter = 0;

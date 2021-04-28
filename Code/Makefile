@@ -59,7 +59,7 @@ Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp includes.hpp
 Texture.o : Texture.cpp Game.hpp Texture.hpp includes.hpp
 	$(COMPILE) -c Texture.cpp $(SDLFLAGS)
 
-main.o : main.cpp Game.hpp includes.hpp
+main.o : main.cpp Game.hpp includes.hpp texture.hpp
 	$(COMPILE) -c main.cpp $(SDLFLAGS)
 
 server.o : server.cpp Game.hpp includes.hpp

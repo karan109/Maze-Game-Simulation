@@ -36,6 +36,7 @@ int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
 int Game::menu = 100;
+bool Game::isRunning = false;
 // int Game::seed = 0;
 int Game::seed = time(0);
 // int Game::response = 0;
@@ -75,37 +76,21 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(fullscrean){
 		flags = SDL_WINDOW_FULLSCREEN;
 	}
-	if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
+	if(isRunning){
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		renderer = SDL_CreateRenderer(window, -1, 0);
 		if(renderer){
-			SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
+			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		}
-		isRunning = true;
-		if(TTF_Init()==-1) {
-		    isRunning = false;
-		}
-		int imgFlags = IMG_INIT_PNG;
-        if( !( IMG_Init( imgFlags ) & imgFlags ) ){
-            isRunning = false;
-        }
-        if( Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 ) < 0 ){
-            isRunning = false;
-        }
-	}
-	else{
-		isRunning = false;
 	}
 	srand(seed);
-	font = TTF_OpenFont("../Fonts/arial.ttf", 100);
 	Game::game_maze = new Maze();
 	for(int i=0;i<num_stones;i++){
 		stone = new Stone("../Images/stone.png", SDL_Rect{0, 0, stone_h, stone_w}, rand() % (Game::rows * Game::cols), 15, 10);
 		entities->Add(stone);
 	}
-	
 	drone = new Drone(SDL_Rect{0, 0, original_player_h, original_player_w}, 80);
-	monster = new Monster(SDL_Rect{0, 0, 191, 161}, 50, 3, 80);
+	monster = new Monster(SDL_Rect{0, 0, 191, 161}, 50, 3, 100);
 	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
 	entities->Add(drone);
@@ -116,14 +101,6 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
-	// gHigh = Mix_LoadWAV( "../Music/high.wav" );
-	// gMedium = Mix_LoadWAV( "../Music/medium.wav" );
-	// gLow = Mix_LoadWAV( "../Music/low.wav" );
-
-	// auto background = Texture::LoadTexture("../Images/background.jpg");
-	// auto water = Texture::LoadTexture("../Images/water.png");
-	// Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, menu, width, height - menu});
-	// Texture::Draw(water, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, 0, width, menu});
 }
 void Game::handleEvents(){
 	SDL_PollEvent(& event);
@@ -169,6 +146,8 @@ void Game::update(){
 }
 void Game::render(){
 	SDL_RenderClear(renderer);
+	auto background = Texture::LoadTexture("../Images/background2.jpg");
+	Texture::Draw(background, SDL_Rect{0, 0, 1920, 1080}, SDL_Rect{0, 0, width, height});
 	auto black = Texture::LoadTexture("../Images/black.png");
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu, wall_thickness, height - menu});
@@ -201,7 +180,7 @@ void Game::render(){
 		broom->Render();
 	}
 	
-	SDL_SetRenderDrawColor(renderer, 7, 33, 255, 255);
+	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 	SDL_RenderPresent(renderer);
 
 }
