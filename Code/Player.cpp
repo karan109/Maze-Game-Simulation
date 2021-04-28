@@ -14,7 +14,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 	}
 }
 
-Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity("../Images/harry1.png", srcR_param, start){
+Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
 	animated = true;
 	srcR.y = srcR.h * 4;
 	frames = frames_param;

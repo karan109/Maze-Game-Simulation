@@ -32,16 +32,28 @@ int main(int argc, char* argv[]){
     int margin = 30;
     int button_width = 150;
     int button_height = 40;
-    Button * button1 = new Button(SDL_Rect{500 - button_width / 2, 250, button_width, button_height}, 2, "Start");
-    Button * button2 = new Button(SDL_Rect{500 - button_width / 2, 250 + button_height + margin, button_width, button_height}, 2, "Task 1");
-    Button * button3 = new Button(SDL_Rect{500 - button_width / 2, 250 + 2 * (button_height + margin), button_width, button_height}, 2, "Task 2");
+    int sprite_width = 70;
+    int sprite_height = 70;
+    int sprite_margin = 50;
+    Button * button1 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height, button_width, button_height}, 2, "Start");
+    Button * button2 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + button_height + margin, button_width, button_height}, 2, "Task 1");
+    Button * button3 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + 2 * (button_height + margin), button_width, button_height}, 2, "Task 2");
+    Button * button4 = new Button(renderer, "harry", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 - sprite_width / 2, 200, sprite_width, sprite_height});
+    Button * button5 = new Button(renderer, "hermione", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 - sprite_width * 3 / 2 - sprite_margin, 200, sprite_width, sprite_height});
+    Button * button6 = new Button(renderer, "ron", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 + sprite_width / 2 + sprite_margin, 200, sprite_width, sprite_height});
     while(true){
         SDL_RenderClear(renderer);
         Texture::Draw(renderer, background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, 1000, 600});
         SDL_Event event;
         SDL_PollEvent(& event);
         if(event.type == SDL_QUIT){
-            break;
+            SDL_DestroyWindow(window);
+            SDL_DestroyRenderer(renderer);
+            Mix_Quit();
+            IMG_Quit();
+            TTF_Quit();
+            SDL_Quit();
+            return 0;
         }
         if(event.type == SDL_MOUSEBUTTONDOWN){
             if(event.button.button == SDL_BUTTON_LEFT){
@@ -59,9 +71,27 @@ int main(int argc, char* argv[]){
                     Game::task = 2;
                     break;
                 }
+                else if(button4->isInside(x, y)){
+                    button4->show = true;
+                    button5->show = false;
+                    button6->show = false;
+                    Game::player_name = "harry1";
+                }
+                else if(button5->isInside(x, y)){
+                    button4->show = false;
+                    button5->show = true;
+                    button6->show = false;
+                    Game::player_name = "hermione";
+                }
+                else if(button6->isInside(x, y)){
+                    button4->show = false;
+                    button5->show = false;
+                    button6->show = true;
+                    Game::player_name = "ron";
+                }
             }
         }
-
+        if(Game::player_name == "") Game::player_name = "harry1";
         SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, "Game", SDL_Color{255, 255, 0, 255});
         SDL_Texture* Message = Texture::LoadTexture(renderer, surfaceMessage);
 
@@ -74,6 +104,9 @@ int main(int argc, char* argv[]){
         button1->Render(renderer);
         button2->Render(renderer);
         button3->Render(renderer);
+        button4->Render(renderer);
+        button5->Render(renderer);
+        button6->Render(renderer);
         SDL_RenderPresent(renderer);
     }
     SDL_DestroyWindow(window);

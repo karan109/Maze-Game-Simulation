@@ -49,7 +49,7 @@ int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wa
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
 int Game::task;
-
+string Game::player_name = "";
 // <<<<<<< HEAD
 Mix_Music * Game::gMusic = nullptr;
 Mix_Chunk * Game::gScratch = nullptr;
