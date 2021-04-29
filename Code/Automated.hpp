@@ -27,7 +27,7 @@ void Update0();
 
 // mode = 1
 int dest;
-// bool reached = false;
+bool scatter_reached = false;
 void set_dest(int dest_param);
 void Update1();
 
@@ -46,7 +46,7 @@ void Update3();
 
 
 //mode = 4
-bool reached = false;
+bool drone_reached = false;
 void set_stones();
 void Update4();
 
