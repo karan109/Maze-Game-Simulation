@@ -2,10 +2,43 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 
-Remote::Remote(SDL_Rect srcR_param, int start) : Entity("../Images/pacman.png", srcR_param, start){
+Remote::Remote(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
+	showHealth = true;
+	health = 100;
+	number = number_param;
+	if(showHealth){
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
+		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
+	}
+}
+
+Remote::Remote(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
+	animated = true;
+	srcR.y = srcR.h * 4;
+	frames = frames_param;
+	animate_speed = speed_param;
+	showHealth = true;
+	health = 100;
+	number = number_param;
+	if(showHealth){
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
+		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
+	}
 }
 
 void Remote::Update(){
+	if(animated){
+		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
+	}
+	counter++;
+	if(counter == Game::FPS / 2){
+		counter = 0;
+		if(health > 0) health-= 5;
+	}
 	int block_num = Entity::getBlock();
 	set<int> obstacles;
 	Entity::keepInside();
@@ -57,6 +90,35 @@ void Remote::Update(){
 	}
 	else if(Game::response == -4){
 		xv = 0;
+	}
+	if(yv > 0){
+		srcR.y = srcR.h * 4;
+		face = 3;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(yv < 0){
+		srcR.y = srcR.h * 7;
+		face = 4;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv > 0){
+		srcR.y = srcR.h * 6;
+		face = 1;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv < 0){
+		srcR.y = srcR.h * 5;
+		face = 2;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else{
+		// srcR.y = srcR.h * 4;
+		// srcR.x = srcR.w * 7;
+		animated = false;
 	}
 	int row = block_num / Game::cols;
 	int col = block_num % Game::cols;

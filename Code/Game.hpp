@@ -16,7 +16,8 @@ public:
 	bool running(){
 		return isRunning;
 	}
-	static SDL_Renderer * renderer;
+	static SDL_Renderer * renderer, * renderer2;
+	static SDL_Texture * background;
 	static SDL_Event event;
 	static Entities * entities;
 	static Maze * game_maze;
@@ -47,8 +48,8 @@ public:
 	static bool isRunning;
 	static int task;
 	static string player_name;
-	// static int response;
-	// static int send;
+	static int response;
+	static int send;
 
 	// static int drone_starting_node = 
 	// static int monster_starting_node = 
@@ -65,7 +66,7 @@ public:
 	Player * player1;
 	// Player * player2;
 
-	// Remote * player2;
+	Remote * player2;
 	Drone * drone;
 	Monster * monster;
 	Stone * stone;

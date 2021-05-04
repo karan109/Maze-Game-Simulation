@@ -17,7 +17,9 @@ Graph::Graph(int heightMtr, int widthMtr, int seed){
 			}
 		}
 	}
-	auto final_adj = MST("dfs");
+	vector<vector<int>> final_adj;
+	if(Game::task == 1) final_adj = MST("dfs");
+	else final_adj = MST("prim");
 	removeLeaves(final_adj, Game::no_trap);
 	for(auto u : edges){
 		int p1 = u.first, p2 = u.second;

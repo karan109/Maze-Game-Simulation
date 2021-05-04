@@ -8,10 +8,13 @@
 #include "Stone.hpp"
 #include "Snitch.hpp"
 #include "Broom.hpp"
+#include "Remote.hpp"
 
 
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
+SDL_Texture * Game::background = nullptr;
+SDL_Renderer * Game::renderer2 = nullptr;
 SDL_Event Game::event;
 
 // Initialize entities object to store all entities
@@ -37,10 +40,10 @@ int Game::stone_h = 32;
 int Game::num_stones = 7;
 int Game::menu = 100;
 bool Game::isRunning = false;
-// int Game::seed = 0;
-int Game::seed = time(0);
-// int Game::response = 0;
-// int Game::send = 0;
+int Game::seed = 0;
+// int Game::seed = time(0);
+int Game::response = 0;
+int Game::send = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
 int Game::window_h = Game::wall_thickness + Game::menu + block_h * rows + (rows - 1) * wall_thickness;
@@ -81,18 +84,22 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(isRunning){
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, flags);
 		renderer = SDL_CreateRenderer(window, -1, 0);
+		renderer2 = SDL_CreateRenderer(window, -1, 0);
 		if(renderer){
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		}
+		if(renderer2){
+			SDL_SetRenderDrawColor(renderer2, 255, 255, 255, 255);
+		}
 	}
-	srand(seed);
+	// srand(seed);
 	Game::game_maze = new Maze();
 	if(Game::task == 2){
 		for(int i=0;i<num_stones;i++){
 			stone = new Stone("../Images/stone2.png", SDL_Rect{0, 0, 353, 300}, rand() % (Game::rows * Game::cols), 15, 15);
 			entities->Add(stone);
 		}
-		drone = new Drone(SDL_Rect{144, 288, 72, 72}, 0);
+		drone = new Drone(SDL_Rect{144, 288, 72, 72}, rand() % (Game::rows * Game::cols));
 		entities->Add(drone);
 	}
 	if(Game::task == 1){
@@ -105,7 +112,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
-
+	background = Texture::LoadTexture("../Images/background2-min.jpg");
 }
 void Game::handleEvents(){
 	SDL_PollEvent(& event);
@@ -136,8 +143,6 @@ void Game::update(){
 		health->Update();
 	}
 
-// <<<<<<< HEAD
-// =======
 	if(task == 1){
 		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
 			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
@@ -154,12 +159,10 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
-		auto background = Texture::LoadTexture("../Images/background2.jpg");
 		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
 	}
 	else{
-		// auto background = Texture::LoadTexture("../Images/bg2.webp");
-		// Texture::Draw(background, SDL_Rect{0, 0, 400, 300}, SDL_Rect{0, 0, width, height});
+		
 	}
 	auto black = Texture::LoadTexture("../Images/black.png");
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
@@ -205,12 +208,13 @@ void Game::render(){
 	    SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
 	}
 
+	SDL_RenderPresent(renderer2);
 	SDL_RenderPresent(renderer);
-
 }
 void Game::clean(){
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	SDL_DestroyRenderer(renderer2);
 	Mix_Quit();
 	IMG_Quit();
 	TTF_Quit();
