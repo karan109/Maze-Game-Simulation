@@ -51,6 +51,9 @@ void set_stones();
 void Update4();
 
 
+void change_mode(int mode_id);
+
+
 
 
 

@@ -159,6 +159,9 @@ void Automated::set_path_mode2() {
 		next = current - Game::cols;
 		yv = -mag; 
 	}
+
+	// cout << "block: " << current << " xv: " << xv << " yv: " << yv << " next: " << next << " " << temp_dir << endl;
+	
 	path.push(next);
 }
 
@@ -761,5 +764,26 @@ void Automated::Update(){
 		
 	}
 
+
+}
+void Automated::change_mode(int mode_id) {
+	if (mode_id == 0) {
+		set_mode(0, target);
+	}
+	if (mode_id == 1) {
+		set_mode(1, dest);
+	}
+
+	if (mode_id == 2) {
+		set_mode(2);
+	}
+
+	if (mode_id == 3) {
+		set_mode(3, scary_target);
+	}
+
+	if (mode_id == 4) {
+		set_mode(4);
+	}
 
 }
