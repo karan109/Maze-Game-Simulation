@@ -286,7 +286,7 @@ void * temporal(void * arg) {
     if(part == 0){
         if (Game::response < 0) Game::response = 0;
         int sent = Game::send;
-        string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos);
+        string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
         int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
         if(sendRes == -1){
             cout<<"Could not send through server"<<endl;
@@ -311,6 +311,8 @@ void * temporal(void * arg) {
         tokenize(command, delim, process);
         game->player2->xpos = stoi(process[0]);
         game->player2->ypos = stoi(process[1]);
+        game->player2->xv = stoi(process[2]);
+        game->player2->yv = stoi(process[3]);
         // Game::response = stoi(command);
         receive = true;
     }
