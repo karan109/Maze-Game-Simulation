@@ -21,5 +21,6 @@ extern "C" {
 #include <map>
 #include <queue>
 #include <climits>
+#include <cstring>
 #include <string>
 using namespace std;

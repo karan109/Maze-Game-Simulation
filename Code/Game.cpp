@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 25;
+int Game::cols = 12;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;

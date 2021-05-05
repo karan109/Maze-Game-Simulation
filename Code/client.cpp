@@ -2,11 +2,31 @@
 #include "Texture.hpp"
 #include "Button.hpp"
 Game * game = nullptr;
+struct thread_data {
+    int part;
+};
 
+void tokenize(std::string const &str, string delim,
+            std::vector<std::string> &out)
+{
+    char *token = strtok(const_cast<char*>(str.c_str()), delim.c_str());
+    while (token != nullptr)
+    {
+        out.push_back(string(token));
+        token = strtok(nullptr, delim.c_str());
+    }
+}
+
+int THREADS = 1; // Number of threads
+void * temporal(void * arg);
+
+char buf[4096];
+int sock;
+unsigned int frameStart;
+int frameTime;
+bool receive = true, sending = true;
+int prevSend = 0;
 int main(int argc, char* argv[]){
-
-    unsigned int frameStart;
-    int frameTime;
 
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         Game::isRunning = true;
@@ -25,7 +45,7 @@ int main(int argc, char* argv[]){
         Game::isRunning = false;
     }
 
-    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    sock = socket(AF_INET, SOCK_STREAM, 0);
     if(sock == -1){
         return 1;
     }
@@ -39,7 +59,6 @@ int main(int argc, char* argv[]){
     if(connectRes == -1){
         return 1;
     }
-    char buf[4096];
     string command;
     Game::font = TTF_OpenFont("../Fonts/arial.ttf", 100);
     SDL_Window * window = SDL_CreateWindow("Start Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 600, false);
@@ -162,18 +181,21 @@ int main(int argc, char* argv[]){
     Mix_PlayMusic( Game::gMusic, -1 );
 
 
+    pthread_t threads[THREADS];
+
+    struct thread_data data[THREADS];
+    
     while(game->running()){
-        if (Game::response < 0) Game::response = 0;
-        command = to_string(Game::send);
-        int sendRes = send(sock, command.c_str(), command.size()+1, 0);
-        if(sendRes == -1){
-            cout<<"Could not send through server"<<endl;
+        if(receive == true){
+            data[0].part = 0;
+            pthread_create( & threads[0], NULL, temporal, (void * ) & data[0]);
+            receive = false;
         }
-        memset(buf, 0, 4096);
-        int bytesRecv = recv(sock, buf, 4096, 0);
-        string response = string(buf, bytesRecv);
-        Game::response = stoi(response);
-        // cout<<Game::response<<endl;
+        // if(sending == true){
+        //     data[1].part = 1;
+        //     pthread_create( & threads[1], NULL, temporal, (void * ) & data[1]);
+        //     sending = false;
+        // }
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
@@ -187,6 +209,42 @@ int main(int argc, char* argv[]){
         }
 
     }
+    for(int i = 0; i < 1;i++){
+        pthread_join(threads[i], NULL); // Wait for each thread to finish
+    }
     close(sock);
     game->clean();
+}
+
+
+void * temporal(void * arg) {
+    // Argument to thread
+    struct thread_data * my_data;
+    my_data = (struct thread_data * ) arg;
+    int part = my_data->part;
+    string delim = ",";
+    if(part == 0){
+        if (Game::response < 0) Game::response = 0;
+        string command = to_string(Game::send);
+        string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos);
+        int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
+        if(sendRes == -1){
+            cout<<"Could not send through server"<<endl;
+        }
+        cout<<sendRes<<endl;
+        prevSend = stoi(command);
+        memset(buf, 0, 4096);
+        int bytesRecv = recv(sock, buf, 4096, 0);
+        string response = string(buf, bytesRecv);
+        vector<string> process;
+        tokenize(response, delim, process);
+        game->player2->xpos = stoi(process[0]);
+        game->player2->ypos = stoi(process[1]);
+        // Game::response = stoi(response);
+        receive = true;
+    }
+    else{
+        
+    }
+    return (void *) 0;
 }

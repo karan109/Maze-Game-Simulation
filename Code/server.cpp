@@ -3,12 +3,32 @@
 #include "Button.hpp"
 Game * game = nullptr;
 
+
+void tokenize(std::string const &str, string delim,
+            std::vector<std::string> &out)
+{
+    char *token = strtok(const_cast<char*>(str.c_str()), delim.c_str());
+    while (token != nullptr)
+    {
+        out.push_back(string(token));
+        token = strtok(nullptr, delim.c_str());
+    }
+}
+
+struct thread_data {
+    int part;
+};
+
+int THREADS = 1; // Number of threads
+void * temporal(void * arg);
+
+char buf[4096];
+int clientSocket;
+unsigned int frameStart;
+int frameTime;
+bool receive = true, sending = true;
+int prevSend = 0;
 int main(int argc, char* argv[]){
-
-    unsigned int frameStart;
-    int frameTime;
-
-
     int listening = socket(AF_INET, SOCK_STREAM, 0);
     if(listening == -1){
         cout<<"Can't create socket"<<endl;
@@ -31,7 +51,7 @@ int main(int argc, char* argv[]){
     char host[NI_MAXHOST];
     char svc[NI_MAXSERV];
 
-    int clientSocket = accept(listening, (struct sockaddr *) & client, & clientSize);
+    clientSocket = accept(listening, (struct sockaddr *) & client, & clientSize);
 
     if(clientSocket == -1){
         cout<<"Problem with client connecting!"<<endl;
@@ -52,7 +72,6 @@ int main(int argc, char* argv[]){
         cout<<host<<" connected on "<<ntohs(client.sin_port)<<endl;
     }
 
-    char buf[4096];
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         Game::isRunning = true;
         if(TTF_Init()==-1) {
@@ -218,26 +237,24 @@ int main(int argc, char* argv[]){
     }
 
     Mix_PlayMusic( Game::gMusic, -1 );
-    while(game->running()){
-        if (Game::response < 0) Game::response = 0;
-        memset(buf, 0, 4096);
-        int bytesRecv = recv(clientSocket, buf, 4096, 0);
-        if(bytesRecv == -1){
-            cout<<"Connection issue"<<endl;
-            break;
-        }
-        if(bytesRecv == 0){
-            cout<<"Client disconnected"<<endl;
-            break;
-        }
-        string command = string(buf, 0, bytesRecv);
-        Game::response = stoi(command);
-        // cout<<Game::response<<endl;
-        int sendRes = send(clientSocket, to_string(Game::send).c_str(), command.size()+1, 0);
-        if(sendRes == -1){
-            cout<<"Could not send through server"<<endl;
-        }
 
+
+    // Array of pthreads
+    pthread_t threads[THREADS];
+
+    struct thread_data data[THREADS];
+    
+    while(game->running()){
+        if(receive == true){
+            data[0].part = 0;
+            pthread_create( & threads[0], NULL, temporal, (void * ) & data[0]);
+            receive = false;
+        }
+        // if(sending == true){
+        //     data[1].part = 1;
+        //     pthread_create( & threads[1], NULL, temporal, (void * ) & data[1]);
+        //     sending = false;
+        // }
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
@@ -251,6 +268,55 @@ int main(int argc, char* argv[]){
         }
 
     }
+
+    for(int i = 0; i < 1;i++){
+        pthread_join(threads[i], NULL); // Wait for each thread to finish
+    }
     close(clientSocket);
     game->clean();
+}
+
+
+void * temporal(void * arg) {
+    // Argument to thread
+    struct thread_data * my_data;
+    my_data = (struct thread_data * ) arg;
+    int part = my_data->part;
+    string delim = ",";
+    if(part == 0){
+        if (Game::response < 0) Game::response = 0;
+        int sent = Game::send;
+        string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos);
+        int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
+        if(sendRes == -1){
+            cout<<"Could not send through server"<<endl;
+        }
+        cout<<sent<<endl;
+        sending = true;
+        prevSend = sent;
+        memset(buf, 0, 4096);
+        int bytesRecv = recv(clientSocket, buf, 4096, 0);
+        if(bytesRecv == -1){
+            cout<<"Connection issue"<<endl;
+            receive = true;
+            return 0;
+        }
+        if(bytesRecv == 0){
+            cout<<"Client disconnected"<<endl;
+            receive = true;
+            return 0;
+        }
+        string command = string(buf, 0, bytesRecv);
+        vector<string> process;
+        tokenize(command, delim, process);
+        game->player2->xpos = stoi(process[0]);
+        game->player2->ypos = stoi(process[1]);
+        // Game::response = stoi(command);
+        receive = true;
+    }
+    else{
+        
+        
+    }
+    return (void *) 0;
 }
