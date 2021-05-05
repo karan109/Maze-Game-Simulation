@@ -99,7 +99,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			stone = new Stone("../Images/stone2.png", SDL_Rect{0, 0, 353, 300}, rand() % (Game::rows * Game::cols), 15, 15);
 			entities->Add(stone);
 		}
-		drone = new Drone(SDL_Rect{144, 288, 72, 72}, rand() % (Game::rows * Game::cols));
+		drone = new Drone(SDL_Rect{144, 288, 72, 72}, 0);
 		entities->Add(drone);
 	}
 	if(Game::task == 1){
@@ -112,6 +112,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
+	gHigh = Mix_LoadWAV( "../Music/reward.wav" );
 	background = Texture::LoadTexture("../Images/background2-min.jpg");
 }
 void Game::handleEvents(){
@@ -159,7 +160,7 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
-		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+		// Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
 	}
 	else{
 		

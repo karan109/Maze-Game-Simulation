@@ -20,7 +20,7 @@ Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png
 
 	disappearing_mode = 1;
 	switch_distance = 15;
-
+	srand(Game::seed);
 
 }
 

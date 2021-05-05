@@ -111,6 +111,8 @@ int main(int argc, char* argv[]){
     }
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    srand(time(0));
+    Game::seed = rand()%100000;
     game = new Game();
     game->init("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
     if(Game::task == 1){
@@ -124,14 +126,21 @@ int main(int argc, char* argv[]){
         game->snitch->scary_target = game->player1;
 
     }
-
-    Mix_PlayMusic( Game::gMusic, -1 );
+    if(Game::task == 1) Mix_PlayMusic( Game::gMusic, -1 );
+    int ct = 0;
     while(game->running()){
-
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
-        game->update();
+        if(Game::task == 1){
+            game->update();
+        }
+        else if(Game::task == 2 and ct < Game::FPS * 3){
+            ct++;
+        }
+        else{
+            game->update();
+        }
         game->render();
 
         frameTime = SDL_GetTicks() - frameStart;

@@ -63,7 +63,6 @@ public:
 	void Add(Health * health){
 		healths->push_back(health);
 	}
-
 	void Add(Broom * broom){
 		brooms->push_back(broom);
 	}
@@ -71,6 +70,10 @@ public:
 	void Delete (Broom * broom) {
 		auto position = find (brooms->begin(), brooms->end(), broom);
 		if (position != brooms->end()) brooms->erase(position);
+	}
+	void Delete (Stone * stone) {
+		auto position = find (stones->begin(), stones->end(), stone);
+		if (position != stones->end()) stones->erase(position);
 	}
 
 };

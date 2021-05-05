@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
         return 1;
     }
     int port = 54000;
-    string ipAddress = "127.0.0.1";
+    string ipAddress = "127.0.0.1"; // 122.177.240.201
     sockaddr_in hint;
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
