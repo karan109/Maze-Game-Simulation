@@ -10,6 +10,8 @@ public:
 	void Update();
 	int monster_retreat_node;
 	bool player_is_scary;
+	bool monster_is_scared;
+
 	void  switch_in_scared_mode();
 	void  switch_in_not_scared_mode();
 

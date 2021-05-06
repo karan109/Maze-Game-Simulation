@@ -20,16 +20,17 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	dest = monster_retreat_node;
 
 	player_is_scary = 0;
+	monster_is_scared = 0;
 
 	switch_distance_scared = 10;
 	switch_distance_not_scared = 10;
 }
 
 void Monster::switch_in_scared_mode() {
-	if (distance(this, scary_target) <= switch_distance_scared and mode == 2) {
+	if (distance(this, scary_target) <= 10 and mode == 2) {
 		change_mode(3);
 	}
-	else if (distance(this, scary_target) > switch_distance_scared and mode == 3) {
+	else if (distance(this, scary_target) > 20 and mode == 3) {
 		change_mode(1);
 	}
 	else if (scatter_reached = true and mode == 1) {
@@ -38,10 +39,10 @@ void Monster::switch_in_scared_mode() {
 }
 
 void Monster::switch_in_not_scared_mode() {
-	if (distance(this, scary_target) <= switch_distance_not_scared and mode == 0) {
+	if (distance(this, scary_target) <= 5 and mode == 0) {
 		change_mode(2);
 	}
-	else if (distance(this, scary_target) > switch_distance_not_scared and mode == 2) {
+	else if (distance(this, scary_target) > 20 and mode == 2) {
 		change_mode(0);
 	}
 }
@@ -83,21 +84,21 @@ void Monster::Update() {
 	}
 
 	if (player_is_scary == true) {
-		if (mode == 0) {
-			change_mode(3);
+
+		if (!monster_is_scared) {
+			monster_is_scared = change_mode(3);
 		}
-		switch_in_scared_mode();
 	}
 
-	if (player_is_scary == false) {
+	if (player_is_scary == false) {	
 
-		// cout <<" mode: " << mode << endl;
-		
-		if (mode != 0 || mode != 2) {
-			change_mode(0);
+		if (monster_is_scared) {
+			monster_is_scared = ! change_mode(0);
 		}
-		// switch_in_not_scared_mode();
 	}
 
+	if (monster_is_scared) switch_in_scared_mode();
+	else switch_in_not_scared_mode();
 
+	cout << mode << " " << monster_is_scared << endl;
 }

@@ -766,7 +766,40 @@ void Automated::Update(){
 
 
 }
-void Automated::change_mode(int mode_id) {
+
+
+bool Automated::is_at_centre () {
+	auto coords = getAutoBlockCoords();
+	int centre_x = xpos + destR.w / 2;
+	int centre_y = ypos + destR.h / 2;
+	int block_centre_y = coords.first + Game::block_h / 2;
+	int block_centre_x = coords.second + Game::block_w / 2;
+	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
+		return true;
+	}
+	return false;
+}
+
+void Automated::empty_the_path() {
+	while (!path.empty()) {
+		path.pop();
+	}
+}
+
+void Automated::set_at_centre() {
+	auto coords = getAutoBlockCoords();
+	xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+	ypos = coords.first + Game::block_h / 2 - destR.h / 2;
+	xv = 0;
+	yv = 0;
+}
+
+bool Automated::change_mode(int mode_id) {
+	if (!is_at_centre() ) return false;
+	
+	set_at_centre();
+	empty_the_path();
+
 	if (mode_id == 0) {
 		set_mode(0, target);
 	}
@@ -785,5 +818,9 @@ void Automated::change_mode(int mode_id) {
 	if (mode_id == 4) {
 		set_mode(4);
 	}
+	return true;
 
 }
+
+
+

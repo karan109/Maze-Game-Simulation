@@ -51,8 +51,10 @@ void set_stones();
 void Update4();
 
 
-void change_mode(int mode_id);
-
+bool change_mode(int mode_id);
+void empty_the_path();
+bool is_at_centre();
+void set_at_centre();
 
 
 
