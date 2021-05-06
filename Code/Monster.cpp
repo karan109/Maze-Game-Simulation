@@ -100,5 +100,5 @@ void Monster::Update() {
 	if (monster_is_scared) switch_in_scared_mode();
 	else switch_in_not_scared_mode();
 
-	cout << mode << " " << monster_is_scared << endl;
+	// cout << mode << " " << monster_is_scared << endl;
 }

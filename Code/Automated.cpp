@@ -291,14 +291,8 @@ void Automated::set_mode_id(int mode_id) {
 	mode = mode_id;
 }
 
-void Automated::Update0() {
-
-	if(target == nullptr) return;
-	// changes path as target moves 
-	Automated::set_dest(target);
-
-	Entity::keepInside();
-
+// different from player
+void Automated::handle_wall_collisions() {
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		if(dir == 1){
@@ -322,414 +316,223 @@ void Automated::Update0() {
 			return;
 		}
 	}
+}
+
+int Automated::getNext() {
+	int current = getBlock();
+	int next = INT_MIN;
+	if(!path.empty()){
+		next = path.front();
+		if(next == current){
+			path.pop();
+			if (!path.empty()) {
+				next = path.front();
+			}
+			else {
+				next = INT_MIN;
+			}
+		}
+	}
+	return next;
+}
+
+int Automated::manhattan_distance() {
+	auto coords = getAutoBlockCoords();
+	int centre_x = xpos + destR.w / 2;
+	int centre_y = ypos + destR.h / 2;
+	int block_centre_y = coords.first + Game::block_h / 2;
+	int block_centre_x = coords.second + Game::block_w / 2;
+	return abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y);
+}
+
+
+void Automated::switch_next(int current, int next) {
+
+	auto coords = getAutoBlockCoords();
+
+	if(next == current + 1){
+		xv = mag;
+		yv = 0;
+		ypos = coords.first + Game::block_h / 2 - destR.h / 2;
+	}
+	else if(next == current - 1){
+		xv = -mag;
+		yv = 0;
+		ypos = coords.first + Game::block_h / 2 - destR.h / 2;
+	}
+	else if(next == current + Game::cols){
+		xv = 0;
+		yv = mag;
+		xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+	}
+	else if(next == current - Game::cols){
+		xv = 0;
+		yv = -mag;
+		xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+	}
+}
+
+void Automated::update_position() {
+	xpos += xv * speed;
+	ypos += yv * speed;	
+	destR.x = xpos;
+	destR.y = ypos;
+}
+
+
+bool Automated::is_at_centre () {
+	auto coords = getAutoBlockCoords();
+	int centre_x = xpos + destR.w / 2;
+	int centre_y = ypos + destR.h / 2;
+	int block_centre_y = coords.first + Game::block_h / 2;
+	int block_centre_x = coords.second + Game::block_w / 2;
+	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
+		return true;
+	}
+	return false;
+}
+
+void Automated::empty_the_path() {
+	while (!path.empty()) {
+		path.pop();
+	}
+}
+
+void Automated::set_pos_at_centre() {
+	auto coords = getAutoBlockCoords();
+	xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+	ypos = coords.first + Game::block_h / 2 - destR.h / 2;
+	destR.x = xpos;
+	destR.y = ypos;
+}
+
+void Automated::set_velocity_zero() {
+	xv = 0;
+	yv = 0;
+}
+
+
+void Automated::Update0() {
+
+	if(target == nullptr) return;
+	// changes path as target moves 
+	Automated::set_dest(target);
+
+	Entity::keepInside();
+	handle_wall_collisions();
+	
 	// if collides with target then return
 	int dir = Collision::AABB(getBB(), target->getBB(), getXV(), getYV(), target->getXV(), target->getYV());
 	if(dir != 0){
 		// xv = 0;	no cleanup
 		return;
-	}
-	auto coords = getAutoBlockCoords();
+	}	
+
 	int current = getBlock();
-	int next = INT_MIN;
-	if(!path.empty()){
-		next = path.front();
-		if(next == current){
-			path.pop();
-			if (!path.empty()) {
-				next = path.front();
-			}
-			else {
-				next = INT_MIN;
-				return;
-			}
-		}
-	}
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
-		if(next == current + 1){
-			xv = mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current - 1){
-			xv = -mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current + Game::cols){
-			xv = 0;
-			yv = mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-		else if(next == current - Game::cols){
-			xv = 0;
-			yv = -mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
+	int next = getNext();
+
+	if (next == INT_MIN) return; // why idk
+
+	if(manhattan_distance() <= 4){
+		switch_next(current, next);
 	}
 
-	xpos += xv * speed;
-	ypos += yv * speed;
-	
-	destR.x = xpos;
-	destR.y = ypos;
-
+	update_position();
 }
 
 void Automated::Update1() {
 	if(scatter_reached) return;
 	Entity::keepInside();
-	for(auto & u: * Game::entities->walls){
-		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
-		if(dir == 1){
-			xv = 0;
-			xpos -= mag * speed;		// different from player
-			return;
-		}
-		else if(dir == 2){
-			xv = 0;
-			xpos += mag * speed;
-			return;
-		}
-		else if(dir == 3){
-			yv = 0;
-			ypos -= mag * speed;
-			return;
-		}
-		else if(dir == 4){
-			yv = 0;
-			ypos += mag * speed;
-			return;
-		}
-	}
-	auto coords = getAutoBlockCoords();
+	handle_wall_collisions();
+
 	int current = getBlock();
-	int next = INT_MIN;
-	if(!path.empty()){
-		next = path.front();
-		if(next == current){
-			path.pop();
-			next = path.front();
-		}
-	}
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
+	int next = getNext();
+
+	if(manhattan_distance() <= 4){
 		if(path.empty()){
-			// cout<<"hi"<<endl;
-			xv = 0;
-			yv = 0;
-			coords = getAutoBlockCoords();
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-			destR.x = xpos;
-			destR.y = ypos;
+			set_pos_at_centre();
+			set_velocity_zero();
 			scatter_reached = true;
 			return;
 		}
-		if(next == current + 1){
-			xv = mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current - 1){
-			xv = -mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current + Game::cols){
-			xv = 0;
-			yv = mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-		else if(next == current - Game::cols){
-			xv = 0;
-			yv = -mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-
+		switch_next(current, next);
 	}
-	xpos += xv * speed;
-	ypos += yv * speed;
-	
-	destR.x = xpos;
-	destR.y = ypos;
+
+	update_position();
 }
 
 void Automated::Update2() {
 	Entity::keepInside();
 	srand(time(0));
+	handle_wall_collisions();
 
-	for(auto & u: * Game::entities->walls){
-		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
-		if(dir == 1){
-			xv = 0;
-			xpos -= mag * speed;		// different from player
-			return;
-
-		}
-		else if(dir == 2){
-			xv = 0;
-			xpos += mag * speed;
-			return;
-		}
-		else if(dir == 3){
-			yv = 0;
-			ypos -= mag * speed;
-			return;
-		}
-		else if(dir == 4){
-			yv = 0;
-			ypos += mag * speed;
-			return;
-		}
-	}
-	auto coords = getAutoBlockCoords();
 	int current = getBlock();
+	int next = getNext();
 
-	int next = INT_MIN;
-	if(!path.empty()){
-		next = path.front();
-		if(next == current){
-			path.pop();
-			if (!path.empty()) {
-				next = path.front();
-			}
-			else {
-				next = INT_MIN;
-			}
-		}
-	}
+	if(manhattan_distance() <= 4){
 
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
-		
 		if(path.empty()){
 
 			set_path_mode2();
 
-			coords = getAutoBlockCoords();
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-			destR.x = xpos;
-			destR.y = ypos;
+			set_pos_at_centre();
+
 
 			return;
 		}
-		else if(next == current + 1){
-			xv = mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current - 1){
-			xv = -mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current + Game::cols){
-			xv = 0;
-			yv = mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-		else if(next == current - Game::cols){
-			xv = 0;
-			yv = -mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
+		switch_next(current, next);
 	}
 
-	xpos += xv * speed;
-	ypos += yv * speed;
-	
-	destR.x = xpos;
-	destR.y = ypos;
+	update_position();
 }	
 
 
 
 void Automated::Update3() {
-	Entity::keepInside();
+
 	srand(time(0));
 
-	for(auto & u: * Game::entities->walls){
-		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
-		if(dir == 1){
-			xv = 0;
-			xpos -= mag * speed;		// different from player
-			return;
+	Entity::keepInside();
+	handle_wall_collisions();
 
-		}
-		else if(dir == 2){
-			xv = 0;
-			xpos += mag * speed;
-			return;
-		}
-		else if(dir == 3){
-			yv = 0;
-			ypos -= mag * speed;
-			return;
-		}
-		else if(dir == 4){
-			yv = 0;
-			ypos += mag * speed;
-			return;
-		}
-	}
-	auto coords = getAutoBlockCoords();
 	int current = getBlock();
+	int next = getNext();
 
-	int next = INT_MIN;
-	if(!path.empty()){
-		next = path.front();
-		if(next == current){
-			path.pop();
-			if (!path.empty()) {
-				next = path.front();
-			}
-			else {
-				next = INT_MIN;
-			}
-		}
-	}
+	if(manhattan_distance() <= 4){
 
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
-		
 		if(path.empty()){
 
 			set_path_mode3(scary_target);
-
-			coords = getAutoBlockCoords();
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-			destR.x = xpos;
-			destR.y = ypos;
-
+			set_pos_at_centre();
 			return;
 		}
-		else if(next == current + 1){
-			xv = mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current - 1){
-			xv = -mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current + Game::cols){
-			xv = 0;
-			yv = mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-		else if(next == current - Game::cols){
-			xv = 0;
-			yv = -mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
+
+		switch_next(current, next);
 	}
 
-	xpos += xv * speed;
-	ypos += yv * speed;
-	
-	destR.x = xpos;
-	destR.y = ypos;
+	update_position();
 }	
 
 
 void Automated::Update4() {
 	if(drone_reached) return;
 	Entity::keepInside();
-	for(auto & u: * Game::entities->walls){
-		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
-		if(dir == 1){
-			xv = 0;
-			xpos -= mag * speed;		// different from player
-			return;
-		}
-		else if(dir == 2){
-			xv = 0;
-			xpos += mag * speed;
-			return;
-		}
-		else if(dir == 3){
-			yv = 0;
-			ypos -= mag * speed;
-			return;
-		}
-		else if(dir == 4){
-			yv = 0;
-			ypos += mag * speed;
-			return;
-		}
-	}
-	auto coords = getAutoBlockCoords();
+	handle_wall_collisions();
+
 	int current = getBlock();
-	int next = INT_MIN;
-	if(!path.empty()){
-		next = path.front();
-		if(next == current){
-			path.pop();
-			next = path.front();
-		}
-	}
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
+	int next = getNext();
+
+	if(manhattan_distance() <= 4){
+
 		if(path.empty()){
-			// cout<<"hi"<<endl;
-			xv = 0;
-			yv = 0;
-			coords = getAutoBlockCoords();
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-			destR.x = xpos;
-			destR.y = ypos;
+			set_pos_at_centre();
+			set_velocity_zero();
 			drone_reached = true;
 			return;
 		}
-		if(next == current + 1){
-			xv = mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current - 1){
-			xv = -mag;
-			yv = 0;
-			ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-		}
-		else if(next == current + Game::cols){
-			xv = 0;
-			yv = mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-		else if(next == current - Game::cols){
-			xv = 0;
-			yv = -mag;
-			xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-		}
-
+		switch_next(current, next);
 	}
-	xpos += xv * speed;
-	ypos += yv * speed;
-	
-	destR.x = xpos;
-	destR.y = ypos;
+	update_position();
 }
 
 
@@ -768,36 +571,13 @@ void Automated::Update(){
 }
 
 
-bool Automated::is_at_centre () {
-	auto coords = getAutoBlockCoords();
-	int centre_x = xpos + destR.w / 2;
-	int centre_y = ypos + destR.h / 2;
-	int block_centre_y = coords.first + Game::block_h / 2;
-	int block_centre_x = coords.second + Game::block_w / 2;
-	if(abs(centre_x - block_centre_x) + abs(centre_y - block_centre_y) <= 4){
-		return true;
-	}
-	return false;
-}
-
-void Automated::empty_the_path() {
-	while (!path.empty()) {
-		path.pop();
-	}
-}
-
-void Automated::set_at_centre() {
-	auto coords = getAutoBlockCoords();
-	xpos = coords.second + Game::block_w / 2 - destR.w / 2;
-	ypos = coords.first + Game::block_h / 2 - destR.h / 2;
-	xv = 0;
-	yv = 0;
-}
 
 bool Automated::change_mode(int mode_id) {
 	if (!is_at_centre() ) return false;
 	
-	set_at_centre();
+	set_pos_at_centre();
+	set_velocity_zero();
+
 	empty_the_path();
 
 	if (mode_id == 0) {

@@ -54,8 +54,20 @@ void Update4();
 bool change_mode(int mode_id);
 void empty_the_path();
 bool is_at_centre();
-void set_at_centre();
+void set_pos_at_centre();
 
+
+void handle_wall_collisions();
+
+int getNext();
+
+int manhattan_distance(); 
+
+void switch_next(int current, int next);
+
+void update_position();
+
+void set_velocity_zero();
 
 
 
