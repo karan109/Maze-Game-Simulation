@@ -15,7 +15,7 @@ public:
 	void  switch_in_scared_mode();
 	void  switch_in_not_scared_mode();
 
-	void collisions();
+	// void collisions();
 
 	// int switch_distance_scared;
 	// int switch_distance_not_scared;

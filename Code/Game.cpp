@@ -216,3 +216,37 @@ void Game::clean(){
 	TTF_Quit();
 	SDL_Quit();
 }
+
+
+void Game::handle_collisions() {
+
+	// what if collides with another player?
+	// if collides with target then return
+	for(auto & player: * Game::entities->players){
+		for(auto & monster: * Game::entities->monsters){
+
+			int dir = Collision::AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
+			if(dir != 0){
+				// xv = 0;	no cleanup
+				if (player->scary) {
+					// player has got to the monster
+					// monster will vanish and start from beginning
+					// player will continue
+					// add a game pause where monster blinks and stuff happens?
+					// Delete();
+					monster->Reinitialize();		
+				}
+				else {
+					//monster has got to the player
+					// player will vanish and start from beginning. (take care in player.cpp?) 
+					// monster will continue
+					// just for testing
+					player->Reinitialize();					
+					return;
+				}			
+			}
+		}	
+	}
+	//monster and automated stuff collision
+
+}

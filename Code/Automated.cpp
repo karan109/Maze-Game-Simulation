@@ -593,5 +593,10 @@ bool Automated::change_mode(int mode_id) {
 
 }
 
+void Automated::Reinitialize() {
+	set_pos(start_node);
+	change_mode(mode);
+}
+
 
 

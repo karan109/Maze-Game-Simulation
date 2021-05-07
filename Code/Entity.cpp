@@ -15,6 +15,8 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	ypos = destR.y;
 	xv = 0;
 	yv = 0;
+	start_node = start;
+	retreat_node = start;
 }
 
 
@@ -369,4 +371,33 @@ int Entity::is_frightened(Entity * e1, Entity * e2) {
 		}
 	}
 	return 0;
+}
+
+
+
+// at centre of current node
+void Entity::set_pos_at_centre() {
+	auto coords = getAutoBlockCoords();
+	xpos = coords.second + Game::block_w / 2 - destR.w / 2;
+	ypos = coords.first + Game::block_h / 2 - destR.h / 2;
+	destR.x = xpos;
+	destR.y = ypos;
+}
+// at centre of node start
+void Entity::set_pos (int start) {
+	auto coords = getAutoBlockCoords(start);
+	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
+	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
+	xpos = destR.x;
+	ypos = destR.y;
+}
+
+void Entity::set_velocity_zero() {
+	xv = 0;
+	yv = 0;
+}
+
+void Entity::Reinitialize() {
+	set_pos(retreat_node);
+	set_velocity_zero();
 }

@@ -55,6 +55,15 @@ public:
 
 	bool scared = 0;
 	bool scary = 0;
+	int start_node;
+	int retreat_node;
+	bool caught = 0;
+
+	void set_pos_at_centre();
+	void set_pos (int start);
+	void set_velocity_zero();
+	void Reinitialize();
+
 protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

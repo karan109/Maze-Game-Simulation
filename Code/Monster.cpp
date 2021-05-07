@@ -8,36 +8,36 @@ void Monster::Delete() {
 	Game::entities->Delete(this);
 }
 
-void Monster::collisions() {
-	// what if collides with another player?
-	// if collides with target then return
-	for(auto & player: * Game::entities->players){
-		int dir = Collision::AABB(getBB(), player->getBB(), getXV(), getYV(), player->getXV(), player->getYV());
-		if(dir != 0){
-			// xv = 0;	no cleanup
-			if (player->scary) {
-				// player has got to the monster
-				// monster will vanish and start from beginning
-				// player will continue
-				// add a game pause where monster blinks and stuff happens?
-				// Delete();
-				set_pos(monster_retreat_node);
-				change_mode(2);
+// void Monster::collisions() {
+// 	// what if collides with another player?
+// 	// if collides with target then return
+// 	for(auto & player: * Game::entities->players){
+// 		int dir = Collision::AABB(getBB(), player->getBB(), getXV(), getYV(), player->getXV(), player->getYV());
+// 		if(dir != 0){
+// 			// xv = 0;	no cleanup
+// 			if (player->scary) {
+// 				// player has got to the monster
+// 				// monster will vanish and start from beginning
+// 				// player will continue
+// 				// add a game pause where monster blinks and stuff happens?
+// 				// Delete();
+// 				set_pos(retreat_node);
+// 				change_mode(mode);
 				
-			}
-			else {
-				//monster has got to the player
-				// player will vanish and start from beginning. (take care in player.cpp?) 
-				// monster will continue
-				// just for testing
-				set_pos(monster_retreat_node);
-				change_mode(mode);//keep the mode same as before
-				return;
-			}			
-		}	
-	}
-	//monster and automated stuff collision
-}
+// 			}
+// 			else {
+// 				//monster has got to the player
+// 				// player will vanish and start from beginning. (take care in player.cpp?) 
+// 				// monster will continue
+// 				// just for testing
+// 				set_pos(retreat_node);
+// 				change_mode(mode);//keep the mode same as before
+// 				return;
+// 			}			
+// 		}	
+// 	}
+// 	//monster and automated stuff collision
+// }
 
 Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/dragon.png", srcR_param, start){
 	speed = 2.5;
@@ -52,8 +52,8 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	speed = 2.5;
 	target = nullptr;
 
-	monster_retreat_node = 10;	//Game::cols * Game::rows - 1; // change this for different monsters
-	dest = monster_retreat_node;
+	//Game::cols * Game::rows - 1; // change retreat node for different monsters
+	dest = retreat_node;
 
 	// switch_distance_scared = 10;
 	// switch_distance_not_scared = 10;
@@ -85,7 +85,7 @@ void Monster::Update() {
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
-	collisions();
+	// collisions();
 	Automated::Update();
 	if(yv > 0){
 		srcR.y = srcR.h * 2;

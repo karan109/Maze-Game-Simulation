@@ -70,6 +70,7 @@ void update_position();
 
 void set_velocity_zero();
 
+void Reinitialize();
 
 
 

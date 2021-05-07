@@ -16,6 +16,7 @@ public:
 	bool running(){
 		return isRunning;
 	}
+	void handle_collisions();
 	static SDL_Renderer * renderer;
 	static SDL_Event event;
 	static Entities * entities;

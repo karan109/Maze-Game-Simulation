@@ -134,6 +134,7 @@ int main(int argc, char* argv[]){
         frameStart = SDL_GetTicks();
 
         game->handleEvents();
+        game->handle_collisions();
         game->update();
         game->render();
 
