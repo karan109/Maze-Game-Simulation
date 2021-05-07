@@ -62,7 +62,11 @@ public:
 	void set_pos_at_centre();
 	void set_pos (int start);
 	void set_velocity_zero();
-	void Reinitialize();
+	void restart();
+
+
+	void change_objTexture( SDL_Texture * tex ,SDL_Rect srcR_param, SDL_Rect destR_param);
+	void change_objTexture( const char * texturesheet ,SDL_Rect srcR_param, SDL_Rect destR_param);
 
 protected:
 	int mag = 1; // Magnitude of velocity

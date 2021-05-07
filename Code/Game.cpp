@@ -96,7 +96,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		entities->Add(drone);
 	}
 	if(Game::task == 1){
-		monster = new Monster(SDL_Rect{0, 0, 191, 161}, 10, 3, 100); // change to Game::rows * Game::cols - 1
+		monster = new Monster(SDL_Rect{0, 0, 191, 161}, Game::rows * Game::cols - 1, 3, 100); // change to Game::rows * Game::cols - 1
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 		entities->Add(monster);
 		entities->Add(snitch);
@@ -111,6 +111,15 @@ void Game::handleEvents(){
 	SDL_PollEvent(& event);
 	if(event.type == SDL_QUIT){
 		isRunning = false;
+	}
+
+	if(task == 1){
+		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
+			int broom_starting_node = ( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
+			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, broom_starting_node);//(Game::rows * Game::cols / 2)
+			entities->Add(broom);
+			broom_exists = 1;
+		}
 	}
 }
 void Game::update(){
@@ -136,19 +145,13 @@ void Game::update(){
 		health->Update();
 	}
 
+	for(auto & broom : * entities->brooms){
+		broom->Update();
+	}
+
 // <<<<<<< HEAD
 // =======
-	if(task == 1){
-		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
-			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, (Game::rows * Game::cols / 2));
-			entities->Add(broom);
-			broom_exists = 1;
-		}
 
-		for(auto & broom : * entities->brooms){
-			broom->Update();
-		}
-	}
 
 }
 void Game::render(){
@@ -226,7 +229,9 @@ void Game::handle_collisions() {
 		for(auto & monster: * Game::entities->monsters){
 
 			int dir = Collision::AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
-			if(dir != 0){
+			if(dir != 0) {
+			// if (Collision::happens(player, monster)) {
+				// cout << 1 << endl;
 				// xv = 0;	no cleanup
 				if (player->scary) {
 					// player has got to the monster
@@ -234,19 +239,58 @@ void Game::handle_collisions() {
 					// player will continue
 					// add a game pause where monster blinks and stuff happens?
 					// Delete();
-					monster->Reinitialize();		
+					monster->restart();		
 				}
 				else {
 					//monster has got to the player
-					// player will vanish and start from beginning. (take care in player.cpp?) 
+					// player will vanish and start from beginning.
 					// monster will continue
-					// just for testing
-					player->Reinitialize();					
+					// handle game stuck case
+					// change player health decrement 1 life
+					// cout << "got ya bitch ";
+					player->restart();					
 					return;
 				}			
 			}
-		}	
+			// else cout << 0 << endl;
+		}
+		// cout << Game::entities->brooms->size() << endl;
+
+		for(auto & broom: * Game::entities->brooms){
+			int dir = Collision::AABB(broom->getBB(), player->getBB(), broom->getXV(), broom->getYV(), player->getXV(), player->getYV());
+			if(dir != 0) {
+				player->scary = 1; // transform the game when player is scary
+				player->on_the_broom = 1;
+				player->my_broom = broom;
+				broom->caught = 1;
+				broom->my_player = player;
+			}
+		}
+
+
+		for(auto & snitch: * Game::entities->snitches){
+			int dir = Collision::AABB(snitch->getBB(), player->getBB(), snitch->getXV(), snitch->getYV(), player->getXV(), player->getYV());
+			if(dir != 0) {
+				//player has caught the snitch
+				snitch->caught = 1;
+				snitch-> transform();
+				//increase lives of player
+			}
+		}
+
+
+
+
+
+
 	}
+
+
+
+	
+
+
+
 	//monster and automated stuff collision
 
 }

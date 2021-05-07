@@ -2,6 +2,7 @@
 
 #include "Entity.hpp"
 
+class Player;
 class Broom : public Entity{
 public:
 	Broom(SDL_Rect srcR_param, int start);
@@ -22,6 +23,8 @@ public:
 
 	bool vanish;
 	bool exists = true;	
+
+	Player * my_player = nullptr;
 
 private:
 

@@ -19,7 +19,8 @@ void Automated::print_path(){
 	for(auto vertex : temp){
 		path.push(vertex);
 	}
-	cout<<endl<<endl<<endl;
+	cout << endl;
+	// cout<<endl<<endl<<endl;
 }
 void Automated::set_dest(int dest_param){
 	while (!path.empty()){
@@ -89,6 +90,27 @@ void Automated::set_dest(Entity * target_param){
 	path.pop();
 }
 
+int Automated::switch_dir(int temp_dir, int current) {
+	int next = INT_MIN;
+	if (temp_dir == 1) {
+		next = current + 1;
+		xv = mag; 
+	} 
+	if (temp_dir == 2) {
+		next = current + Game::cols;
+		yv = mag; 
+	}
+	if (temp_dir == 3) {
+		next = current - 1;
+		xv = -mag; 
+	}
+	if (temp_dir == 4) {
+		next = current - Game::cols;
+		yv = -mag; 
+	}
+	return next;
+}
+
 
 void Automated::set_path_mode2() {
 
@@ -100,7 +122,6 @@ void Automated::set_path_mode2() {
 	}
 
 	vector <int> temp;
-	int next = INT_MIN;
 
 	if (xv == mag and yv == 0) {
 		if (Entity::can_go_right(current)) temp.push_back(1);
@@ -143,22 +164,9 @@ void Automated::set_path_mode2() {
 
 	xv = 0;
 	yv = 0;
-	if (temp_dir == 1) {
-		next = current + 1;
-		xv = mag; 
-	} 
-	if (temp_dir == 2) {
-		next = current + Game::cols;
-		yv = mag; 
-	}
-	if (temp_dir == 3) {
-		next = current - 1;
-		xv = -mag; 
-	}
-	if (temp_dir == 4) {
-		next = current - Game::cols;
-		yv = -mag; 
-	}
+
+	int next = switch_dir(temp_dir, current);
+
 
 	// cout << "block: " << current << " xv: " << xv << " yv: " << yv << " next: " << next << " " << temp_dir << endl;
 	
@@ -194,11 +202,13 @@ void Automated::set_path_mode3(Entity * scary_target) {
 
 	int temp_dir = 0;
 	int max_distance = graph.distance(current, scary_block);
+	bool a[5] = {0};
 
 	for (int i = 0; i < temp.size() ; ++i) {
 		int dir = temp[i];
 		int d;
 		if (dir == 1) {
+			a[1] = 1;
 			d = graph.distance(current + 1, scary_block);
 			if (d > max_distance) {
 				max_distance = d;
@@ -206,6 +216,7 @@ void Automated::set_path_mode3(Entity * scary_target) {
 			}
 		}
 		if (dir == 2) {
+			a[2] = 1;
 			d = graph.distance(current + Game::cols, scary_block);
 			if (d > max_distance) {
 				max_distance = d;
@@ -213,6 +224,7 @@ void Automated::set_path_mode3(Entity * scary_target) {
 			}
 		}
 		if (dir == 3) {
+			a[3] = 1;
 			d = graph.distance(current - 1, scary_block);
 			if (d > max_distance) {
 				max_distance = d;
@@ -220,6 +232,7 @@ void Automated::set_path_mode3(Entity * scary_target) {
 			}
 		}
 		if (dir == 4) {
+			a[4] = 1;
 			d = graph.distance(current - Game::cols, scary_block);
 			if (d > max_distance) {
 				max_distance = d;
@@ -228,25 +241,48 @@ void Automated::set_path_mode3(Entity * scary_target) {
 		}
 	}
 
-	xv = 0;
-	yv = 0;
-
 	if (temp_dir == 1) {
 		next = current + 1;
-		xv = mag; 
+		xv = mag;
+		yv = 0; 
 	} 
 	if (temp_dir == 2) {
 		next = current + Game::cols;
 		yv = mag; 
+		xv = 0;
 	}
 	if (temp_dir == 3) {
 		next = current - 1;
-		xv = -mag; 
+		xv = -mag;
+		yv = 0; 
 	}
 	if (temp_dir == 4) {
 		next = current - Game::cols;
-		yv = -mag; 
+		yv = -mag;
+		xv = 0; 
 	}
+	if (temp_dir == 0) {
+		//go according to velocity if possible to go
+		if (xv == mag and a[1] == 1) {
+			next = current + 1;
+		}
+		else if (yv == mag and a[2] == 1) {
+			next = current + Game::cols;
+		}
+		else if (xv == -mag and a[3] == 1) {
+			next = current - 1;
+		}
+		else if (yv == -mag and a[4] == 1) {
+			next = current - Game::cols;
+		}
+		else {
+			int go_randomly = temp[rand() % temp.size()];
+			next = switch_dir(go_randomly, current);
+		}
+	}
+	// if nothing else works just stay where you are
+	// xv = 0
+	// yv = 0
 	path.push(next);
 }
 
@@ -429,7 +465,7 @@ void Automated::Update0() {
 	int current = getBlock();
 	int next = getNext();
 
-	if (next == INT_MIN) return; // why idk
+	// if (next == INT_MIN) return; // why idk
 
 	if(manhattan_distance() <= 4){
 		switch_next(current, next);
@@ -556,7 +592,6 @@ void Automated::Update(){
 		
 	}
 
-
 }
 
 
@@ -593,7 +628,7 @@ bool Automated::change_mode(int mode_id) {
 
 }
 
-void Automated::Reinitialize() {
+void Automated::restart() {
 	set_pos(start_node);
 	change_mode(mode);
 }

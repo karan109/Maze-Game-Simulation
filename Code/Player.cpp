@@ -9,6 +9,10 @@ void Player::Delete() {
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
+
+	speed = 3.5;
+	
+
 	showHealth = true;
 	health = 100;
 	number = number_param;
@@ -21,6 +25,9 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
+	
+	speed = 3.5;
+
 	animated = true;
 	srcR.y = srcR.h * 4;
 	frames = frames_param;
@@ -38,6 +45,11 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 
 
 void Player::Update(){
+
+	if (on_the_broom) speed = 5;
+	else speed = 3.5;
+
+
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}

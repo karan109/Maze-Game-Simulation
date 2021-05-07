@@ -9,12 +9,20 @@ void Snitch::Delete() {
 	Game::entities->Delete(this);
 }
 
+void Snitch::transform() {
+	caught = 1;
+	Entity::change_objTexture("../Images/Resurrection_Stone.png", SDL_Rect{0, 0, 549, 549}, destR);
+	// set_pos_at_centre();
+	set_velocity_zero();
+}
+
 Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png", srcR_param, start){
 	speed = 2.5;
 	// scary_target = nullptr;
 	set_mode(2);
 	vanish_texture = Texture::LoadTexture("../Images/empty.png");
 	snitch_texture = Texture::LoadTexture("../Images/snitch.png");
+	resurrection_stone_texture = Texture::LoadTexture("../Images/Resurrection_Stone.png");
 
 	vanish_counter = 0;
 	vanish = 0;
@@ -40,6 +48,10 @@ void Snitch::switch_mode() {
 }
 
 void Snitch::Update() {
+
+	if (caught) {
+		return;
+	}
 
 	switch_mode();
 

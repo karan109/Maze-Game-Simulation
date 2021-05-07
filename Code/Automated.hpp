@@ -70,7 +70,13 @@ void update_position();
 
 void set_velocity_zero();
 
-void Reinitialize();
+void restart();
+
+int switch_dir(int temp_dir, int current);
+
+void print_path(); // Prints path for debugging
+
+
 
 
 
@@ -79,5 +85,5 @@ protected:
 	// int dest; // final destination (not needed in case of stones)
 	queue<int> path; // Path as queue of node numbers
 	int current; // Current node number of entity
-	void print_path(); // Prints path for debugging
+	// void print_path(); // Prints path for debugging
 };

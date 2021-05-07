@@ -23,7 +23,7 @@ Health.o : Game.hpp Entity.hpp Health.hpp Health.cpp
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 	$(COMPILE) -c Wall.cpp $(SDLFLAGS)
 
-Collision.o : Collision.cpp Collision.hpp includes.hpp
+Collision.o : Collision.cpp Collision.hpp includes.hpp Entity.hpp
 	$(COMPILE) -c Collision.cpp $(SDLFLAGS)
 
 Stone.o : Stone.cpp Stone.hpp Entity.hpp includes.hpp Game.hpp Texture.hpp
@@ -41,7 +41,7 @@ Automated.o : Automated.cpp Automated.hpp Entity.hpp includes.hpp Game.hpp
 Drone.o : Drone.cpp Drone.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Drone.cpp $(SDLFLAGS)
 
-Broom.o : includes.hpp Collision.hpp Game.hpp Entity.hpp Broom.hpp Broom.cpp
+Broom.o : includes.hpp Collision.hpp Game.hpp Entity.hpp Broom.hpp Broom.cpp Player.hpp
 	$(COMPILE) -c Broom.cpp $(SDLFLAGS)
 	
 Remote.o : Remote.cpp Player.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp

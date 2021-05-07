@@ -69,6 +69,7 @@ public:
 	}
 
 	void Delete (Broom * broom) {
+		if (brooms->size() == 0) {cout << "fffffffffffffffffffffffffffffffffffffffffff" << endl ; return;}
 		auto position = find (brooms->begin(), brooms->end(), broom);
 		if (position != brooms->end()) brooms->erase(position);
 	}

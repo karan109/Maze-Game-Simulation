@@ -66,7 +66,8 @@ void Monster::switch_in_scared_mode() {
 	else if (distance(this, scary_target) > 20 and mode == 3) {
 		change_mode(1);
 	}
-	else if (scatter_reached = true and mode == 1) {
+	else if (scatter_reached == true and mode == 1) {
+		// scatter_reached = false;
 		change_mode(2);
 	}
 }
@@ -117,6 +118,7 @@ void Monster::Update() {
 		animated = false;
 	}
 
+	// change to any player scary
 	if (target->scary == true) {
 
 		if (!scared) {
@@ -128,13 +130,15 @@ void Monster::Update() {
 	if (target->scary == false) {	
 
 		if (scared) {
-			bool mode_changed = change_mode(3);
+			bool mode_changed = change_mode(0);
 			if (mode_changed) scared = false;
 		}
 	}
 
+	// cout << "target_scary: " << target->scary << "\tmonster_scared: " << scared << endl;
+
 	if (scared) switch_in_scared_mode();
 	// else switch_in_not_scared_mode();
 
-	// cout << mode << " " << monster_is_scared << endl;
+	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
 }

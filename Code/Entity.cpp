@@ -33,6 +33,23 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_pa
 	xv = 0;
 	yv = 0;
 }
+// not the velocity
+void Entity::change_objTexture( SDL_Texture * tex ,SDL_Rect srcR_param, SDL_Rect destR_param) {
+	objTexture = tex;
+	srcR = srcR_param;
+	destR = destR_param;
+	xpos = destR.x;
+	ypos = destR.y;
+}
+// not the velocity
+void Entity::change_objTexture( const char * texturesheet ,SDL_Rect srcR_param, SDL_Rect destR_param) {
+	objTexture = Texture::LoadTexture(texturesheet);
+	srcR = srcR_param;
+	destR = destR_param;
+	xpos = destR.x;
+	ypos = destR.y;
+}
+
 void Entity::Update(){
 	
 }
@@ -386,8 +403,8 @@ void Entity::set_pos_at_centre() {
 // at centre of node start
 void Entity::set_pos (int start) {
 	auto coords = getAutoBlockCoords(start);
-	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
-	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
+	destR.x = coords.second + Game::block_w / 2 - destR.w / 2;
+	destR.y = coords.first + Game::block_h / 2 - destR.h / 2;
 	xpos = destR.x;
 	ypos = destR.y;
 }
@@ -397,7 +414,7 @@ void Entity::set_velocity_zero() {
 	yv = 0;
 }
 
-void Entity::Reinitialize() {
+void Entity::restart() {
 	set_pos(retreat_node);
 	set_velocity_zero();
 }
