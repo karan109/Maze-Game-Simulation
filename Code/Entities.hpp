@@ -73,4 +73,19 @@ public:
 		if (position != brooms->end()) brooms->erase(position);
 	}
 
+	void Delete (Snitch * snitch) {
+		auto position = find (snitches->begin(), snitches->end(), snitch);
+		if (position != snitches->end()) snitches->erase(position);
+	}
+
+	void Delete (Monster * monster) {
+		auto position = find (monsters->begin(), monsters->end(), monster);
+		if (position != monsters->end()) monsters->erase(position);
+	}
+
+	void Delete (Player * player) {
+		auto position = find (players->begin(), players->end(), player);
+		if (position != players->end()) players->erase(position);
+	}
+
 };

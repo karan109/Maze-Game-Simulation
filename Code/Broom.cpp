@@ -4,10 +4,10 @@
 #include "Entities.hpp"
 #include "Broom.hpp"
 
-Broom::~Broom(){
+
+void Broom::Delete() {
 	SDL_DestroyTexture(objTexture);
-	// change to deleting current obj
-	Game::entities->brooms->clear();
+	Game::entities->Delete(this);
 }
 
 
@@ -60,10 +60,7 @@ void Broom::Update() {
 		objTexture = vanish_texture;
 
 		// delete the broom
-		SDL_DestroyTexture(objTexture);
-		// deleting current obj from entities
-		Game::entities->Delete(this);
-
+		Delete();
 	}
 }
 

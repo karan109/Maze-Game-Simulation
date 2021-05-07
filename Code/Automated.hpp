@@ -55,6 +55,7 @@ bool change_mode(int mode_id);
 void empty_the_path();
 bool is_at_centre();
 void set_pos_at_centre();
+void set_pos(int start);
 
 
 void handle_wall_collisions();

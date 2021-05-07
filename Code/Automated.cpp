@@ -397,13 +397,21 @@ void Automated::empty_the_path() {
 		path.pop();
 	}
 }
-
+// at centre of current node
 void Automated::set_pos_at_centre() {
 	auto coords = getAutoBlockCoords();
 	xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 	ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 	destR.x = xpos;
 	destR.y = ypos;
+}
+// at centre of node start
+void Automated::set_pos (int start) {
+	auto coords = getAutoBlockCoords(start);
+	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
+	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
+	xpos = destR.x;
+	ypos = destR.y;
 }
 
 void Automated::set_velocity_zero() {
@@ -417,17 +425,7 @@ void Automated::Update0() {
 	if(target == nullptr) return;
 	// changes path as target moves 
 	Automated::set_dest(target);
-
-	Entity::keepInside();
-	handle_wall_collisions();
 	
-	// if collides with target then return
-	int dir = Collision::AABB(getBB(), target->getBB(), getXV(), getYV(), target->getXV(), target->getYV());
-	if(dir != 0){
-		// xv = 0;	no cleanup
-		return;
-	}	
-
 	int current = getBlock();
 	int next = getNext();
 
@@ -441,9 +439,8 @@ void Automated::Update0() {
 }
 
 void Automated::Update1() {
+
 	if(scatter_reached) return;
-	Entity::keepInside();
-	handle_wall_collisions();
 
 	int current = getBlock();
 	int next = getNext();
@@ -462,9 +459,8 @@ void Automated::Update1() {
 }
 
 void Automated::Update2() {
-	Entity::keepInside();
+
 	srand(time(0));
-	handle_wall_collisions();
 
 	int current = getBlock();
 	int next = getNext();
@@ -472,12 +468,8 @@ void Automated::Update2() {
 	if(manhattan_distance() <= 4){
 
 		if(path.empty()){
-
 			set_path_mode2();
-
 			set_pos_at_centre();
-
-
 			return;
 		}
 		switch_next(current, next);
@@ -491,9 +483,6 @@ void Automated::Update2() {
 void Automated::Update3() {
 
 	srand(time(0));
-
-	Entity::keepInside();
-	handle_wall_collisions();
 
 	int current = getBlock();
 	int next = getNext();
@@ -516,8 +505,6 @@ void Automated::Update3() {
 
 void Automated::Update4() {
 	if(drone_reached) return;
-	Entity::keepInside();
-	handle_wall_collisions();
 
 	int current = getBlock();
 	int next = getNext();
@@ -538,6 +525,8 @@ void Automated::Update4() {
 
 void Automated::Update(){
 
+	Entity::keepInside();
+	handle_wall_collisions();
 
 	if (mode == 0) {
 		Update0();
@@ -569,6 +558,8 @@ void Automated::Update(){
 
 
 }
+
+
 
 
 

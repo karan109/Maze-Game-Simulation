@@ -2,6 +2,12 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 #include "Texture.hpp"
+#include "Entities.hpp"
+
+void Snitch::Delete() {
+	SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(this);
+}
 
 Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png", srcR_param, start){
 	speed = 2.5;

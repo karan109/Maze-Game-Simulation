@@ -1,6 +1,12 @@
 #include "Player.hpp"
 #include "Game.hpp"
 #include "Collision.hpp"
+#include "Entities.hpp"
+
+void Player::Delete() {
+	SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(this);
+}
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
 	showHealth = true;

@@ -7,6 +7,8 @@ class Snitch : public Automated{
 public:
 	Snitch(SDL_Rect srcR_param, int start);
 	void Update();
+	void Delete();
+
 
 
 	SDL_Texture * vanish_texture;

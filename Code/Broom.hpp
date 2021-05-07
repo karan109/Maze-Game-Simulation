@@ -5,9 +5,9 @@
 class Broom : public Entity{
 public:
 	Broom(SDL_Rect srcR_param, int start);
-	~Broom();
 
 	void Update();
+	void Delete();
 
 
 	SDL_Texture * vanish_texture;
