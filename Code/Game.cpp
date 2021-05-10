@@ -245,10 +245,13 @@ void Game::handle_collisions() {
 				else {
 					//monster has got to the player
 					// player will vanish and start from beginning.
-					// monster will continue
+					// monster will continue? not sure
+					// monster will emit fire
+					// monster will retreat?
 					// handle game stuck case
 					// change player health decrement 1 life
 					// cout << "got ya bitch ";
+					monster-> restart();
 					player->restart();					
 					return;
 				}			
