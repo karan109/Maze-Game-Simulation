@@ -48,6 +48,7 @@ public:
 	static bool isRunning;
 	static int task;
 	static string player_name;
+	static int N;
 	// static int response;
 	// static int send;
 

@@ -45,6 +45,7 @@ int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
 int Game::window_h = Game::wall_thickness + Game::menu + block_h * rows + (rows - 1) * wall_thickness;
 int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wall_thickness;
+int Game::N = Game::rows * Game::cols;
 
 int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
@@ -96,7 +97,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		entities->Add(drone);
 	}
 	if(Game::task == 1){
-		monster = new Monster(SDL_Rect{0, 0, 191, 161}, Game::rows * Game::cols - 1, 3, 100); // change to Game::rows * Game::cols - 1
+		monster = new Monster(SDL_Rect{0, 0, 191, 161}, 10, 3, 100); // change to Game::rows * Game::cols - 1
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 		entities->Add(monster);
 		entities->Add(snitch);
@@ -228,7 +229,7 @@ void Game::handle_collisions() {
 	for(auto & player: * Game::entities->players){
 		for(auto & monster: * Game::entities->monsters){
 
-			int dir = Collision::AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
+			int dir = Collision::close_AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
 			// if (Collision::happens(player, monster)) {
 				// cout << 1 << endl;
@@ -257,7 +258,7 @@ void Game::handle_collisions() {
 		// cout << Game::entities->brooms->size() << endl;
 
 		for(auto & broom: * Game::entities->brooms){
-			int dir = Collision::AABB(broom->getBB(), player->getBB(), broom->getXV(), broom->getYV(), player->getXV(), player->getYV());
+			int dir = Collision::close_AABB(broom->getBB(), player->getBB(), broom->getXV(), broom->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
 				player->scary = 1; // transform the game when player is scary
 				player->on_the_broom = 1;
@@ -269,7 +270,7 @@ void Game::handle_collisions() {
 
 
 		for(auto & snitch: * Game::entities->snitches){
-			int dir = Collision::AABB(snitch->getBB(), player->getBB(), snitch->getXV(), snitch->getYV(), player->getXV(), player->getYV());
+			int dir = Collision::close_AABB(snitch->getBB(), player->getBB(), snitch->getXV(), snitch->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
 				//player has caught the snitch
 				snitch->caught = 1;
