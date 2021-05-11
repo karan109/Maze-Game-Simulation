@@ -103,10 +103,21 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		entities->Add(drone);
 	}
 	if(Game::task == 1){
-		monster = new Monster(SDL_Rect{0, 0, 191, 161}, 10, 3, 100); // change to Game::rows * Game::cols - 1
+		int monster1_starting_node = 10; // change 10 to Game::rows * Game::cols - 1
+		int player1_starting_node = 0;
+
+		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, 3.5); //3.5 is player speed
+		monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, 2.5); //2.5 is monster speed 
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
+
+		entities->Add(player1); 
 		entities->Add(monster);
 		entities->Add(snitch);
+
+		// player mode = -1 is set in player constructor
+		monster->set_mode(0, player1); // the one it chases
+        monster->scary_target = player1; // the one it is scared of
+        snitch->scary_target = player1;
 	}
 	Game::game_maze->DrawMaze();
 

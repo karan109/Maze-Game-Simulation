@@ -134,6 +134,8 @@ void handle_wall_collisions();
 int getNext();
 
 int manhattan_distance(); 
+int manhattan_distance_player(); 
+
 
 void switch_next(int current, int next);
 
@@ -149,6 +151,9 @@ void print_path(); // Prints path for debugging
 
 queue<int> path; // Path as queue of node numbers
 int current; 
+
+// player mode = -1
+void Update_player();
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------
