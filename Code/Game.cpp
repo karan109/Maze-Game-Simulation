@@ -118,20 +118,16 @@ void Game::handleEvents(){
 
 	handle_quit_game();
 
-	update_global_running_time();
+	if (! paused) {
+		update_global_running_time();
+	}
+	else {
+		update_global_paused_time();
+		switch_pause();
+	}
+
 
 }
-
-
-void Game::handlePause() {
-
-	handle_quit_game();
-
-	update_global_paused_time();
-
-	switch_pause();
-}
-
 
 void Game::handle_quit_game () {
 	SDL_PollEvent(& event);
@@ -179,9 +175,9 @@ void Game::update(){
 	for(auto & player : * entities->players){
 		player->Update();
 	}
-	for(auto & remote : * entities->remotes){
-		remote->Update();
-	}
+	// for(auto & remote : * entities->remotes){
+	// 	remote->Update();
+	// }
 	for(auto & monster : * entities->monsters){
 		monster->Update();
 	}
@@ -226,9 +222,9 @@ void Game::render(){
 	for(auto & player : * entities->players){
 		player->Render();
 	}
-	for(auto & remote : * entities->remotes){
-		remote->Render();
-	}
+	// for(auto & remote : * entities->remotes){
+	// 	remote->Render();
+	// }
 	for(auto & monster : * entities->monsters){
 		monster->Render();
 	}
@@ -273,6 +269,8 @@ void Game::clean(){
 
 void Game::handle_collisions() {
 
+	if (paused) return;
+
 	// what if collides with another player?
 	// if collides with target then return
 	for(auto & player: * Game::entities->players){
@@ -281,7 +279,7 @@ void Game::handle_collisions() {
 			int dir = Collision::close_AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
 				paused = 1;
-			// if (Collision::happens(player, monster)) {
+				// if (Collision::happens(player, monster)) {
 				// cout << 1 << endl;
 				// xv = 0;	no cleanup
 				if (player->scary) {
@@ -336,19 +334,7 @@ void Game::handle_collisions() {
 			}
 		}
 
-
-
-
-
-
 	}
 
-
-
-	
-
-
-
 	//monster and automated stuff collision
-
 }

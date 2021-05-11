@@ -22,7 +22,7 @@ public:
 	void Add_entities();
 	void handle_collisions();
 	static bool paused;
-	void handlePause();
+	// void handlePause();
 	void update_global_paused_time();
 	void switch_pause();
 

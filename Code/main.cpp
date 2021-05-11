@@ -133,18 +133,10 @@ int main(int argc, char* argv[]){
 
         frameStart = SDL_GetTicks();
 
-        if (! game->paused) {
-
-            game->handleEvents();
-            game->update();
-            game->handle_collisions();
-            game->render();
-        }
-        else {
-            game->handlePause();
-            game->render();
-        }
-
+        game->handleEvents();
+        game->update();
+        game->handle_collisions();
+        game->render();
 
 
         frameTime = SDL_GetTicks() - frameStart;

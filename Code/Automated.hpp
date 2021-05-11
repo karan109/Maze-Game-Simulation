@@ -9,81 +9,82 @@ Automated(const char * texturesheet, SDL_Rect srcR_param, int start);
 
 
 
-void Update();
+// void Update();
 
-int mode;
-// get_mode, set_mode etc
-void set_mode(int mode_id, Entity * target_param);
-void set_mode(int mode_id, int dest_param);
-void set_mode(int mode_id);
-void set_mode_id(int mode_id);
-
-
-// mode = 0
-Entity * target;
-void set_dest(Entity * target_param);
-void Update0();
+// int mode;
+// // get_mode, set_mode etc
+// void set_mode(int mode_id, Entity * target_param);
+// void set_mode(int mode_id, int dest_param);
+// void set_mode(int mode_id);
+// void set_mode_id(int mode_id);
 
 
-// mode = 1
-int dest;
-bool scatter_reached = false;
-void set_dest(int dest_param);
-void Update1();
+// // mode = 0
+// Entity * target;
+// void set_dest(Entity * target_param);
+// void Update0();
 
 
-
-// mode = 2
-void set_path_mode2();
-void Update2();
-
-
-// mode = 3
-Entity * scary_target;
-void set_path_mode3(Entity * scary_target);
-void Update3();
+// // mode = 1
+// int dest;
+// bool scatter_reached = false;
+// void set_dest(int dest_param);
+// void Update1();
 
 
 
-//mode = 4
-bool drone_reached = false;
-void set_stones();
-void Update4();
+// // mode = 2
+// void set_path_mode2();
+// void Update2();
 
 
-bool change_mode(int mode_id);
-void empty_the_path();
-bool is_at_centre();
-void set_pos_at_centre();
-void set_pos(int start);
+// // mode = 3
+// Entity * scary_target;
+// void set_path_mode3(Entity * scary_target);
+// void Update3();
 
 
-void handle_wall_collisions();
 
-int getNext();
-
-int manhattan_distance(); 
-
-void switch_next(int current, int next);
-
-void update_position();
-
-void set_velocity_zero();
-
-void restart();
-
-int switch_dir(int temp_dir, int current);
-
-void print_path(); // Prints path for debugging
+// //mode = 4
+// bool drone_reached = false;
+// void set_stones();
+// void Update4();
 
 
+// bool change_mode(int mode_id);
+// void empty_the_path();
+// bool is_at_centre();
+// void set_pos_at_centre();
+// void set_pos(int start);
+
+
+// void handle_wall_collisions();
+
+// int getNext();
+
+// int manhattan_distance(); 
+
+// void switch_next(int current, int next);
+
+// void update_position();
+
+// void set_velocity_zero();
+
+// void restart();
+
+// int switch_dir(int temp_dir, int current);
+
+// void print_path(); // Prints path for debugging
+
+// queue<int> path; // Path as queue of node numbers
+// int current; 
 
 
 
 
 protected:
 	// int dest; // final destination (not needed in case of stones)
-	queue<int> path; // Path as queue of node numbers
-	int current; // Current node number of entity
+	// queue<int> path; // Path as queue of node numbers
+	// int current; // Current node number of entity
 	// void print_path(); // Prints path for debugging
 };

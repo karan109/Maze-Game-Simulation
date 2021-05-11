@@ -5,8 +5,8 @@
 class Health : public Entity{
 public:
 	Health(SDL_Rect srcR_param, Entity * target_param, bool move_param);
-	void Update() override;
-	void Render() override;
+	void Update();
+	void Render();
 	SDL_Texture * white, * black;
 	Entity * target;
 	int length;
