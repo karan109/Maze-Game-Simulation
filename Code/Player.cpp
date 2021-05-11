@@ -53,11 +53,14 @@ void Player::Update(){
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
+
+	// health with time
 	counter++;
 	if(counter == Game::FPS / 2){
 		counter = 0;
 		if(health > 0) health-= 5;
 	}
+
 	int block_num = Entity::getBlock();
 	set<int> obstacles;
 	Entity::keepInside();
@@ -143,6 +146,10 @@ void Player::Update(){
 			xv = 0;
 		}
 	}
+	// face = 1 right facing
+	// face = 2 left facing
+	// face = 3 down facing
+	// face = 4 up facing
 	if(yv > 0){
 		srcR.y = srcR.h * 4;
 		face = 3;

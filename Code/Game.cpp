@@ -60,8 +60,11 @@ Mix_Chunk * Game::gLow = nullptr;
 
 int Game::original_broom_h = 1274;
 int Game::original_broom_w = 2393;
-bool Game::broom_exists = 0;
+// bool Game::broom_exists = 0;
 
+
+int Game::global_counter = 0;
+double Game::global_time = 0;
 
 
 
@@ -105,7 +108,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	Game::game_maze->DrawMaze();
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
-	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
+	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" ); //wall collision
 
 }
 void Game::handleEvents(){
@@ -113,13 +116,23 @@ void Game::handleEvents(){
 	if(event.type == SDL_QUIT){
 		isRunning = false;
 	}
+	// update global_counter and time
+	global_counter++;
+	// int global_time. same value for 60 gloabal counters.
+	// global_time = global_counter / Game::FPS;
 
+	// double global_time. value == 1 only once.
+	global_time = (double)global_counter / Game::FPS;
+
+	// cout << global_counter << " " << global_time << endl;
+
+	// add broom
 	if(task == 1){
-		if (SDL_GetTicks() >= 10000 and broom_exists == 0) {
+		if (global_time == 10) {
 			int broom_starting_node = ( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
 			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, broom_starting_node);//(Game::rows * Game::cols / 2)
 			entities->Add(broom);
-			broom_exists = 1;
+			// broom_exists = 1;
 		}
 	}
 }

@@ -61,7 +61,7 @@ public:
 
 	static int original_broom_h;
 	static int original_broom_w;
-	static bool broom_exists;
+	// static bool broom_exists;
 	Broom * broom;
 
 	Player * player1;
@@ -78,6 +78,9 @@ public:
 	static Mix_Chunk * gHigh;
 	static Mix_Chunk * gMedium;
 	static Mix_Chunk * gLow;
+
+	static int global_counter;
+	static double global_time;
 
 
 
