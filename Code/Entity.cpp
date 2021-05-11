@@ -51,7 +51,6 @@ void Entity::change_objTexture( const char * texturesheet ,SDL_Rect srcR_param, 
 }
 
 void Entity::Update(){
-	
 }
 void Entity::Render(){
 	SDL_RenderCopy(Game::renderer, objTexture, & srcR, & destR);
@@ -417,4 +416,8 @@ void Entity::set_velocity_zero() {
 void Entity::restart() {
 	set_pos(retreat_node);
 	set_velocity_zero();
+}
+void Entity::time_update() {
+	entity_counter++;
+	entity_time = (double) entity_counter / Game::FPS;
 }

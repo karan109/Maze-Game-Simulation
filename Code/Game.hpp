@@ -16,7 +16,17 @@ public:
 	bool running(){
 		return isRunning;
 	}
+
+	void handle_quit_game ();
+	void update_global_running_time();
+	void Add_entities();
 	void handle_collisions();
+	static bool paused;
+	void handlePause();
+	void update_global_paused_time();
+	void switch_pause();
+
+
 	static SDL_Renderer * renderer;
 	static SDL_Event event;
 	static Entities * entities;
@@ -81,6 +91,11 @@ public:
 
 	static int global_counter;
 	static double global_time;
+
+	static int pause_counter;
+	static double pause_time;
+
+
 
 
 

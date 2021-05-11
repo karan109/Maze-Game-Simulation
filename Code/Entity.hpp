@@ -42,7 +42,7 @@ public:
 	int ypos; // y coordinate
 	bool showHealth;
 	int health = 100;
-	int counter = 0;
+
 	int number;
 	bool animated = false;
 	int frames = 0;
@@ -67,6 +67,11 @@ public:
 
 	void change_objTexture( SDL_Texture * tex ,SDL_Rect srcR_param, SDL_Rect destR_param);
 	void change_objTexture( const char * texturesheet ,SDL_Rect srcR_param, SDL_Rect destR_param);
+
+	int counter = 0;
+	int entity_counter = 0;
+	double entity_time = 0;
+	void time_update();
 
 protected:
 	int mag = 1; // Magnitude of velocity

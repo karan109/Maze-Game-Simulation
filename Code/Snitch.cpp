@@ -27,10 +27,10 @@ Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png
 	vanish_counter = 0;
 	vanish = 0;
 	
-	blinking_time = Game::FPS * 18;
-	disapparation_time = Game::FPS * 20;
-	// apparation_time = Game::FPS * 52;
-	vanish_time = Game::FPS * 0.1;
+	blinking_time = 18;
+	disapparation_time = 20;
+
+	vanish_time = 0.1;
 
 	disappearing_mode = 1;
 	switch_distance = 15;
@@ -53,22 +53,23 @@ void Snitch::Update() {
 		return;
 	}
 
+	Automated::Update();
+
+
 	switch_mode();
 
 	// srand(Game::seed); //already done in Game.cpp?
 	if (disappearing_mode == 1) {
-		counter++;
-		// int one = Game::FPS;
 
-		if (counter ==  blinking_time) {
+		if (entity_time ==  blinking_time) {
 			vanish = 1;
 			vanish_counter = 0;
 			objTexture = vanish_texture;
 		}
 
-		else if (counter > blinking_time and counter < disapparation_time) {
+		else if (entity_time > blinking_time and entity_time < disapparation_time) {
 			++vanish_counter;
-			if (vanish_counter == vanish_time) {
+			if (vanish_counter == Game::FPS * vanish_time) {
 				vanish_counter = 0;
 				vanish = ! vanish ;
 				if (vanish) {
@@ -107,6 +108,5 @@ void Snitch::Update() {
 		}
 	}
 
-	Automated::Update();
 
 }

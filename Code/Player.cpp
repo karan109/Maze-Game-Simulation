@@ -46,6 +46,8 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 
 void Player::Update(){
 
+	time_update();
+
 	if (on_the_broom) speed = 5;
 	else speed = 3.5;
 
@@ -55,11 +57,9 @@ void Player::Update(){
 	}
 
 	// health with time
-	counter++;
-	if(counter == Game::FPS / 2){
-		counter = 0;
+	if (fmod(entity_time, 0.5) == 0) {
 		if(health > 0) health-= 5;
-	}
+	} 
 
 	int block_num = Entity::getBlock();
 	set<int> obstacles;

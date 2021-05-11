@@ -561,6 +561,8 @@ void Automated::Update4() {
 
 void Automated::Update(){
 
+	time_update();
+
 	Entity::keepInside();
 	handle_wall_collisions();
 

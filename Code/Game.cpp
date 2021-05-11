@@ -65,6 +65,9 @@ int Game::original_broom_w = 2393;
 
 int Game::global_counter = 0;
 double Game::global_time = 0;
+bool Game::paused = false;
+int Game::pause_counter = 0;
+double Game::pause_time = 0;
 
 
 
@@ -112,20 +115,47 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 }
 void Game::handleEvents(){
+
+	handle_quit_game();
+
+	update_global_running_time();
+
+}
+
+
+void Game::handlePause() {
+
+	handle_quit_game();
+
+	update_global_paused_time();
+
+	switch_pause();
+}
+
+
+void Game::handle_quit_game () {
 	SDL_PollEvent(& event);
 	if(event.type == SDL_QUIT){
 		isRunning = false;
 	}
-	// update global_counter and time
+}
+void Game::update_global_running_time() {
 	global_counter++;
-	// int global_time. same value for 60 gloabal counters.
-	// global_time = global_counter / Game::FPS;
-
-	// double global_time. value == 1 only once.
 	global_time = (double)global_counter / Game::FPS;
+}
 
-	// cout << global_counter << " " << global_time << endl;
-
+void Game::update_global_paused_time() {
+	pause_counter++;
+	pause_time = (double) pause_counter / Game::FPS;
+}
+void Game::switch_pause() {
+	if (pause_time == 5) {
+		paused = false;
+		pause_counter = 0;
+		pause_time = 0;
+	}
+}
+void Game::Add_entities() {
 	// add broom
 	if(task == 1){
 		if (global_time == 10) {
@@ -137,6 +167,12 @@ void Game::handleEvents(){
 	}
 }
 void Game::update(){
+
+	if (paused) return;
+
+	Add_entities();
+
+
 	for(auto & stone : * entities->stones){
 		stone->Update();
 	}
@@ -244,6 +280,7 @@ void Game::handle_collisions() {
 
 			int dir = Collision::close_AABB(monster->getBB(), player->getBB(), monster->getXV(), monster->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
+				paused = 1;
 			// if (Collision::happens(player, monster)) {
 				// cout << 1 << endl;
 				// xv = 0;	no cleanup
@@ -276,6 +313,8 @@ void Game::handle_collisions() {
 		for(auto & broom: * Game::entities->brooms){
 			int dir = Collision::close_AABB(broom->getBB(), player->getBB(), broom->getXV(), broom->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
+				paused = 1;
+
 				player->scary = 1; // transform the game when player is scary
 				player->on_the_broom = 1;
 				player->my_broom = broom;
@@ -288,6 +327,8 @@ void Game::handle_collisions() {
 		for(auto & snitch: * Game::entities->snitches){
 			int dir = Collision::close_AABB(snitch->getBB(), player->getBB(), snitch->getXV(), snitch->getYV(), player->getXV(), player->getYV());
 			if(dir != 0) {
+				paused = 1;
+
 				//player has caught the snitch
 				snitch->caught = 1;
 				snitch-> transform();
