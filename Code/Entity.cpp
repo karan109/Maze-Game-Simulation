@@ -27,6 +27,7 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	yv = 0;
 	start_node = start;
 	retreat_node = start;
+	dest = retreat_node;
 }
 
 
@@ -224,6 +225,25 @@ bool Entity::change_mode(int mode_id) {
 void Entity::restart() {
 	set_pos(start_node);
 	change_mode(mode);
+}
+
+void Entity::start_collision() {
+	collided = 1;
+	mode_before_collision = mode;
+	set_pos_at_centre();
+	dest = start_node;
+	change_mode(1);
+	speed = 5;
+}
+
+
+void Entity::resume_after_collision() {
+	// change face
+	scatter_reached = 0;
+	collided = 0;
+	set_pos_at_centre();
+	change_mode(mode_before_collision);
+	speed = original_speed;
 }
 
 

@@ -95,7 +95,31 @@ public:
 	static int pause_counter;
 	static double pause_time;
 
+	static int player_original_speed;
+	static int monster_original_speed;
+	static int snitch_original_speed;
 
+
+
+
+	Broom * collided_broom = nullptr;
+	Player * collided_player = nullptr;
+	Monster * collided_monster = nullptr;
+	Snitch * collided_snitch = nullptr;
+
+	string collision_code = "";
+
+
+	void start_game_collision ();
+	void pause_updates();
+	bool resume_safely ();
+	void reset_collided_entities();
+
+
+	static int broom_disapparation_time;
+	static int monster1_starting_node;
+	static int player1_starting_node;
+	static int broom_starting_node;
 
 
 

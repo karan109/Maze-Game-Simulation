@@ -11,5 +11,5 @@ public:
 	void Delete();
 	void  switch_in_scared_mode();
 	void  switch_in_not_scared_mode();
-	
+	void switch_modes();
 };

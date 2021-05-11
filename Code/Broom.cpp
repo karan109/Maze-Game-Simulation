@@ -17,6 +17,8 @@ void Broom::Delete() {
 
 		my_player->scary = 0;
 		my_player->on_the_broom = 0;
+		my_player->speed = my_player->original_speed;
+
 		my_player->my_broom = nullptr;
 		caught = 0;
 		my_player = nullptr;
@@ -37,7 +39,7 @@ Broom::Broom (SDL_Rect srcR_param, int start) : Entity("../Images/broom.png", sr
 	vanish_counter = 0;
 	vanish = 0;
 	
-	disapparation_time = Game::FPS * 30;
+	disapparation_time = Game::FPS * Game::broom_disapparation_time;
 	blinking_time = disapparation_time - 2 * Game::FPS;
 	// apparation_time = Game::FPS * 11;
 	vanish_time = Game::FPS * 0.2;

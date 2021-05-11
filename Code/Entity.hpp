@@ -81,6 +81,8 @@ public:
 	double entity_time = 0;
 	void time_update();
 
+	bool collided = 0;
+
 // --------------------------------------------------FROM AUTOMATED---------------------------------------------
 int mode;
 // get_mode, set_mode etc
@@ -154,6 +156,13 @@ int current;
 
 // player mode = -1
 void Update_player();
+
+int original_mode;
+int original_speed;
+int mode_before_collision;
+
+void start_collision();
+void resume_after_collision();
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------

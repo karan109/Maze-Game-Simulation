@@ -17,9 +17,12 @@ void Snitch::transform() {
 }
 
 Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png", srcR_param, start){
-	speed = 2.5;
+	
+	original_speed = Game::snitch_original_speed;
+	speed = original_speed;
 	// scary_target = nullptr;
-	set_mode(2);
+	original_mode = 2;
+	set_mode(original_mode);
 	vanish_texture = Texture::LoadTexture("../Images/empty.png");
 	snitch_texture = Texture::LoadTexture("../Images/snitch.png");
 	resurrection_stone_texture = Texture::LoadTexture("../Images/Resurrection_Stone.png");

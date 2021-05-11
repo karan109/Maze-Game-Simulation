@@ -10,8 +10,10 @@ void Player::Delete() {
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
 
-	speed = 3.5;
+	original_speed = Game::player_original_speed;
+	speed = original_speed;
 	set_mode(-1); // mode = -1;
+	dest = retreat_node;
 	
 
 	showHealth = true;
@@ -27,8 +29,12 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
 	
-	speed = 3.5;
-	set_mode(-1); //mode = -1;
+	original_speed = Game::player_original_speed;
+	speed = original_speed;
+
+	original_mode = -1;
+	set_mode(original_mode); //mode = -1;
+	dest = retreat_node;
 
 	animated = true;
 	srcR.y = srcR.h * 4;
@@ -48,10 +54,9 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 
 void Player::Update(){
 
-	// time_update();
+	// cout << xpos << " " << destR.x << " " << ypos << " " <<destR.y << endl;
 
-	if (on_the_broom) speed = 5;
-	else speed = 3.5;
+	// time_update();
 
 	// health with time
 	// if (fmod(entity_time, 0.5) == 0) {
@@ -62,9 +67,11 @@ void Player::Update(){
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
+	
 
 	Entity::Update();
 
+	
 	// face = 1 right facing
 	// face = 2 left facing
 	// face = 3 down facing
@@ -98,6 +105,7 @@ void Player::Update(){
 		// srcR.x = srcR.w * 7;
 		animated = false;
 	}
+
 
 
 

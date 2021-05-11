@@ -8,39 +8,11 @@ void Monster::Delete() {
 	Game::entities->Delete(this);
 }
 
-// void Monster::collisions() {
-// 	// what if collides with another player?
-// 	// if collides with target then return
-// 	for(auto & player: * Game::entities->players){
-// 		int dir = Collision::AABB(getBB(), player->getBB(), getXV(), getYV(), player->getXV(), player->getYV());
-// 		if(dir != 0){
-// 			// xv = 0;	no cleanup
-// 			if (player->scary) {
-// 				// player has got to the monster
-// 				// monster will vanish and start from beginning
-// 				// player will continue
-// 				// add a game pause where monster blinks and stuff happens?
-// 				// Delete();
-// 				set_pos(retreat_node);
-// 				change_mode(mode);
-				
-// 			}
-// 			else {
-// 				//monster has got to the player
-// 				// player will vanish and start from beginning. (take care in player.cpp?) 
-// 				// monster will continue
-// 				// just for testing
-// 				set_pos(retreat_node);
-// 				change_mode(mode);//keep the mode same as before
-// 				return;
-// 			}			
-// 		}	
-// 	}
-// 	//monster and automated stuff collision
-// }
-
 Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/dragon.png", srcR_param, start){
-	speed = 2.5;
+
+	original_mode = 0;
+	original_speed = Game::monster_original_speed;
+	speed = original_speed;
 	target = nullptr;
 }
 
@@ -49,11 +21,15 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	srcR.y = srcR.h * 4;
 	frames = frames_param;
 	animate_speed = speed_param;
-	speed = 2.5;
+	
+	original_mode = 0;
+	original_speed = Game::monster_original_speed;
+	speed = speed_param;
+
 	target = nullptr;
 
 	//Game::cols * Game::rows - 1; // change retreat node for different monsters
-	dest = retreat_node;
+	dest = retreat_node; //retreat_node = start in Entity constructor
 
 	// switch_distance_scared = 10;
 	// switch_distance_not_scared = 10;
@@ -81,13 +57,39 @@ void Monster::switch_in_not_scared_mode() {
 	}
 }
 
+void Monster::switch_modes() {
+	if (collided) return;
+	// change to any player scary
+	if (target->scary == true) {
+
+		if (!scared) {
+			bool mode_changed = change_mode(3);
+			if (mode_changed) scared = true;
+		}
+	}
+
+	if (target->scary == false) {	
+
+		if (scared) {
+			bool mode_changed = change_mode(0);
+			if (mode_changed) scared = false;
+		}
+	}
+
+	if (scared) switch_in_scared_mode();
+	// else switch_in_not_scared_mode();
+}
+
 
 void Monster::Update() {
+
+	// cout << mode << endl;
+	
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
 	// collisions();
-	Automated::Update();
+	Entity::Update();
 	if(yv > 0){
 		srcR.y = srcR.h * 2;
 		face = 3;
@@ -118,27 +120,7 @@ void Monster::Update() {
 		animated = false;
 	}
 
-	// change to any player scary
-	if (target->scary == true) {
-
-		if (!scared) {
-			bool mode_changed = change_mode(3);
-			if (mode_changed) scared = true;
-		}
-	}
-
-	if (target->scary == false) {	
-
-		if (scared) {
-			bool mode_changed = change_mode(0);
-			if (mode_changed) scared = false;
-		}
-	}
-
-	// cout << "target_scary: " << target->scary << "\tmonster_scared: " << scared << endl;
-
-	if (scared) switch_in_scared_mode();
-	// else switch_in_not_scared_mode();
+	if (!collided) switch_modes();
 
 	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
 }
