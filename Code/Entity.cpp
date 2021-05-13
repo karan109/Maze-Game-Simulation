@@ -801,16 +801,17 @@ void Entity::Update_player() {
 	}
 
 	auto coords = getCurrentBlockCoords();
+	int md = manhattan_distance_player();
 
 	if(yv == 0 and xv != 0){
 		if( (xv == mag and Entity::getRight() != 1) or (xv == -mag and Entity::getLeft() != 1) ){
-			if(manhattan_distance_player() <= 20)   // smooth turn
+			if(md <= 20)   // smooth turn
 				ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 		}
 	}
 	if(xv == 0 and yv != 0){
 		if( (yv == mag and Entity::getDown() != 1) or (yv == -mag and Entity::getUp() != 1) ){
-			if(manhattan_distance_player() <= 20)
+			if(md <= 20)
 				xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 		}
 	}
