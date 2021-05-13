@@ -24,7 +24,7 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	
 	original_mode = 0;
 	original_speed = Game::monster_original_speed;
-	speed = speed_param;
+	speed = original_speed;
 
 	target = nullptr;
 
@@ -76,7 +76,7 @@ void Monster::switch_modes() {
 		}
 	}
 
-	if (scared) switch_in_scared_mode();
+	// if (scared) switch_in_scared_mode();
 	// else switch_in_not_scared_mode();
 }
 

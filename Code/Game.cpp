@@ -116,8 +116,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(Game::task == 1){
 
 
-		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, player_original_speed); //3.5 is player speed
-		monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, monster_original_speed); //2.5 is monster speed 
+		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, 100); //3.5 is player speed
+		monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, 100); //2.5 is monster speed 
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
 		entities->Add(player1); 
