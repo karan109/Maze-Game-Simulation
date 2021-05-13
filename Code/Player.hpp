@@ -3,7 +3,7 @@
 #include "Entity.hpp"
 #include "Health.hpp"
 
-class Broom;
+// class Broom;
 class Player : public Entity{
 public:
 	Player(SDL_Rect srcR_param, int start, int number_param);
@@ -12,7 +12,15 @@ public:
 	void Update(); // Update function
 	void Delete();
 
-	bool on_the_broom = 0;
-	Broom * my_broom = nullptr;
+	bool boost = 0;
+	double boost_time_left = 0;
+	double boost_time_limit;
+	double boost_speed;
+	void update_boost();
+	void boost_on();
+	void boost_off();
+	void update_boost_time_left();
+
+	// Broom * my_broom = nullptr;
 
 };

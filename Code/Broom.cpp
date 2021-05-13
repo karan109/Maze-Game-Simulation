@@ -13,17 +13,17 @@ void Broom::Delete() {
 	objTexture = vanish_texture;
 
 	exists = 0;
-	if (caught) {
+	// if (caught) {
 
-		my_player->scary = 0;
-		my_player->on_the_broom = 0;
-		my_player->speed = my_player->original_speed;
+	// 	my_player->scary = 0;
+	// 	my_player->boost = 0;
+	// 	my_player->speed = my_player->original_speed;
 
-		my_player->my_broom = nullptr;
-		caught = 0;
-		my_player = nullptr;
+	// 	my_player->my_broom = nullptr;
+	// 	caught = 0;
+	// 	my_player = nullptr;
 
-	}
+	// }
 	SDL_DestroyTexture(objTexture);
 	Game::entities->Delete(this);
 
@@ -75,9 +75,6 @@ void Broom::Update() {
 		}
 	}
 	else if(counter == disapparation_time){
-
-
-
 		// delete the broom
 		Delete();
 	}

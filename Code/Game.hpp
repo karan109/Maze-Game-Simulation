@@ -81,9 +81,13 @@ public:
 	static Mix_Chunk * gLow;
 
 
-	static int player_original_speed;
-	static int monster_original_speed;
-	static int snitch_original_speed;
+	static double player_original_speed;
+	static double player_boost_speed;
+	static double player_boost_time_limit;
+
+
+	static double monster_original_speed;
+	static double snitch_original_speed;
 
 
 
@@ -128,13 +132,25 @@ public:
 	void collision_updates();
 	bool resume_safely ();
 	void reset_collided_entities();
+	void collision_pause ();
 
-	void game_pause (double t);
 
-	static int broom_disapparation_time;
+	static void game_pause (double t);
+
+
 	static int monster1_starting_node;
 	static int player1_starting_node;
 	static int broom_starting_node;
+
+	static int broom_apparatation_time;
+	static int broom_disapparation_time;
+
+
+
+	static double player_monster_collision_pause;
+	static double player_snitch_collision_pause;
+	static double player_broom_collision_pause;
+
 
 
 

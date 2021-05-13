@@ -2,7 +2,7 @@
 
 #include "Entity.hpp"
 
-class Player;
+// class Player;
 class Broom : public Entity{
 public:
 	Broom(SDL_Rect srcR_param, int start);

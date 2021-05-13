@@ -79,18 +79,25 @@ bool Game::paused = false;
 bool Game::collision_happened = false;
 
 
+double Game::monster_original_speed = 2.5;
+double Game::snitch_original_speed = 2.5;
+double Game::player_original_speed = 3.5;
 
-int Game::player_original_speed = 3.5;
-int Game::monster_original_speed = 2.5;
-int Game::snitch_original_speed = 2.5;
+double Game::player_boost_speed = 5;
+double Game::player_boost_time_limit = 5;
 
 
-int Game::broom_disapparation_time = 100;
 
+int Game::broom_apparatation_time = 10;
+int Game::broom_disapparation_time = 100; // so 110 pe disappears
+
+int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
 int Game::monster1_starting_node = 10; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
-int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
 
+double Game::player_monster_collision_pause = 1;
+double Game::player_snitch_collision_pause = 5;
+double Game::player_broom_collision_pause = 1;
 
 Game::Game(){
 
@@ -176,18 +183,25 @@ void Game::switch_pause() {
 		pause_counter = 0;
 		pause_time = 0;
 		global_pause_time_variable = 0;
+
+		reset_collided_entities();
+
 	}
 }
 void Game::switch_collision() {
-
-	bool resume = resume_safely ();
+	// first get peeps to their place
+	// then wait for 1/2/5 sec
+	// then reset.
+	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
 
 	if (resume) {
 		collision_happened = false;
 		collision_counter = 0;
 		collision_time = 0;
-		reset_collided_entities();
-		game_pause(1);
+
+		collision_pause();
+		// reset_collided_entities(); //done in switch_pause now
+		// game_pause(1);
 	}
 }
 
@@ -205,7 +219,7 @@ void Game::handle_quit_game () {
 void Game::Add_entities() {
 	// add broom
 	if(task == 1){
-		if (global_time == 10) {
+		if (global_time == Game::broom_apparatation_time) {
 			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, broom_starting_node);//(Game::rows * Game::cols / 2)
 			entities->Add(broom);
 			// broom_exists = 1;
@@ -214,10 +228,19 @@ void Game::Add_entities() {
 }
 
 void Game::game_pause(double t) {
+	// if (paused == 1) return;
 	global_pause_time_variable = t;
 	paused = 1;
 }
 
+void Game::clean(){
+	SDL_DestroyWindow(window);
+	SDL_DestroyRenderer(renderer);
+	Mix_Quit();
+	IMG_Quit();
+	TTF_Quit();
+	SDL_Quit();
+}
 
 
 // ------------------------------------------------- game loop functions --------------------------------------------------
@@ -242,9 +265,6 @@ void Game::handleEvents(){
 	}
 
 }
-
-
-
 
 
 void Game::update(){
@@ -287,12 +307,10 @@ void Game::update(){
 	for(auto & broom : * entities->brooms){
 		broom->Update();
 	}
-
-// <<<<<<< HEAD
-// =======
-
-
 }
+
+
+
 void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
@@ -350,14 +368,7 @@ void Game::render(){
 	SDL_RenderPresent(renderer);
 
 }
-void Game::clean(){
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
-	Mix_Quit();
-	IMG_Quit();
-	TTF_Quit();
-	SDL_Quit();
-}
+
 
 // not more than 1 collision at an instant
 void Game::handle_collisions() {
@@ -443,6 +454,10 @@ void Game::handle_collisions() {
 	//monster and automated stuff collision
 }
 
+
+// -------------------------------------------------collision auxilaries --------------------------------------------------
+
+
 void Game::start_game_collision () {
 
 	// Broom * broom = collided_broom;
@@ -463,12 +478,8 @@ void Game::start_game_collision () {
 
 	if (collision_code == "player_broom") {
 
-		collided_player->scary = 1; // transform the game when player is scary
-		collided_player->on_the_broom = 1;
-		collided_player->speed = 5;
-		collided_player->my_broom = collided_broom;
-		collided_broom->caught = 1;
-		collided_broom->my_player = collided_player;
+		collided_player->boost_on();
+
 	}
 
 	if (collision_code == "player_snitch") {
@@ -484,6 +495,7 @@ void Game::collision_updates() {
 		collided_monster->Update();
 	}
 	if (collision_code == "monster_player") {
+
 		collided_player->Update();
 		collided_player->health_box->Update();
 		collided_player->static_health_box->Update();
@@ -527,11 +539,11 @@ void Game::reset_collided_entities() {
 	}
 	else if (collision_code == "player_snitch") {
 
-		collided_snitch->Delete();
+		// collided_snitch->Delete();
 
 	}
 	else if (collision_code == "player_broom") {
-		// collided_broom->Delete();
+		collided_broom->Delete();
 	}
 
 
@@ -541,5 +553,23 @@ void Game::reset_collided_entities() {
 	collided_player = nullptr;
 	collided_monster = nullptr;
 	collided_snitch = nullptr;
+}
+
+void Game::collision_pause() {
+	if (collision_code == "scary_player_monster") {
+		game_pause(player_monster_collision_pause);
+	}
+
+	if (collision_code == "monster_player") {
+		game_pause(player_monster_collision_pause);
+
+	}
+	else if (collision_code == "player_snitch") {
+		game_pause(player_snitch_collision_pause);
+	}
+	else if (collision_code == "player_broom") {
+		game_pause(player_broom_collision_pause);
+
+	}
 }
 
