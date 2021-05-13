@@ -17,15 +17,6 @@ public:
 		return isRunning;
 	}
 
-	void handle_quit_game ();
-	void update_global_running_time();
-	void Add_entities();
-	void handle_collisions();
-	static bool paused;
-	// void handlePause();
-	void update_global_paused_time();
-	void switch_pause();
-
 
 	static SDL_Renderer * renderer;
 	static SDL_Event event;
@@ -89,11 +80,6 @@ public:
 	static Mix_Chunk * gMedium;
 	static Mix_Chunk * gLow;
 
-	static int global_counter;
-	static double global_time;
-
-	static int pause_counter;
-	static double pause_time;
 
 	static int player_original_speed;
 	static int monster_original_speed;
@@ -110,11 +96,40 @@ public:
 	string collision_code = "";
 
 
+	void handle_quit_game ();
+	void Add_entities();
+
+
+
+	static int global_counter;
+	static double global_time;
+
+	static int pause_counter;
+	static double pause_time;
+	static bool paused;
+	static double global_pause_time_variable;
+
+
+	static int collision_counter;
+	static double collision_time;
+	static bool collision_happened;
+
+
+	void update_global_running_time();
+	void update_global_pause_time();
+	void update_global_collision_time();
+
+	void switch_collision();
+	void switch_pause();
+
+
+	void handle_collisions();
 	void start_game_collision ();
-	void pause_updates();
+	void collision_updates();
 	bool resume_safely ();
 	void reset_collided_entities();
 
+	void game_pause (double t);
 
 	static int broom_disapparation_time;
 	static int monster1_starting_node;

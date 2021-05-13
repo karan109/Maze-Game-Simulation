@@ -63,11 +63,21 @@ int Game::original_broom_w = 2393;
 // bool Game::broom_exists = 0;
 
 
+
 int Game::global_counter = 0;
 double Game::global_time = 0;
-bool Game::paused = false;
 int Game::pause_counter = 0;
 double Game::pause_time = 0;
+int Game::collision_counter = 0;
+double Game::collision_time = 0;
+
+double Game::global_pause_time_variable = 0;
+
+
+
+bool Game::paused = false;
+bool Game::collision_happened = false;
+
 
 
 int Game::player_original_speed = 3.5;
@@ -135,20 +145,55 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" ); //wall collision
 
 }
-void Game::handleEvents(){
-
-	handle_quit_game();
-
-	if (! paused) {
-		update_global_running_time();
-	}
-	else {
-		update_global_paused_time();
-		switch_pause();
-	}
 
 
+
+// ------------------------------------------------- update running times--------------------------------------------------
+void Game::update_global_running_time() {
+	global_counter++;
+	global_time = (double)global_counter / Game::FPS;
 }
+
+void Game::update_global_pause_time() {
+	pause_counter++;
+	pause_time = (double) pause_counter / Game::FPS;
+}
+void Game::update_global_collision_time() {
+	collision_counter++;
+	collision_time = (double) collision_counter / Game::FPS;
+}
+
+
+
+// ------------------------------------------------- switch pauses --------------------------------------------------
+
+void Game::switch_pause() {
+
+	bool resume = (pause_time >= global_pause_time_variable);
+
+	if (resume) {
+		paused = false;
+		pause_counter = 0;
+		pause_time = 0;
+		global_pause_time_variable = 0;
+	}
+}
+void Game::switch_collision() {
+
+	bool resume = resume_safely ();
+
+	if (resume) {
+		collision_happened = false;
+		collision_counter = 0;
+		collision_time = 0;
+		reset_collided_entities();
+		game_pause(1);
+	}
+}
+
+
+// ------------------------------------------------- helper functions --------------------------------------------------
+
 
 void Game::handle_quit_game () {
 	SDL_PollEvent(& event);
@@ -156,26 +201,7 @@ void Game::handle_quit_game () {
 		isRunning = false;
 	}
 }
-void Game::update_global_running_time() {
-	global_counter++;
-	global_time = (double)global_counter / Game::FPS;
-}
 
-void Game::update_global_paused_time() {
-	pause_counter++;
-	pause_time = (double) pause_counter / Game::FPS;
-}
-void Game::switch_pause() {
-
-	bool resume = resume_safely () && (pause_time >= 5);
-
-	if (resume) {
-		paused = false;
-		pause_counter = 0;
-		pause_time = 0;
-		reset_collided_entities();
-	}
-}
 void Game::Add_entities() {
 	// add broom
 	if(task == 1){
@@ -186,11 +212,50 @@ void Game::Add_entities() {
 		}
 	}
 }
+
+void Game::game_pause(double t) {
+	global_pause_time_variable = t;
+	paused = 1;
+}
+
+
+
+// ------------------------------------------------- game loop functions --------------------------------------------------
+
+
+
+void Game::handleEvents(){
+
+	handle_quit_game();
+
+	if (paused) {
+		update_global_pause_time();
+		switch_pause();
+	}
+	if (collision_happened) {
+		update_global_collision_time();
+		switch_collision();
+
+	}
+	else {
+		update_global_running_time();
+	}
+
+}
+
+
+
+
+
 void Game::update(){
 
 	if (paused) {
+		return;
+	}
 
-		pause_updates();
+	if (collision_happened) {
+
+		collision_updates();
 		return;
 	}
 
@@ -297,7 +362,7 @@ void Game::clean(){
 // not more than 1 collision at an instant
 void Game::handle_collisions() {
 
-	if (paused) return;
+	if (paused || collision_happened) return;
 
 	// what if collides with another player?
 	// if collides with target then return
@@ -337,7 +402,7 @@ void Game::handle_collisions() {
 		
 					}	
 
-				paused = 1;
+				collision_happened = 1;
 				return;	
 			}
 		}
@@ -353,7 +418,7 @@ void Game::handle_collisions() {
 				start_game_collision();
 				// collision_between(player, snitch);
 
-				paused = 1;				
+				collision_happened = 1;				
 				return;
 
 			}
@@ -369,7 +434,7 @@ void Game::handle_collisions() {
 				start_game_collision();
 				// collision_between(player, broom);
 
-				paused = 1;
+				collision_happened = 1;
 				return;
 			}
 		}
@@ -414,7 +479,7 @@ void Game::start_game_collision () {
 	}
 }
 
-void Game::pause_updates() {
+void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
 		collided_monster->Update();
 	}
