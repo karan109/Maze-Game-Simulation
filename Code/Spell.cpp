@@ -24,6 +24,9 @@ Spell::Spell(Player * castee) {
 	set_velocity();
 	initialize_head_tail_velocity();	
 	destR = set_rect();
+	xpos = destR.x;
+	ypos = destR.y;
+	
 	released = 0;
 	spell_length_limit = 200;
 
@@ -132,12 +135,15 @@ void Spell::Update() {
 	update_tail();
 	length = abs(head - tail);
 	destR = get_rect();
+	xpos = destR.x;
+	ypos = destR.y;
 
 	if (release_conditions() ) {
 		if (!released) release_spell();
 	}
 
 	if (!collided) {
+		keepInside();
 		handle_wall_collision();
 	}
 
@@ -148,8 +154,6 @@ void Spell::Update() {
 	// if (finished) {
 	// 	Delete();
 	// }
-
-
 
 }
 
@@ -211,12 +215,40 @@ void Spell::handle_wall_collision() {
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		if (dir != 0) {
 			collided = 1;
+			SDL_Rect R = u->getBB();
 			// assert (dir == face)
+			switch (face) {
+				case 1: head = R.x; break;
+				case 2: head = R.x + R.w; break;
+				case 3: head = R.y; break;
+				case 4: head = R.y + R.h; break;
+			}
+
 			head_v = 0;
 		}
 	}
 }
 
+void Spell::keep_Inside(){
+	if(face == 1 and head >= Game::width - Game::wall_thickness){
+		head = Game::width - Game::wall_thickness;
+		head_v = 0;
+	}
+	else if(face == 2 and head <= Game::wall_thickness){
+		head = Game::wall_thickness;
+		head_v = 0;
+	}
+	else if(face == 3 and head >= Game::height - Game::wall_thickness){
+		head = Game::height - Game::wall_thickness;
+		head_v = 0;
+	}
+
+	else if(face == 4 and head <= Game::menu){
+		head = Game::menu;
+		head_v = 0;
+	}
+	
+}
 
 
 // ------------------------------------------------------render--------------------------------------------------------------------------------------
