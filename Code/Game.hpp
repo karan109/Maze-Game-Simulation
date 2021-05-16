@@ -63,12 +63,9 @@ public:
 	static int original_broom_h;
 	static int original_broom_w;
 	// static bool broom_exists;
+	
 	Broom * broom;
-
-	Player * player1;
-	// Player * player2;
-
-	// Remote * player2;
+	Player * player;
 	Drone * drone;
 	Monster * monster;
 	Stone * stone;
@@ -141,6 +138,7 @@ public:
 	static int monster1_starting_node;
 	static int player1_starting_node;
 	static int broom_starting_node;
+	static int snitch_starting_node;
 
 	static int broom_apparatation_time;
 	static int broom_disapparation_time;
@@ -158,8 +156,9 @@ public:
 
 	static queue<int> seq_generator(double p, bool chase, int sampling_time);
 	void add_monster(int start, double p, bool chase);
-
-
+	void add_player(int start);
+	void add_snitch(int start);
+	void add_broom(int appear_time, int start);
 
 private:
 	int ct = 0;

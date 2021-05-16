@@ -52,9 +52,12 @@ void Snitch::switch_mode() {
 
 void Snitch::Update() {
 
+
 	if (caught) {
 		return;
 	}
+
+	scary_target = nearest_player();
 
 	switch_mode();
 

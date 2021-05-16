@@ -63,6 +63,10 @@ int Game::original_broom_h = 1274;
 int Game::original_broom_w = 2393;
 // bool Game::broom_exists = 0;
 
+double Game::global_pause_time_variable = 0;
+bool Game::spacebar_pressed = 0;
+bool Game::paused = false;
+bool Game::collision_happened = false;
 
 
 int Game::global_counter = 0;
@@ -72,12 +76,10 @@ double Game::pause_time = 0;
 int Game::collision_counter = 0;
 double Game::collision_time = 0;
 
-double Game::global_pause_time_variable = 0;
 
-
-
-bool Game::paused = false;
-bool Game::collision_happened = false;
+double Game::player_monster_collision_pause = 1;
+double Game::player_snitch_collision_pause = 5;
+double Game::player_broom_collision_pause = 1;
 
 
 double Game::monster_original_speed = 2.5;
@@ -87,20 +89,22 @@ double Game::player_original_speed = 3.5;
 double Game::player_boost_speed = 5;
 double Game::player_boost_time_limit = 30;
 
-
-
 int Game::broom_apparatation_time = 10;
 int Game::broom_disapparation_time = 100; // so 110 pe disappears
+
+int Game::monster_cycle_time = 30;
+
+// ------------------------------------------------- variables --------------------------------------------------
+
 
 int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
 int Game::monster1_starting_node = 299; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
+int Game::snitch_starting_node = 20;
 
-double Game::player_monster_collision_pause = 1;
-double Game::player_snitch_collision_pause = 5;
-double Game::player_broom_collision_pause = 1;
 
-bool Game::spacebar_pressed = 0;
+
+// ----------------------------------------------------------------------------------------------------------------
 
 
 Game::Game(){
@@ -134,26 +138,26 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		drone = new Drone(SDL_Rect{144, 288, 72, 72}, 0);
 		entities->Add(drone);
 	}
+
+
+
+
+
+
+
 	if(Game::task == 1){
-
-
-		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, 100);
-		entities->Add(player1); 
- 
-		// monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, 100, 1); 
+		// must add player before monster
+ 		add_player(player1_starting_node);
 		add_monster(monster1_starting_node, 0.5, 1);
-		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
+		add_snitch(snitch_starting_node);
 
-		// entities->Add(monster);
-		entities->Add(snitch);
-
-		// player mode = -1 is set in player constructor
-		// monster->mode = 0;
-		// monster->target = player1;
-		// monster->set_mode(monster->original_mode, player1); // the one it chases
-        // monster->scary_target = player1; // the one it is scared of
-        snitch->scary_target = player1;
 	}
+	
+
+
+
+
+
 	Game::game_maze->DrawMaze();
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
@@ -161,18 +165,41 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 }
 
+// ------------------------------------------------- Add entities--------------------------------------------------
 
 void Game::add_monster(int start, double p, bool chase = 1) {
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase); 
-	// monster_set_target();
-	// monster_set_scary_target();
-	// done above in constructor
+	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
 	monster->seq = seq_generator(p, chase, 10); 
-	print_queue(monster->seq);
+	// print_queue(monster->seq);
 	entities->Add(monster);
 }
+void Game::add_player(int start){
+	player = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, start, 0, 6, 100);
+	entities->Add(player); 
 
+}
+void Game::add_snitch(int start){
+	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, start);
+	// snitch->scary_target = player1; // set in snitch constructor
+	entities->Add(snitch);
+}
+void Game::add_broom(int appear_time, int start) {
+	if (global_time == appear_time) {
+		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
+		entities->Add(broom);
+		// broom_exists = 1;
+	}
+}
+
+void Game::Add_entities() {
+	// add broom
+	if(task == 1){
+		add_broom(Game::broom_apparatation_time,broom_starting_node);
+
+	}
+}
 
 
 // ------------------------------------------------- update running times--------------------------------------------------
@@ -236,16 +263,6 @@ void Game::handle_quit_game () {
 	}
 }
 
-void Game::Add_entities() {
-	// add broom
-	if(task == 1){
-		if (global_time == Game::broom_apparatation_time) {
-			broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, broom_starting_node);//(Game::rows * Game::cols / 2)
-			entities->Add(broom);
-			// broom_exists = 1;
-		}
-	}
-}
 
 void Game::game_pause(double t) {
 	// if (paused == 1) return;

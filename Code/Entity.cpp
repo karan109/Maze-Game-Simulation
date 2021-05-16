@@ -367,6 +367,24 @@ void Entity::handle_spell_collisions() {
 
 
 
+Entity * Entity::nearest_player () {
+	auto & graph = Game::game_maze->graph;
+
+	int current = getBlock();
+	int min_dis = INT_MAX;
+	Entity * closest_player = nullptr;
+	for(auto & player: * Game::entities->players){
+		int dis = graph.distance(current, player->getBlock());
+		if (dis < min_dis) {
+			min_dis = dis;
+			closest_player = player;
+		}
+	}
+	return closest_player;
+}
+
+
+
 
 // ------------------------------------------------------SET PATH (MODE)--------------------------------------------------------------------------------------
 
