@@ -229,21 +229,25 @@ void Spell::handle_wall_collision() {
 	}
 }
 
-void Spell::keep_Inside(){
+void Spell::keepInside(){
 	if(face == 1 and head >= Game::width - Game::wall_thickness){
+		collided = 1;
 		head = Game::width - Game::wall_thickness;
 		head_v = 0;
 	}
 	else if(face == 2 and head <= Game::wall_thickness){
+		collided = 1;
 		head = Game::wall_thickness;
 		head_v = 0;
 	}
 	else if(face == 3 and head >= Game::height - Game::wall_thickness){
+		collided = 1;
 		head = Game::height - Game::wall_thickness;
 		head_v = 0;
 	}
 
 	else if(face == 4 and head <= Game::menu){
+		collided = 1;
 		head = Game::menu;
 		head_v = 0;
 	}
