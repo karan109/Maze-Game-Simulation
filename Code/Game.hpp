@@ -151,6 +151,8 @@ public:
 	static double player_snitch_collision_pause;
 	static double player_broom_collision_pause;
 
+	static bool spacebar_pressed;
+
 
 
 

@@ -52,7 +52,7 @@ int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
 int Game::task;
 string Game::player_name = "";
-// <<<<<<< HEAD
+
 Mix_Music * Game::gMusic = nullptr;
 Mix_Chunk * Game::gScratch = nullptr;
 Mix_Chunk * Game::gHigh = nullptr;
@@ -99,6 +99,9 @@ int Game::player1_starting_node = 0;
 double Game::player_monster_collision_pause = 1;
 double Game::player_snitch_collision_pause = 5;
 double Game::player_broom_collision_pause = 1;
+
+bool Game::spacebar_pressed = 0;
+
 
 Game::Game(){
 

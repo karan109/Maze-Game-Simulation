@@ -75,7 +75,7 @@ void Player::Update(){
 	update_boost();
 
 	if (casting_conditions() ) {
-		cout << 1 << endl;
+		// cout << 1 << endl;
 		cast_spell();
 	}
 
@@ -168,10 +168,17 @@ bool Player::casting_conditions() {
 	// if (!wanded) return;
 	// cout << " player casting condition used";
 
+
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
-		if(key == SDLK_SPACE) return 1;
+		if(key == SDLK_SPACE)  {
+			if (Game::spacebar_pressed == 0) {
+				Game::spacebar_pressed = 1;
+				return 1;
+			}
+		}
 	}
+
 	return 0;	
 }
 

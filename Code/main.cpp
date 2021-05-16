@@ -3,7 +3,39 @@
 #include "Button.hpp"
 Game * game = nullptr;
 
+
+void key_testing() {
+    // cout << Game::spacebar_pressed << endl;
+    // cout << Game::event.type << endl;
+
+    if(Game::event.type == SDL_KEYDOWN){
+        auto key = Game::event.key.keysym.sym;
+        if(key == SDLK_SPACE)  {
+            if (Game::spacebar_pressed == 0) {
+                Game::spacebar_pressed = 1;
+            }
+        }
+    }
+
+    if(Game::event.type == SDL_KEYUP){
+        auto key = Game::event.key.keysym.sym;
+        if(key == SDLK_SPACE)  {
+            if (Game::spacebar_pressed == 1) {
+                Game::spacebar_pressed = 0;
+            }
+        }
+    }
+    // if(Game::event.type == SDL_KEYUP){
+    //     auto key = Game::event.key.keysym.sym;
+    //     if(key == SDLK_SPACE) 
+    //         cout << "h" << endl;
+    // }
+    // else 
+    //     cout << "r" << endl;
+}
+
 int main(int argc, char* argv[]){
+
 
     unsigned int frameStart;
     int frameTime;
@@ -142,6 +174,9 @@ int main(int argc, char* argv[]){
         if(Game::frameDelay > frameTime){
             SDL_Delay(Game::frameDelay - frameTime);
         }
+
+        key_testing();
+
 
     }
     game->clean();

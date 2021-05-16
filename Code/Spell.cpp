@@ -17,7 +17,7 @@ Spell::Spell(Player * castee) {
 	set_velocity();
 	destR = set_rect();
 	released = 0;
-	spell_length_limit = 10;
+	spell_length_limit = 200;
 
 }
 void Spell::set_velocity() {
@@ -80,11 +80,17 @@ int Spell::get_tail(){
 bool Spell::release_conditions() {
 	// if already released??
 	// ie casting/pressed = 0
+	// cout << "idk wtf" << endl;
 	if(Game::event.type == SDL_KEYUP){
 		auto key = Game::event.key.keysym.sym;
-		if(key == SDLK_SPACE) return 1;
+		if(key == SDLK_SPACE)  {
+			if (Game::spacebar_pressed == 1) {
+				// Game::spacebar_pressed = 0;
+				return 1;
+			}
+		}
 	}
-	// if (length >= spell_length_limit) return 1;
+	if (length >= spell_length_limit) return 1;
 	// if direction of player changed
 	// if spell casting ability becomes 0 or health becomes 0
 	// if player collision happens
@@ -106,8 +112,8 @@ void Spell::Update() {
 	destR = get_rect();
 
 		// in spell
-	if (!released and release_conditions() ) {
-		release_spell();
+	if (release_conditions() ) {
+		if (!released) release_spell();
 	}
 
 }
@@ -149,3 +155,5 @@ void Spell::Render() {
 	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
 	SDL_RenderFillRect(Game::renderer, &destR);
 }
+
+
