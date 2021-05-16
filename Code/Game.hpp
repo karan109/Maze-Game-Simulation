@@ -151,8 +151,13 @@ public:
 	static double player_snitch_collision_pause;
 	static double player_broom_collision_pause;
 
+	static int monster_cycle_time;
 	static bool spacebar_pressed;
 
+	static void print_queue(queue<int>);
+
+	static queue<int> seq_generator(double p, bool chase, int sampling_time);
+	void add_monster(int start, double p, bool chase);
 
 
 

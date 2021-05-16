@@ -8,15 +8,18 @@ void Monster::Delete() {
 	Game::entities->Delete(this);
 }
 
-Monster::Monster(SDL_Rect srcR_param, int start) : Automated("../Images/dragon.png", srcR_param, start){
+Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start = 1) : Automated("../Images/dragon.png", srcR_param, start){
 
 	original_mode = 0;
 	original_speed = Game::monster_original_speed;
 	speed = original_speed;
 	target = nullptr;
+	chase = chase_start;
+	set_target();
+	set_scary_target();
 }
 
-Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param) : Automated("../Images/dragon.png", srcR_param, start){
+Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param, bool chase_start = 1) : Automated("../Images/dragon.png", srcR_param, start){
 	animated = true;
 	srcR.y = srcR.h * 4;
 	frames = frames_param;
@@ -25,14 +28,16 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	original_mode = 0;
 	original_speed = Game::monster_original_speed;
 	speed = original_speed;
-
+	chase = chase_start;
 	target = nullptr;
+	set_target();
+	set_scary_target();
 
 	//Game::cols * Game::rows - 1; // change retreat node for different monsters
 	dest = retreat_node; //retreat_node = start in Entity constructor
 
-	// switch_distance_scared = 10;
-	// switch_distance_not_scared = 10;
+	// Game::print_queue(seq);
+
 }
 
 void Monster::switch_in_scared_mode() {
@@ -49,12 +54,35 @@ void Monster::switch_in_scared_mode() {
 }
 
 void Monster::switch_in_not_scared_mode() {
-	if (distance(this, scary_target) <= 5 and mode == 0) {
-		change_mode(2);
-	}
-	else if (distance(this, scary_target) > 20 and mode == 2) {
+
+	if (distance(this, target) <= 5 and mode == 2) {
 		change_mode(0);
+		return;
 	}
+
+	if(seq.empty()) {
+		if (mode != 2) {
+			change_mode(2);
+		}
+	}
+	if (floor(normal_time) >= seq.front()) {
+		if (mode == 0) {
+			bool mode_changed = change_mode(2); 
+			if (mode_changed) {
+				seq.pop();
+			}
+		}
+		else if (mode == 2) {
+			bool mode_changed = change_mode(0); 
+			if (mode_changed) {
+				seq.pop();
+			}
+		}
+	}
+	// if (distance(this, target) <= 5 and mode == 0) {
+	// 	change_mode(2);
+	// }
+
 }
 
 void Monster::switch_modes() {
@@ -76,12 +104,22 @@ void Monster::switch_modes() {
 		}
 	}
 
-	// if (scared) switch_in_scared_mode();
-	// else switch_in_not_scared_mode();
+	if (scared) {		
+		scared_time_update();
+		switch_in_scared_mode();
+	}
+	else {
+		normal_time_update();
+		switch_in_not_scared_mode();
+	}
 }
 
 
 void Monster::Update() {
+
+	// Game::print_queue(seq);
+
+
 
 	// cout << mode << endl;
 	
@@ -124,6 +162,32 @@ void Monster::Update() {
 
 	handle_spell_collisions();
 
+	// cout << normal_time << " " << mode << endl << endl;
+
 
 	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
+}
+
+
+
+void Monster::normal_time_update() {
+	normal_counter++;
+	normal_time = (double) normal_counter / Game::FPS;
+}
+void Monster::scared_time_update() {
+	scared_counter++;
+	scared_time = (double) scared_counter / Game::FPS;
+}
+
+
+void Monster::set_target() {
+
+	target = Game::entities->players->at(0);
+
+}
+
+void Monster::set_scary_target() {
+
+	scary_target = Game::entities->players->at(0);
+
 }

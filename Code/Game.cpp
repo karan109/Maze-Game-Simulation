@@ -137,17 +137,21 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(Game::task == 1){
 
 
-		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, 100); //3.5 is player speed
-		monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, 100); //2.5 is monster speed 
+		player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 0, 6, 100);
+		entities->Add(player1); 
+ 
+		// monster = new Monster(SDL_Rect{0, 0, 191, 161}, monster1_starting_node, 3, 100, 1); 
+		add_monster(monster1_starting_node, 0.5, 1);
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
-		entities->Add(player1); 
-		entities->Add(monster);
+		// entities->Add(monster);
 		entities->Add(snitch);
 
 		// player mode = -1 is set in player constructor
-		monster->set_mode(monster->original_mode, player1); // the one it chases
-        monster->scary_target = player1; // the one it is scared of
+		// monster->mode = 0;
+		// monster->target = player1;
+		// monster->set_mode(monster->original_mode, player1); // the one it chases
+        // monster->scary_target = player1; // the one it is scared of
         snitch->scary_target = player1;
 	}
 	Game::game_maze->DrawMaze();
@@ -155,6 +159,18 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" ); //wall collision
 
+}
+
+
+void Game::add_monster(int start, double p, bool chase = 1) {
+	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase); 
+	// monster_set_target();
+	// monster_set_scary_target();
+	// done above in constructor
+	monster->mode = (chase) ? 0 : 2;
+	monster->seq = seq_generator(p, chase, 10); 
+	print_queue(monster->seq);
+	entities->Add(monster);
 }
 
 
@@ -285,6 +301,10 @@ void Game::update(){
 
 	Add_entities();
 
+	for(auto & spell : * entities->spells){
+		spell->Update();
+	}
+
 
 	for(auto & stone : * entities->stones){
 		stone->Update();
@@ -311,9 +331,7 @@ void Game::update(){
 	for(auto & broom : * entities->brooms){
 		broom->Update();
 	}
-	for(auto & spell : * entities->spells){
-		spell->Update();
-	}
+
 }
 
 
@@ -583,3 +601,49 @@ void Game::collision_pause() {
 	}
 }
 
+
+// -------------------------------------------------monster sequence --------------------------------------------------
+
+
+queue<int> Game::seq_generator(double p, bool chase = 1, int sampling_time = 60) {
+	int N = 100; // gmae runs for N * sampling time seconds ie 100 minutes
+	int a[2*N] = {0};
+	int f = p * sampling_time;
+	int s = sampling_time - f;
+	int x, y;
+	if (chase) {
+		x = f;
+		y = s;
+	}
+	else {
+		x = s;
+		y = f;
+	}
+	for (int i = 0; i < N ; ++i) {
+		a[2*i] = x;
+		a[2*i + 1] = y;
+	}
+	for (int i = 1; i < 2*N ; ++i) {
+		a[i] += a[i-1];
+	}
+	queue<int> seq;
+	for (int i = 0; i < 2*N ; ++i) {
+		seq.push(a[i]);
+	}
+	return seq;
+}
+
+void Game::print_queue(queue<int> q){
+	vector<int> temp;
+	while(!q.empty()){
+		int front = q.front();
+		temp.push_back(front);
+		cout<<front<<" ";
+		q.pop();
+	}
+	for(auto vertex : temp){
+		q.push(vertex);
+	}
+	// cout << endl;
+	cout<<endl<<endl<<endl;
+}
