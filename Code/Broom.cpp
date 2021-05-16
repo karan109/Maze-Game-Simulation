@@ -78,5 +78,8 @@ void Broom::Update() {
 		// delete the broom
 		Delete();
 	}
+
+	handle_spell_collisions();
+
 }
 

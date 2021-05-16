@@ -167,6 +167,7 @@ void resume_after_collision();
 
 // bool casting_conditions();
 // void cast_spell();
+void handle_spell_collisions();
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------

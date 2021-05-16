@@ -28,7 +28,7 @@ Spell::Spell(Player * castee) {
 	ypos = destR.y;
 	
 	released = 0;
-	spell_length_limit = 200;
+	spell_length_limit = 150;
 	spell_counter_limit = ceil ((double)spell_length_limit / speed ); 
 	spell_time_limit = (double) spell_counter_limit / Game::FPS; 
 
@@ -137,28 +137,29 @@ void Spell::Update() {
 	time_update();
 	update_head();
 	update_tail();
-	length = abs(head - tail);
 	// cout << entity_counter << " " << length << endl;
-	destR = get_rect();
-	xpos = destR.x;
-	ypos = destR.y;
+
 
 	if (release_conditions() ) {
 		if (!released) release_spell();
 	}
 
-	if (!collided) {
+	// if (!collided) {
 		keepInside();
-		handle_wall_collision();
-	}
+		handle_wall_collisions();
+	// }
 
-	if (collided) {
+	// if (collided) {
 		handle_spell_over();
-	}
+	// }
 
 	// if (finished) {
 	// 	Delete();
 	// }
+	length = abs(head - tail);
+	destR = get_rect();
+	xpos = destR.x;
+	ypos = destR.y;
 
 }
 
@@ -216,11 +217,11 @@ bool Spell::spell_over() {
 	}
 }
 
-void Spell::handle_wall_collision() {
+void Spell::handle_wall_collisions() {
 	for(auto & u: * Game::entities->walls){
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		if (dir != 0) {
-			collided = 1;
+			// collided = 1;
 			SDL_Rect R = u->getBB();
 			// assert (dir == face)
 			switch (face) {
@@ -230,32 +231,32 @@ void Spell::handle_wall_collision() {
 				case 4: head = R.y + R.h; break;
 			}
 
-			head_v = 0;
+			// head_v = 0;
 		}
 	}
 }
 
 void Spell::keepInside(){
 	if(face == 1 and head >= Game::width - Game::wall_thickness){
-		collided = 1;
+		// collided = 1;
 		head = Game::width - Game::wall_thickness;
-		head_v = 0;
+		// head_v = 0;
 	}
 	else if(face == 2 and head <= Game::wall_thickness){
-		collided = 1;
+		// collided = 1;
 		head = Game::wall_thickness;
-		head_v = 0;
+		// head_v = 0;
 	}
 	else if(face == 3 and head >= Game::height - Game::wall_thickness){
-		collided = 1;
+		// collided = 1;
 		head = Game::height - Game::wall_thickness;
-		head_v = 0;
+		// head_v = 0;
 	}
 
 	else if(face == 4 and head <= Game::menu){
-		collided = 1;
+		// collided = 1;
 		head = Game::menu;
-		head_v = 0;
+		// head_v = 0;
 	}
 	
 }

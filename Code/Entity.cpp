@@ -6,6 +6,7 @@
 #include "Stone.hpp"
 #include "Entities.hpp"
 #include "Graph.hpp"
+#include "Spell.hpp"
 
 
 // -------------------------------------------------------CONSTRUCTOR AND RELATED FUNCTIONS-------------------------------------------------------------------------------------
@@ -180,6 +181,8 @@ void Entity::Update(){
 		Update4();
 	}
 
+	// handle_spell_collisions();
+
 }
 
 
@@ -341,6 +344,26 @@ void Entity::update_position() {
 // 	Game::entities->Add(spell);
 // 	// add spell to entities
 // }
+
+void Entity::handle_spell_collisions() {
+	for(auto & spell: * Game::entities->spells){
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		if (dir != 0) {
+			// collided = 1;
+			SDL_Rect R = this->getBB();
+			// assert (dir == face)
+			switch (spell->face) {
+				case 1: spell->head = R.x; break;
+				case 2: spell->head = R.x + R.w; break;
+				case 3: spell->head = R.y; break;
+				case 4: spell->head = R.y + R.h; break;
+			}
+
+			// spell->head_v = 0;
+			// update this ki health
+		}
+	}
+}
 
 
 

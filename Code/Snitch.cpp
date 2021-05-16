@@ -111,5 +111,7 @@ void Snitch::Update() {
 	}
 
 	Entity::Update();
+	handle_spell_collisions();
+
 
 }

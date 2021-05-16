@@ -122,5 +122,8 @@ void Monster::Update() {
 
 	if (!collided) switch_modes();
 
+	handle_spell_collisions();
+
+
 	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
 }

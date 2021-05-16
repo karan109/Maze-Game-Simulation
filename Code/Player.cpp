@@ -121,7 +121,7 @@ void Player::Update(){
 		animated = false;
 	}
 
-
+	handle_spell_collisions();
 
 
 
@@ -173,7 +173,7 @@ bool Player::casting_conditions() {
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 0) {
-				Game::spacebar_pressed = 1;
+				// Game::spacebar_pressed = 1;
 				return 1;
 			}
 		}

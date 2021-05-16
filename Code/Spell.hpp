@@ -43,7 +43,7 @@ void Render();
 bool release_conditions();
 void handle_spell_over();
 bool spell_over();
-void handle_wall_collision();
+void handle_wall_collisions();
 void keepInside();
 
 int	spell_counter_limit; 

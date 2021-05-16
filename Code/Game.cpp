@@ -142,8 +142,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
 		entities->Add(player1); 
-		// entities->Add(monster);
-		// entities->Add(snitch);
+		entities->Add(monster);
+		entities->Add(snitch);
 
 		// player mode = -1 is set in player constructor
 		monster->set_mode(monster->original_mode, player1); // the one it chases
