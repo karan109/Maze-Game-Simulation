@@ -20,6 +20,9 @@ public:
 	void boost_on();
 	void boost_off();
 	void update_boost_time_left();
+	bool casting_conditions();
+	// bool release_conditions();
+	void cast_spell();
 
 	// Broom * my_broom = nullptr;
 

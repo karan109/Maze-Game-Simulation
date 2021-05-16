@@ -3,7 +3,7 @@ CFLAGS := -std=c++11 -w
 SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf 
 COMPILE := $(CC) $(CFLAGS)
 # OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Remote.o
-OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Snitch.o Health.o Broom.o Button.o
+OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Snitch.o Health.o Broom.o Button.o Spell.o
 
 
 # all: $(OBJS) server.o client.o main.o
@@ -19,6 +19,9 @@ Button.o : Game.hpp Button.hpp Button.cpp Texture.hpp
 
 Health.o : Game.hpp Entity.hpp Health.hpp Health.cpp
 	$(COMPILE) -c Health.cpp $(SDLFLAGS)
+
+Spell.o : Game.hpp Entity.hpp Spell.hpp Spell.cpp
+	$(COMPILE) -c Spell.cpp $(SDLFLAGS)
 
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 	$(COMPILE) -c Wall.cpp $(SDLFLAGS)

@@ -11,6 +11,8 @@
 #include "Snitch.hpp"
 #include "Health.hpp"
 #include "Broom.hpp"
+#include "Spell.hpp"
+
 
 
 
@@ -26,6 +28,8 @@ public:
 	vector<Snitch * > * snitches;
 	vector<Health * > * healths;
 	vector<Broom * > * brooms;
+	vector<Spell * > * spells;
+
 
 	Entities(){
 		players = new vector<Player *>(0);
@@ -37,6 +41,8 @@ public:
 		snitches = new vector<Snitch *>(0);
 		healths = new vector<Health *>(0);
 		brooms = new vector<Broom *>(0);
+		spells = new vector<Spell *>(0);
+
 
 	}
 	void Add(Player * player){
@@ -66,6 +72,15 @@ public:
 
 	void Add(Broom * broom){
 		brooms->push_back(broom);
+	}
+
+	void Add(Spell * spell){
+		spells->push_back(spell);
+	}
+
+	void Delete(Spell * spell){
+		auto position = find (spells->begin(), spells->end(), spell);
+		if (position != spells->end()) spells->erase(position);
 	}
 
 	void Delete (Broom * broom) {

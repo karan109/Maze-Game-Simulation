@@ -9,6 +9,7 @@
 #include "Snitch.hpp"
 #include "Broom.hpp"
 
+// #include "Spell.hpp"
 
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
@@ -84,7 +85,7 @@ double Game::snitch_original_speed = 2.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
-double Game::player_boost_time_limit = 5;
+double Game::player_boost_time_limit = 30;
 
 
 
@@ -92,7 +93,7 @@ int Game::broom_apparatation_time = 10;
 int Game::broom_disapparation_time = 100; // so 110 pe disappears
 
 int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
-int Game::monster1_starting_node = 10; // change to Game::rows * Game::cols - 1
+int Game::monster1_starting_node = 299; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
 
 double Game::player_monster_collision_pause = 1;
@@ -138,7 +139,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, 20);
 
 		entities->Add(player1); 
-		entities->Add(monster);
+		// entities->Add(monster);
 		entities->Add(snitch);
 
 		// player mode = -1 is set in player constructor
@@ -307,6 +308,9 @@ void Game::update(){
 	for(auto & broom : * entities->brooms){
 		broom->Update();
 	}
+	for(auto & spell : * entities->spells){
+		spell->Update();
+	}
 }
 
 
@@ -351,6 +355,9 @@ void Game::render(){
 
 	for(auto & broom : * entities->brooms){
 		broom->Render();
+	}
+	for(auto & spell : * entities->spells){
+		spell->Render();
 	}
 	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

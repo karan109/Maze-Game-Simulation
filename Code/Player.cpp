@@ -2,6 +2,8 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 #include "Entities.hpp"
+#include "Spell.hpp"
+
 
 void Player::Delete() {
 	SDL_DestroyTexture(objTexture);
@@ -71,6 +73,11 @@ void Player::Update(){
 	// } 
 
 	update_boost();
+
+	if (casting_conditions() ) {
+		cout << 1 << endl;
+		cast_spell();
+	}
 
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
@@ -154,3 +161,33 @@ void Player::update_boost() {
 	}
 
 }
+
+
+bool Player::casting_conditions() {
+	// if wand is not caught
+	// if (!wanded) return;
+	// cout << " player casting condition used";
+
+	if(Game::event.type == SDL_KEYDOWN){
+		auto key = Game::event.key.keysym.sym;
+		if(key == SDLK_SPACE) return 1;
+	}
+	return 0;	
+}
+
+
+
+void Player::cast_spell() {
+	Spell * spell = new Spell(this);
+	Game::entities->Add(spell);
+	// add spell to entities
+}
+
+
+
+
+
+
+
+
+

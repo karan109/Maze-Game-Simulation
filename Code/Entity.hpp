@@ -5,6 +5,7 @@
 class Entity{
 public:
 	double speed = 3;
+	Entity();
 	Entity(const char * texturesheet, SDL_Rect srcR_param, int start);
 	Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param);
 	~Entity();
@@ -158,11 +159,14 @@ int current;
 void Update_player();
 
 int original_mode;
-int original_speed;
+double original_speed;
 int mode_before_collision;
 
 void start_collision();
 void resume_after_collision();
+
+// bool casting_conditions();
+// void cast_spell();
 
 
 // ---------------------------------------------------------------------------------------------------------------------------------
@@ -171,7 +175,7 @@ void resume_after_collision();
 
 
 
-protected:
+// protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity
 	int yv; // y component of velocity

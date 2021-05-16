@@ -10,7 +10,7 @@
 
 // -------------------------------------------------------CONSTRUCTOR AND RELATED FUNCTIONS-------------------------------------------------------------------------------------
 
-
+Entity::Entity(){}
 
 // Constructor when start node number is given (for moving entities)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
@@ -276,7 +276,6 @@ void Entity::set_pos_at_centre() {
 	destR.y = ypos;
 }
 
-
 void Entity::set_velocity_zero() {
 	xv = 0;
 	yv = 0;
@@ -328,7 +327,20 @@ void Entity::update_position() {
 	destR.x = xpos;
 	destR.y = ypos;
 }
+// ------------------------------------------------------WAND WORK--------------------------------------------------------------------------------------
 
+// bool Entity::casting_conditions() {
+// 	if(Game::event.type == SDL_KEYDOWN){
+// 		auto key = Game::event.key.keysym.sym;
+// 		if(key == SDLK_SPACE) return 1;
+// 	}
+// 	return 0;	
+// }
+// void Entity::cast_spell() {
+// 	spell = new Spell(Entity * castee);
+// 	Game::entities->Add(spell);
+// 	// add spell to entities
+// }
 
 
 
