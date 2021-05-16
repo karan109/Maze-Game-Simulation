@@ -29,6 +29,8 @@ Spell::Spell(Player * castee) {
 	
 	released = 0;
 	spell_length_limit = 200;
+	spell_counter_limit = ceil ((double)spell_length_limit / speed ); 
+	spell_time_limit = (double) spell_counter_limit / Game::FPS; 
 
 }
 void Spell::set_velocity() {
@@ -111,6 +113,8 @@ bool Spell::release_conditions() {
 		}
 	}
 	if (length >= spell_length_limit) return 1;
+	if (entity_time >= spell_time_limit) return 1;
+
 	// if direction of player changed
 	// face used instead of original_face
 	if (wizard->face != face) {
@@ -130,10 +134,11 @@ bool Spell::release_conditions() {
 void Spell::Update() {
 	// handle wall collision
 
-	// time update
+	time_update();
 	update_head();
 	update_tail();
 	length = abs(head - tail);
+	// cout << entity_counter << " " << length << endl;
 	destR = get_rect();
 	xpos = destR.x;
 	ypos = destR.y;
@@ -179,6 +184,7 @@ SDL_Rect Spell::get_rect() {
 
 void Spell::release_spell(){
 	released = 1;
+	// cout << " released = 1" << entity_counter << " " << length << endl;
 }
 
 
