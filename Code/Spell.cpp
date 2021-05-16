@@ -1,13 +1,20 @@
 #include "Spell.hpp"
 #include "Game.hpp"
+#include "Collision.hpp"
+
 
 
 // ------------------------------------------------------constructors--------------------------------------------------------------------------------------
 
+void Spell::Delete() {
+	// if (objTexture != nullptr) SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(this);
+}
 
 Spell::Spell(Player * castee) {
 	wizard = castee;
-	face = wizard->face;
+	original_face = wizard->face;
+	face = original_face;
 	speed = 6;
 	offset = 0;
 	spell_height = 5;
@@ -15,6 +22,7 @@ Spell::Spell(Player * castee) {
 	head = tail;
 	length = 0;
 	set_velocity();
+	initialize_head_tail_velocity();	
 	destR = set_rect();
 	released = 0;
 	spell_length_limit = 200;
@@ -25,6 +33,15 @@ void Spell::set_velocity() {
 	xv = v.first;
 	yv = v.second;
 }
+
+void Spell::initialize_head_tail_velocity() {
+	if (face == 1 || face == 2) {
+		head_v = xv;
+	}
+	else head_v = yv;
+	tail_v = head_v;
+}
+
 
 SDL_Rect Spell::set_rect() {
 	
@@ -92,9 +109,13 @@ bool Spell::release_conditions() {
 	}
 	if (length >= spell_length_limit) return 1;
 	// if direction of player changed
+	// face used instead of original_face
+	if (wizard->face != face) {
+		return 1;
+	}
 	// if spell casting ability becomes 0 or health becomes 0
 	// if player collision happens
-	// if player spell time limit reached.
+	// if player spelling limit reached ie wand exhausted. get a new wand
 	return 0;
 }
 
@@ -105,31 +126,42 @@ bool Spell::release_conditions() {
 
 void Spell::Update() {
 	// handle wall collision
+
 	// time update
 	update_head();
 	update_tail();
 	length = abs(head - tail);
 	destR = get_rect();
 
-		// in spell
 	if (release_conditions() ) {
 		if (!released) release_spell();
 	}
 
+	if (!collided) {
+		handle_wall_collision();
+	}
+
+	if (collided) {
+		handle_spell_over();
+	}
+
+	// if (finished) {
+	// 	Delete();
+	// }
+
+
+
 }
 
 void Spell::update_head() {
-	// one of xv, yv = 0
-	head += (xv + yv) * speed;
+	head += head_v * speed;
 }
 void Spell::update_tail() {
 	if (released) {
-		tail += (xv + yv) * speed;
+		tail += tail_v * speed;
 	}
-
 	// else if still casting then follow player
 	else tail = get_tail();
-
 }
 
 SDL_Rect Spell::get_rect() {
@@ -146,6 +178,46 @@ void Spell::release_spell(){
 }
 
 
+// ------------------------------------------------------collisions--------------------------------------------------------------------------------------
+
+
+void Spell::handle_spell_over() {
+	if (spell_over()) {
+		collided = 0;
+		finished = 1;
+		// set_tail_velocity_0
+		//in next cycle. can cause errors if done in this loop?
+		Delete(); 
+	}
+}
+
+bool Spell::spell_over() {
+	if (face == 1 || face == 3) {
+		if (tail >= head) {
+			return 1;
+		}
+		return 0;
+	}
+	else {
+		if (tail <= head) {
+			return 1;
+		}
+		return 0;
+	}
+}
+
+void Spell::handle_wall_collision() {
+	for(auto & u: * Game::entities->walls){
+		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
+		if (dir != 0) {
+			collided = 1;
+			// assert (dir == face)
+			head_v = 0;
+		}
+	}
+}
+
+
 
 // ------------------------------------------------------render--------------------------------------------------------------------------------------
 
@@ -155,5 +227,4 @@ void Spell::Render() {
 	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
 	SDL_RenderFillRect(Game::renderer, &destR);
 }
-
 

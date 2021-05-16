@@ -143,7 +143,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		entities->Add(player1); 
 		// entities->Add(monster);
-		entities->Add(snitch);
+		// entities->Add(snitch);
 
 		// player mode = -1 is set in player constructor
 		monster->set_mode(monster->original_mode, player1); // the one it chases
