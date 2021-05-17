@@ -23,10 +23,10 @@ Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_pa
 	health = 100;
 	number = number_param;
 	if(showHealth){
-		health_box = new Health(srcR_param, this, true);
-		static_health_box = new Health(srcR_param, this, false);
-		Game::entities->Add(health_box);
-		Game::entities->Add(static_health_box);
+		// health_box = new Health(srcR_param, this, true);
+		// static_health_box = new Health(srcR_param, this, false);
+		// Game::entities->Add(health_box);
+		// Game::entities->Add(static_health_box);
 	}
 }
 
@@ -55,9 +55,9 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	number = number_param;
 	if(showHealth){
 		health_box = new Health(srcR_param, this, true);
-		static_health_box = new Health(srcR_param, this, false);
+		// static_health_box = new Health(srcR_param, this, false);
 		Game::entities->Add(health_box);
-		Game::entities->Add(static_health_box);
+		// Game::entities->Add(static_health_box);
 	}
 
 }

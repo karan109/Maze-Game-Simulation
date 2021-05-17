@@ -107,6 +107,8 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 // ----------------------------------------------------------------------------------------------------------------
 
 
+SDL_Texture * background;
+
 Game::Game(){
 
 }
@@ -148,7 +150,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(Game::task == 1){
 		// must add player before monster
 		// 0 is the number_param
- 		add_player(player1_starting_node, 0);
+ 		add_player(player1_starting_node, 1);
 		add_monster(monster1_starting_node, 0.5, 1, 0); 
 		// add_monster(monster2_starting_node, 0.3, 0, 0);
 
@@ -165,12 +167,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" ); //wall collision
+	background = Texture::LoadTexture("../Images/bg3.jpg");
 
 }
 
 // ------------------------------------------------- Add entities--------------------------------------------------
 
-void Game::add_monster(int start, double p, bool chase = 1, int number_param = 2) {
+void Game::add_monster(int start, double p, bool chase = 1, int number_param = 0) {
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
 	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
@@ -359,8 +362,8 @@ void Game::update(){
 void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
-		// auto background = Texture::LoadTexture("../Images/background2.jpg");
-		// Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+		
+		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
 	}
 	else{
 		// auto background = Texture::LoadTexture("../Images/bg2.webp");
@@ -632,7 +635,10 @@ void Game::collision_pause() {
 
 queue<int> Game::seq_generator(double p, bool chase = 1, int sampling_time = 60) {
 	int N = 100; // gmae runs for N * sampling time seconds ie 100 minutes
-	int a[2*N] = {0};
+	int a[2*N];
+	for(int i=0;i<2*N;i++){
+		a[i] = 0;
+	}
 	int f = p * sampling_time;
 	int s = sampling_time - f;
 	int x, y;
