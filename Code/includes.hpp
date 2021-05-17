@@ -12,6 +12,7 @@ extern "C" {
 	#include <arpa/inet.h>
 	#include <string.h>
 	#include <time.h>
+	#include <fcntl.h>
 }
 #include <iostream>
 #include <cmath>

@@ -45,21 +45,7 @@ int main(int argc, char* argv[]){
         Game::isRunning = false;
     }
 
-    sock = socket(AF_INET, SOCK_STREAM, 0);
-    if(sock == -1){
-        return 1;
-    }
-    int port = 54000;
-    string ipAddress = "127.0.0.1"; // 122.177.240.201
-    sockaddr_in hint;
-    hint.sin_family = AF_INET;
-    hint.sin_port = htons(port);
-    inet_pton(AF_INET, ipAddress.c_str(), & hint.sin_addr);
-    int connectRes = connect(sock, (struct sockaddr * ) & hint, sizeof(hint));
-    if(connectRes == -1){
-        return 1;
-    }
-    string command;
+    
     Game::font = TTF_OpenFont("../Fonts/arial.ttf", 100);
     SDL_Window * window = SDL_CreateWindow("Start Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 600, false);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);

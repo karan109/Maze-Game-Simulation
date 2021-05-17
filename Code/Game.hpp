@@ -169,6 +169,8 @@ public:
 
 	static double player_health_decrement_per_second;
 
+	static bool server, client;
+
 private:
 	int ct = 0;
 	SDL_Window * window;

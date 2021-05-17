@@ -827,22 +827,22 @@ void Entity::Update_player() {
 		auto key = Game::event.key.keysym.sym;
 		// if no collision originally then change velocity
 		if(key == SDLK_UP and obstacles.find(4) == obstacles.end()){
-			// Game::send = 1;
+			Game::send = 1;
 			yv = -mag;
 			xv = 0;
 		}
 		else if(key == SDLK_DOWN and obstacles.find(3) == obstacles.end()){
-			// Game::send = 2;
+			Game::send = 2;
 			yv = mag;
 			xv = 0;
 		}
 		else if(key == SDLK_RIGHT and obstacles.find(1) == obstacles.end()){
-			// Game::send = 3;
+			Game::send = 3;
 			xv = mag;
 			yv = 0;
 		}
 		else if(key == SDLK_LEFT and obstacles.find(2) == obstacles.end()){
-			// Game::send = 4;
+			Game::send = 4;
 			xv = -mag;
 			yv = 0;
 		}
@@ -852,19 +852,19 @@ void Entity::Update_player() {
 		wall_ct = 0;
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_UP){
-			// Game::send = -1;
+			Game::send = -1;
 			yv = 0;
 		}
 		else if(key == SDLK_DOWN){
-			// Game::send = -2;
+			Game::send = -2;
 			yv = 0;
 		}
 		else if(key == SDLK_RIGHT){
-			// Game::send = -3;
+			Game::send = -3;
 			xv = 0;
 		}
 		else if(key == SDLK_LEFT){
-			// Game::send = -4;
+			Game::send = -4;
 			xv = 0;
 		}
 	}

@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 25;
+int Game::cols = 12;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -44,6 +44,9 @@ int Game::seed = 0;
 // int Game::seed = time(0);
 int Game::response = 0;
 int Game::send = 0;
+bool Game::server = false;
+bool Game::client = false;
+
 
 string Game::message = "ok";
 double Game::message_t = 2.5;
@@ -104,7 +107,7 @@ int Game::monster_cycle_time = 30;
 
 
 int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
-int Game::monster1_starting_node = 299; // change to Game::rows * Game::cols - 1
+int Game::monster1_starting_node = 50; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
 int Game::snitch_starting_node = 20;
 int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
@@ -163,8 +166,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// must add player before monster
 		// 0 is the number_param
  		add_player(player1_starting_node, 1);
-		add_monster(monster1_starting_node, 0.5, 1, 0); 
-		add_monster(monster2_starting_node, 0.3, 0, 0);
+		// add_monster(monster1_starting_node, 0.5, 1, 0); 
+		// add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -361,9 +364,9 @@ void Game::update(){
 	for(auto & player : * entities->players){
 		player->Update();
 	}
-	// for(auto & remote : * entities->remotes){
-	// 	remote->Update();
-	// }
+	for(auto & remote : * entities->remotes){
+		remote->Update();
+	}
 	for(auto & monster : * entities->monsters){
 		monster->Update();
 	}
@@ -405,9 +408,9 @@ void Game::render(){
 	for(auto & player : * entities->players){
 		player->Render();
 	}
-	// for(auto & remote : * entities->remotes){
-	// 	remote->Render();
-	// }
+	for(auto & remote : * entities->remotes){
+		remote->Render();
+	}
 	for(auto & monster : * entities->monsters){
 		monster->Render();
 	}
@@ -655,7 +658,6 @@ void Game::collision_pause() {
 
 	if (collision_code == "monster_player") {
 		game_pause(player_monster_collision_pause);
-
 	}
 	else if (collision_code == "player_snitch") {
 		game_pause(player_snitch_collision_pause);

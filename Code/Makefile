@@ -7,13 +7,8 @@ COMPILE := $(CC) $(CFLAGS)
 OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Snitch.o Health.o Broom.o Button.o Spell.o Remote.o
 
 
-all: $(OBJS) server.o client.o main.o
+all: $(OBJS) main.o
 	$(COMPILE) -o game $(OBJS) main.o $(SDLFLAGS)
-	$(COMPILE) -o server $(OBJS) server.o $(SDLFLAGS)
-	$(COMPILE) -o client $(OBJS) client.o $(SDLFLAGS)
-
-# all: $(OBJS) main.o
-# 	$(COMPILE) -o game $(OBJS) main.o $(SDLFLAGS)
 
 Button.o : Game.hpp Button.hpp Button.cpp Texture.hpp
 	$(COMPILE) -c Button.cpp $(SDLFLAGS)
@@ -66,7 +61,7 @@ Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp includes.hpp
 Texture.o : Texture.cpp Game.hpp Texture.hpp includes.hpp
 	$(COMPILE) -c Texture.cpp $(SDLFLAGS)
 
-main.o : main.cpp Game.hpp includes.hpp Texture.hpp Button.hpp
+main.o : main.cpp Game.hpp includes.hpp Texture.hpp Button.hpp helpers.hpp sockets.hpp
 	$(COMPILE) -c main.cpp $(SDLFLAGS)
 
 server.o : server.cpp Game.hpp includes.hpp
@@ -83,4 +78,4 @@ run:
 
 clean:
 	rm *.o
-	rm game server client
+	rm game

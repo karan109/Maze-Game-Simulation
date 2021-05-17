@@ -15,6 +15,7 @@ Remote::Remote(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 }
 
 Remote::Remote(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
+	// cout<<"ok"<<endl;
 	animated = true;
 	srcR.y = srcR.h * 4;
 	frames = frames_param;
