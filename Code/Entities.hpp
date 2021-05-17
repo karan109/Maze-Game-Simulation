@@ -103,5 +103,9 @@ public:
 		auto position = find (players->begin(), players->end(), player);
 		if (position != players->end()) players->erase(position);
 	}
+	void Delete (Health * health) {
+		auto position = find (healths->begin(), healths->end(), health);
+		if (position != healths->end()) healths->erase(position);
+	}
 
 };

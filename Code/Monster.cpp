@@ -252,6 +252,10 @@ void Monster::Update() {
 
 
 	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
+
+	if (health == 0) {
+		Delete();
+	}
 }
 
 
@@ -301,6 +305,7 @@ void Monster::handle_spell_collisions() {
 			spell_collision = 1;
 
 			// update monster ki health
+			decrease_health(0.5);
 
 			// monster mode change
 			// when to revert back?

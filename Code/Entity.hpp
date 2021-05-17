@@ -50,7 +50,7 @@ public:
 	int xpos; // x coordinate
 	int ypos; // y coordinate
 	bool showHealth;
-	int health = 100;
+	double health = 100;
 
 	int number;
 	bool animated = false;
@@ -175,6 +175,10 @@ void handle_spell_collisions();
 Entity * nearest_player ();
 
 bool spell_collision = 0;
+
+void increase_health(double x);
+void decrease_health(double x);
+
 
 
 // protected:

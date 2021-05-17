@@ -167,6 +167,8 @@ public:
 	void add_snitch(int start);
 	void add_broom(int appear_time, int start);
 
+	static double player_health_decrement_per_second;
+
 private:
 	int ct = 0;
 	SDL_Window * window;

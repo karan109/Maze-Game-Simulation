@@ -81,16 +81,16 @@ double Game::collision_time = 0;
 
 
 double Game::player_monster_collision_pause = 1;
-double Game::player_snitch_collision_pause = 5;
-double Game::player_broom_collision_pause = 1;
+double Game::player_snitch_collision_pause = 1;
+double Game::player_broom_collision_pause = 0;
 
 
 double Game::monster_original_speed = 2.5;
-double Game::snitch_original_speed = 2.5;
+double Game::snitch_original_speed = 1.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
-double Game::player_boost_time_limit = 30;
+double Game::player_boost_time_limit = 100;
 
 int Game::broom_apparatation_time = 10;
 int Game::broom_disapparation_time = 100; // so 110 pe disappears
@@ -105,6 +105,9 @@ int Game::monster1_starting_node = 299; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
 int Game::snitch_starting_node = 20;
 int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
+
+
+double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -158,7 +161,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// 0 is the number_param
  		add_player(player1_starting_node, 1);
 		add_monster(monster1_starting_node, 0.5, 1, 0); 
-		// add_monster(monster2_starting_node, 0.3, 0, 0);
+		add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -557,9 +560,11 @@ void Game::start_game_collision () {
 
 	if (collision_code == "player_snitch") {
 		//player has caught the snitch
+		collided_player-> snitch_caught = 1;
 		collided_snitch-> caught = 1;
 		collided_snitch-> transform();
 		//increase lives of player
+		collided_player->health = 1;
 	}
 }
 
@@ -569,18 +574,28 @@ void Game::collision_updates() {
 		collided_monster->Update();
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
+		collided_monster->decrease_health(0.1);
+
+		collided_player->increase_health(0.1);
+
 	}
 	if (collision_code == "monster_player") {
 
 		collided_player->Update();
 		collided_player->health_box->Update();
 		collided_player->static_health_box->Update();
+		collided_player->decrease_health(0.1);
+
 
 		collided_monster->Update();
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
+		collided_monster->increase_health(0.1);
 	}
 	if (collision_code == "player_snitch") {
+		collided_player->health_box->Update();
+		collided_player->static_health_box->Update();
+		collided_player->increase_health(0.5);
 	}
 	if (collision_code == "player_broom") {
 	}
@@ -595,7 +610,7 @@ bool Game::resume_safely () {
 		return (collided_player->scatter_reached) && (collided_monster->scatter_reached);
 	}
 	if (collision_code == "player_snitch") {
-		return 1;
+		return (collided_player->health == 100);
 	}
 	if (collision_code == "player_broom") {
 		return 1;
@@ -617,7 +632,7 @@ void Game::reset_collided_entities() {
 	}
 	else if (collision_code == "player_snitch") {
 
-		// collided_snitch->Delete();
+		collided_snitch->Delete();
 
 	}
 	else if (collision_code == "player_broom") {
@@ -658,9 +673,7 @@ void Game::collision_pause() {
 queue<int> Game::seq_generator(double p, bool chase = 1, int sampling_time = 60) {
 	int N = 100; // gmae runs for N * sampling time seconds ie 100 minutes
 	int a[2*N];
-	for(int i=0;i<2*N;i++){
-		a[i] = 0;
-	}
+	for (int i = 0; i < 2*N; ++i) a[i] = 0;
 	int f = p * sampling_time;
 	int s = sampling_time - f;
 	int x, y;

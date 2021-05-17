@@ -315,7 +315,7 @@ void Entity::set_dest(Entity * target_param){
 
 
 
-// ------------------------------------------------------UPDATE SMALL STUFF--------------------------------------------------------------------------------------
+// ------------------------------------------------------SMALL STUFF--------------------------------------------------------------------------------------
 
 
 void Entity::time_update() {
@@ -329,6 +329,35 @@ void Entity::update_position() {
 	ypos += yv * speed;	
 	destR.x = xpos;
 	destR.y = ypos;
+}
+
+
+Entity * Entity::nearest_player () {
+	auto & graph = Game::game_maze->graph;
+
+	int current = getBlock();
+	int min_dis = INT_MAX;
+	Entity * closest_player = nullptr;
+	for(auto & player: * Game::entities->players){
+		int dis = graph.distance(current, player->getBlock());
+		if (dis < min_dis) {
+			min_dis = dis;
+			closest_player = player;
+		}
+	}
+	return closest_player;
+}
+
+
+void Entity::increase_health(double x) {
+	health += x;
+	if (health > 100) {
+		health = 100;
+	}
+}
+void Entity::decrease_health(double x) {
+	health -= x;
+	if (health < 0) health = 0;
 }
 // ------------------------------------------------------WAND WORK--------------------------------------------------------------------------------------
 
@@ -368,21 +397,7 @@ void Entity::handle_spell_collisions() {
 
 
 
-Entity * Entity::nearest_player () {
-	auto & graph = Game::game_maze->graph;
 
-	int current = getBlock();
-	int min_dis = INT_MAX;
-	Entity * closest_player = nullptr;
-	for(auto & player: * Game::entities->players){
-		int dis = graph.distance(current, player->getBlock());
-		if (dis < min_dis) {
-			min_dis = dis;
-			closest_player = player;
-		}
-	}
-	return closest_player;
-}
 
 
 
