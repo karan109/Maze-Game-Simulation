@@ -35,11 +35,6 @@ void Remote::Update(){
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
-	counter++;
-	if(counter == Game::FPS / 2){
-		counter = 0;
-		if(health > 0) health-= 5;
-	}
 	int block_num = Entity::getBlock();
 	set<int> obstacles;
 	Entity::keepInside();

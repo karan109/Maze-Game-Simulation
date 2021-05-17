@@ -29,6 +29,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 	showHealth = true;
 	health = 100;
 	health_dps = Game::player_health_decrement_per_second;
+	if(Game::server or Game::client) health_dps = 0;
 	number = number_param;
 	if(showHealth){
 		health_box = new Health(srcR_param, this, true);
@@ -57,7 +58,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 	showHealth = true;
 	health = 100;
 	health_dps = Game::player_health_decrement_per_second;
-
+	if(Game::server or Game::client) health_dps = 0;
 	number = number_param;
 	if(showHealth){
 		health_box = new Health(srcR_param, this, true);

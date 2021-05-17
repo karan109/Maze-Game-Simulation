@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 12;
+int Game::cols = 25;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -107,14 +107,13 @@ int Game::monster_cycle_time = 30;
 
 
 int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::cols/2);
-int Game::monster1_starting_node = 50; // change to Game::rows * Game::cols - 1
+int Game::monster1_starting_node = Game::rows * Game::cols - 1; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
 int Game::snitch_starting_node = 20;
 int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
-
 
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -131,6 +130,7 @@ Game::~Game(){
 
 }
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
+	// cout<<"ok"<<endl;
 	if(task == 2) no_trap = false;
 	Game::width = width;
 	Game::height = height;
@@ -170,14 +170,19 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
  			add_player(player1_starting_node, 1);
             player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100);
             entities->Add(player2);
+            // player_health_decrement_per_second = 0;
         }
         else if(Game::client){
         	add_player(Game::cols-1, 1);
             player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100);
             entities->Add(player2);
+            // player_health_decrement_per_second = 0;
         }
-		// add_monster(monster1_starting_node, 0.5, 1, 0); 
-		// add_monster(monster2_starting_node, 0.3, 0, 0);
+        else{
+        	add_player(player1_starting_node, 1);
+        }
+		add_monster(monster1_starting_node, 0.5, 1, 0); 
+		add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -192,7 +197,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 
-
+	if(!server and !client){
+		rows = 12;
+		cols = 25;
+		Game::N = Game::rows * Game::cols;
+	}
 
 	Game::game_maze->DrawMaze();
 
