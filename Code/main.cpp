@@ -3,7 +3,39 @@
 #include "Button.hpp"
 Game * game = nullptr;
 
+
+void key_testing() {
+    // cout << Game::spacebar_pressed << endl;
+    // cout << Game::event.type << endl;
+
+    if(Game::event.type == SDL_KEYDOWN){
+        auto key = Game::event.key.keysym.sym;
+        if(key == SDLK_SPACE)  {
+            if (Game::spacebar_pressed == 0) {
+                Game::spacebar_pressed = 1;
+            }
+        }
+    }
+
+    if(Game::event.type == SDL_KEYUP){
+        auto key = Game::event.key.keysym.sym;
+        if(key == SDLK_SPACE)  {
+            if (Game::spacebar_pressed == 1) {
+                Game::spacebar_pressed = 0;
+            }
+        }
+    }
+    // if(Game::event.type == SDL_KEYUP){
+    //     auto key = Game::event.key.keysym.sym;
+    //     if(key == SDLK_SPACE) 
+    //         cout << "h" << endl;
+    // }
+    // else 
+    //     cout << "r" << endl;
+}
+
 int main(int argc, char* argv[]){
+
 
     unsigned int frameStart;
     int frameTime;
@@ -28,7 +60,7 @@ int main(int argc, char* argv[]){
     SDL_Window * window = SDL_CreateWindow("Start Menu", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 1000, 600, false);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
-    auto background = Texture::LoadTexture(renderer, "../Images/background2.jpg");
+    auto background = Texture::LoadTexture(renderer, "../Images/bg3.jpg");
     int margin = 30;
     int button_width = 150;
     int button_height = 40;
@@ -43,7 +75,7 @@ int main(int argc, char* argv[]){
     Button * button6 = new Button(renderer, "ron", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 + sprite_width / 2 + sprite_margin, 200, sprite_width, sprite_height});
     while(true){
         SDL_RenderClear(renderer);
-        Texture::Draw(renderer, background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, 1000, 600});
+        Texture::Draw(renderer, background, SDL_Rect{0, 0, 533, 300}, SDL_Rect{0, 0, 1000, 600});
         SDL_Event event;
         SDL_PollEvent(& event);
         if(event.type == SDL_QUIT){
@@ -114,16 +146,17 @@ int main(int argc, char* argv[]){
     srand(time(0));
     Game::seed = rand()%100000;
     game = new Game();
+    // cout << "hi" << endl;
     game->init("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
     if(Game::task == 1){
-        game->player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0, 1, 6, 100);
-        Game::entities->Add(game->player1);
+        // game->player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0, 1, 6, 100);
+        // Game::entities->Add(game->player1);
         // game->player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 60);
-       
         // Game::entities->Add(game->player2);
+        // game->monster->set_mode(0, game->player1);
+        // game->monster->scary_target = game->player1;
 
-        game->monster->set_mode(0, game->player1);
-        game->snitch->scary_target = game->player1;
+        // game->snitch->scary_target = game->player1;
 
     }
     if(Game::task == 1) Mix_PlayMusic( Game::gMusic, -1 );
@@ -141,13 +174,18 @@ int main(int argc, char* argv[]){
         else{
             game->update();
         }
+        game->handle_collisions();
         game->render();
+
 
         frameTime = SDL_GetTicks() - frameStart;
 
         if(Game::frameDelay > frameTime){
             SDL_Delay(Game::frameDelay - frameTime);
         }
+
+        key_testing();
+
 
     }
     game->clean();

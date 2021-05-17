@@ -7,10 +7,13 @@ class Snitch : public Automated{
 public:
 	Snitch(SDL_Rect srcR_param, int start);
 	void Update();
+	void Delete();
+
 
 
 	SDL_Texture * vanish_texture;
 	SDL_Texture * snitch_texture;
+	SDL_Texture * resurrection_stone_texture;
 
 	int disapparation_time;
 	int blinking_time;
@@ -24,6 +27,8 @@ public:
 	int switch_distance;
 
 	void switch_mode();
+
+	void transform();
 
 private:
 

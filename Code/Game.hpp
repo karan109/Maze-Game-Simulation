@@ -13,11 +13,15 @@ public:
 	void update();
 	void render();
 	void clean();
+	static string message;
+	static double message_t;
+	static int message_counter;
+	static void display_message(string text);
 	bool running(){
 		return isRunning;
 	}
-	static SDL_Renderer * renderer, * renderer2;
 	static SDL_Texture * background;
+	static SDL_Renderer * renderer;
 	static SDL_Event event;
 	static Entities * entities;
 	static Maze * game_maze;
@@ -50,6 +54,7 @@ public:
 	static string player_name;
 	static int response;
 	static int send;
+	static int N;
 
 	// static int drone_starting_node = 
 	// static int monster_starting_node = 
@@ -60,12 +65,10 @@ public:
 
 	static int original_broom_h;
 	static int original_broom_w;
-	static bool broom_exists;
+	// static bool broom_exists;
+	
 	Broom * broom;
-
 	Player * player1;
-	// Player * player2;
-
 	Remote * player2;
 	Drone * drone;
 	Monster * monster;
@@ -79,6 +82,92 @@ public:
 	static Mix_Chunk * gLow;
 
 
+	static double player_original_speed;
+	static double player_boost_speed;
+	static double player_boost_time_limit;
+
+
+	static double monster_original_speed;
+	static double snitch_original_speed;
+
+
+
+
+	Broom * collided_broom = nullptr;
+	Player * collided_player = nullptr;
+	Monster * collided_monster = nullptr;
+	Snitch * collided_snitch = nullptr;
+
+	string collision_code = "";
+
+
+	void handle_quit_game ();
+	void Add_entities();
+
+
+
+	static int global_counter;
+	static double global_time;
+
+	static int pause_counter;
+	static double pause_time;
+	static bool paused;
+	static double global_pause_time_variable;
+
+
+	static int collision_counter;
+	static double collision_time;
+	static bool collision_happened;
+
+
+	void update_global_running_time();
+	void update_global_pause_time();
+	void update_global_collision_time();
+
+	void switch_collision();
+	void switch_pause();
+
+
+	void handle_collisions();
+	void start_game_collision ();
+	void collision_updates();
+	bool resume_safely ();
+	void reset_collided_entities();
+	void collision_pause ();
+
+
+	static void game_pause (double t);
+
+
+	static int monster1_starting_node;
+	static int monster2_starting_node;
+	static int player1_starting_node;
+	static int broom_starting_node;
+	static int snitch_starting_node;
+
+
+
+	static int broom_apparatation_time;
+	static int broom_disapparation_time;
+
+
+
+	static double player_monster_collision_pause;
+	static double player_snitch_collision_pause;
+	static double player_broom_collision_pause;
+
+	static int monster_cycle_time;
+	static bool spacebar_pressed;
+
+	static void print_queue(queue<int>);
+
+	static queue<int> seq_generator(double p, bool chase, int sampling_time);
+	void add_monster(int start, double p, bool chase, int number_param);
+	void add_player(int start, int number_param);
+	void add_snitch(int start);
+	void add_broom(int appear_time, int start);
+
+	static double player_health_decrement_per_second;
 
 private:
 	int ct = 0;

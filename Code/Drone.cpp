@@ -12,5 +12,5 @@ Drone::Drone(SDL_Rect srcR_param, int start) : Automated("../Images/drone2.png",
 }
 // Update function
 void Drone::Update(){
-	Automated::Update();
+	Entity::Update();
 }

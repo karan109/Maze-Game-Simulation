@@ -2,13 +2,30 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 #include "Texture.hpp"
+#include "Entities.hpp"
+
+void Snitch::Delete() {
+	SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(this);
+}
+
+void Snitch::transform() {
+	caught = 1;
+	Entity::change_objTexture("../Images/Resurrection_Stone.png", SDL_Rect{0, 0, 549, 549}, destR);
+	// set_pos_at_centre();
+	set_velocity_zero();
+}
 
 Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png", srcR_param, start){
-	speed = 2.5;
+	
+	original_speed = Game::snitch_original_speed;
+	speed = original_speed;
 	// scary_target = nullptr;
-	set_mode(2);
+	original_mode = 2;
+	set_mode(original_mode);
 	vanish_texture = Texture::LoadTexture("../Images/empty.png");
 	snitch_texture = Texture::LoadTexture("../Images/snitch.png");
+	resurrection_stone_texture = Texture::LoadTexture("../Images/Resurrection_Stone.png");
 
 	vanish_counter = 0;
 	vanish = 0;
@@ -34,6 +51,13 @@ void Snitch::switch_mode() {
 }
 
 void Snitch::Update() {
+
+
+	if (caught) {
+		return;
+	}
+
+	scary_target = nearest_player();
 
 	switch_mode();
 
@@ -89,6 +113,8 @@ void Snitch::Update() {
 		}
 	}
 
-	Automated::Update();
+	Entity::Update();
+	handle_spell_collisions();
+
 
 }

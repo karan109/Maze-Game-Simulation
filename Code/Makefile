@@ -3,7 +3,8 @@ CFLAGS := -std=c++11 -w
 SDLFLAGS := `sdl2-config --cflags --libs` -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf 
 COMPILE := $(CC) $(CFLAGS)
 # OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Remote.o
-OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Snitch.o Health.o Broom.o Button.o Remote.o
+
+OBJS := Game.o Texture.o Entity.o Maze.o Graph.o Player.o Wall.o Collision.o Drone.o Automated.o Monster.o Stone.o Snitch.o Health.o Broom.o Button.o Spell.o Remote.o
 
 
 all: $(OBJS) server.o client.o main.o
@@ -14,16 +15,19 @@ all: $(OBJS) server.o client.o main.o
 # all: $(OBJS) main.o
 # 	$(COMPILE) -o game $(OBJS) main.o $(SDLFLAGS)
 
-Button.o : Game.hpp Button.hpp Button.cpp texture.hpp
+Button.o : Game.hpp Button.hpp Button.cpp Texture.hpp
 	$(COMPILE) -c Button.cpp $(SDLFLAGS)
 
 Health.o : Game.hpp Entity.hpp Health.hpp Health.cpp
 	$(COMPILE) -c Health.cpp $(SDLFLAGS)
 
+Spell.o : Game.hpp Entity.hpp Spell.hpp Spell.cpp
+	$(COMPILE) -c Spell.cpp $(SDLFLAGS)
+
 Wall.o : Wall.cpp Wall.hpp Entity.hpp includes.hpp Game.hpp
 	$(COMPILE) -c Wall.cpp $(SDLFLAGS)
 
-Collision.o : Collision.cpp Collision.hpp includes.hpp
+Collision.o : Collision.cpp Collision.hpp includes.hpp Entity.hpp
 	$(COMPILE) -c Collision.cpp $(SDLFLAGS)
 
 Stone.o : Stone.cpp Stone.hpp Entity.hpp includes.hpp Game.hpp Texture.hpp
@@ -41,7 +45,7 @@ Automated.o : Automated.cpp Automated.hpp Entity.hpp includes.hpp Game.hpp
 Drone.o : Drone.cpp Drone.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
 	$(COMPILE) -c Drone.cpp $(SDLFLAGS)
 
-Broom.o : includes.hpp Collision.hpp Game.hpp Entity.hpp Broom.hpp Broom.cpp
+Broom.o : includes.hpp Collision.hpp Game.hpp Entity.hpp Broom.hpp Broom.cpp Player.hpp
 	$(COMPILE) -c Broom.cpp $(SDLFLAGS)
 	
 Remote.o : Remote.cpp Player.hpp Entity.hpp includes.hpp Game.hpp Collision.hpp
