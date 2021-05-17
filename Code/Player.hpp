@@ -30,6 +30,8 @@ public:
 	bool snitch_caught = 0;
 	bool cloak_caught = 0;
 
+	void handle_spell_collisions();
+
 
 
 	// Broom * my_broom = nullptr;

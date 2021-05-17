@@ -46,6 +46,8 @@ bool spell_over();
 void handle_wall_collisions();
 void keepInside();
 
+void handle_spell_collisions(); 
+
 int	spell_counter_limit; 
 double spell_time_limit;
 

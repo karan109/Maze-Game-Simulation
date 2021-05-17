@@ -133,10 +133,12 @@ void Player::Update(){
 			decrease_health(health_dps);
 		}
 	}
-	cout << health << endl;
+	// cout << health << endl;
 	// if (health == 0) {
 	// 	Delete();
 	// }
+
+	handle_spell_collisions();
 
 
 
@@ -205,6 +207,26 @@ void Player::cast_spell() {
 	// add spell to entities
 }
 
+
+void Player::handle_spell_collisions() {
+	spell_collision = 0;
+	for(auto & spell: * Game::entities->spells){
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		if (dir != 0) {
+			// collided = 1;
+			SDL_Rect R = this->getBB();
+			// assert (dir == face)
+			switch (spell->face) {
+				case 1: spell->head = R.x; break;
+				case 2: spell->head = R.x + R.w; break;
+				case 3: spell->head = R.y; break;
+				case 4: spell->head = R.y + R.h; break;
+			}
+			spell_collision = 1;
+			decrease_health(0.5);
+		}
+	}
+}
 
 
 
