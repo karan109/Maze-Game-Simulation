@@ -52,6 +52,7 @@ public:
 	static bool isRunning;
 	static int task;
 	static string player_name;
+	static string remote_name;
 	static int response;
 	static int send;
 	static int N;

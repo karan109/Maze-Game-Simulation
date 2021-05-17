@@ -61,7 +61,7 @@ int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
 int Game::task;
 string Game::player_name = "";
-
+string Game::remote_name = "";
 Mix_Music * Game::gMusic = nullptr;
 Mix_Chunk * Game::gScratch = nullptr;
 Mix_Chunk * Game::gHigh = nullptr;
@@ -165,7 +165,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(Game::task == 1){
 		// must add player before monster
 		// 0 is the number_param
- 		add_player(player1_starting_node, 1);
+ 		
+ 		if(Game::server){
+ 			add_player(player1_starting_node, 1);
+            player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100);
+            entities->Add(player2);
+        }
+        else if(Game::client){
+        	add_player(Game::cols-1, 1);
+            player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100);
+            entities->Add(player2);
+        }
 		// add_monster(monster1_starting_node, 0.5, 1, 0); 
 		// add_monster(monster2_starting_node, 0.3, 0, 0);
 

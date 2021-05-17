@@ -21,6 +21,18 @@ int listening;
 pthread_t threads[1];
 struct thread_data data[1];
 string command;
+
+void tokenize(std::string const &str, string delim,
+            std::vector<std::string> &out)
+{
+    char *token = strtok(const_cast<char*>(str.c_str()), delim.c_str());
+    while (token != nullptr)
+    {
+        out.push_back(string(token));
+        token = strtok(nullptr, delim.c_str());
+    }
+}
+
 int create_server(){
 	listening = socket(AF_INET, SOCK_STREAM, 0);
     if(listening == -1){
@@ -80,12 +92,14 @@ int wait_connect(){
         return -1;
     }
     string command_rec = string(buf, 0, bytesRecv);
+    cout<<command_rec<<endl;
     // send(clientSocket, buf, bytesRecv + 1, 0);
-    if(command_rec == "start"){
+    if(command_rec == "harry1" or command_rec == "ron" or command_rec == "hermione"){
         srand(time(0));
         // Game::seed = rand()%100000;
+        Game::remote_name = command_rec;
         cout<<Game::seed<<endl;
-        string command_send = to_string(Game::seed);
+        string command_send = to_string(Game::seed)+","+Game::player_name;
         int sendRes = send(clientSocket, command_send.c_str(), command_send.size()+1, 0);
         return 0;
     }
@@ -109,12 +123,15 @@ int create_client(){
     return 0;
 }
 void wait_connect_client(){
-    command = "start";
+    command = Game::player_name;
     int sendRes = send(sock, command.c_str(), command.size()+1, 0);
     if(sendRes == -1){
         cout<<"Could not send through server"<<endl;
     }
     memset(buf, 0, 4096);
     int bytesRecv = recv(sock, buf, 4096, 0);
-    Game::seed = stoi(string(buf, bytesRecv));
+    vector<string> process;
+    tokenize(string(buf, bytesRecv), ",", process);
+    Game::seed = stoi(process[0]);
+    Game::remote_name = process[1];
 }

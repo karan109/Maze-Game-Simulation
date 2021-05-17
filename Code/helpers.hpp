@@ -156,14 +156,3 @@ int main_menu(){
     SDL_DestroyRenderer(renderer);
     return 0;
 }
-
-void tokenize(std::string const &str, string delim,
-            std::vector<std::string> &out)
-{
-    char *token = strtok(const_cast<char*>(str.c_str()), delim.c_str());
-    while (token != nullptr)
-    {
-        out.push_back(string(token));
-        token = strtok(nullptr, delim.c_str());
-    }
-}
