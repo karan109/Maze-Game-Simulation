@@ -330,8 +330,6 @@ void Game::update(){
 		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
 		Message = Texture::LoadTexture(surfaceMessage);
 		Message_rect.w = 15 * message.size();
-		Message_rect.h = 20;
-		Message_rect.y = 20;
 		Message_rect.x = window_w/2 - Message_rect.w / 2;
 	}
 	if (paused) {
@@ -465,6 +463,7 @@ void Game::handle_collisions() {
 						collision_code = "scary_player_monster";
 						// collided_player = player;
 						collided_monster = monster;
+						display_message("Nice");
 						start_game_collision();
 						// collision_between(player, monster);
 					}
@@ -480,6 +479,7 @@ void Game::handle_collisions() {
 						collision_code = "monster_player";
 						collided_player = player;
 						collided_monster = monster;
+						display_message("Got ya bitch");
 						start_game_collision();
 						// collision_between(player, monster);
 
@@ -501,7 +501,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
-
+				display_message("Snitch taken");
 				collision_happened = 1;				
 				return;
 
@@ -517,7 +517,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-
+				display_message("Broom taken");
 				collision_happened = 1;
 				return;
 			}
@@ -703,4 +703,8 @@ void Game::print_queue(queue<int> q){
 void Game::display_message(string text){
 	message = text;
 	message_counter = 0;
+	surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
+	Message = Texture::LoadTexture(surfaceMessage);
+	Message_rect.w = 15 * message.size();
+	Message_rect.x = window_w/2 - Message_rect.w / 2;
 }
