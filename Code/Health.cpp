@@ -2,13 +2,14 @@
 #include "Game.hpp"
 #include "Texture.hpp"
 
-Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param) : Entity("../Images/dirt.png", srcR_param, srcR_param){
+Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param, bool show_param) : Entity("../Images/dirt.png", srcR_param, srcR_param){
 	target = target_param;
 	white = Texture::LoadTexture("../Images/white.png");
 	black = Texture::LoadTexture("../Images/black.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
+	show = show_param;
 	if(move == true){
 		length = 50;
 		destR.y = target_rect.y - 10;
@@ -49,6 +50,7 @@ void Health::Update(){
 	destR.w = length * health / full;
 }
 void Health::Render(){
+	if(!show) return;
 	int health = target->health;
 	int c1 = min((full - health) * 2 * 255 / full, 255);
 	int c2 = min(health * 2 * 255 / full, 255);
