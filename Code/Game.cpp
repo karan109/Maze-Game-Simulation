@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 12;
+int Game::cols = 25;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -200,8 +200,8 @@ void Game::add_monster(int start, double p, bool chase = 1, int number_param = 0
 	entities->Add(monster);
 }
 void Game::add_player(int start, int number_param = 0){
-	player = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, start, number_param, 6, 100);
-	entities->Add(player); 
+	player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, start, number_param, 6, 100);
+	entities->Add(player1); 
 
 }
 void Game::add_snitch(int start){

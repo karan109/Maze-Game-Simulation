@@ -181,13 +181,9 @@ void decrease_health(double x);
 
 
 
-// protected:
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity
 	int yv; // y component of velocity
-protected:
-	int mag = 1; // Magnitude of velocity
-	
 	SDL_Rect srcR, destR; // destR is bounding box of entity
 	SDL_Texture * objTexture; // Texture
 };
