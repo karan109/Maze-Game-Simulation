@@ -7,7 +7,10 @@
 
 void Player::Delete() {
 	SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(health_box);
+	Game::entities->Delete(static_health_box);
 	Game::entities->Delete(this);
+	// what if this is the target of something?
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
@@ -22,8 +25,10 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 	boost_time_left = 0;
 
 
+
 	showHealth = true;
 	health = 100;
+	health_dps = Game::player_health_decrement_per_second;
 	number = number_param;
 	if(showHealth){
 		health_box = new Health(srcR_param, this, true);
@@ -51,6 +56,8 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 	animate_speed = speed_param;
 	showHealth = true;
 	health = 100;
+	health_dps = Game::player_health_decrement_per_second;
+
 	number = number_param;
 	if(showHealth){
 		health_box = new Health(srcR_param, this, true);
@@ -67,10 +74,6 @@ void Player::Update(){
 
 	// time_update();
 
-	// health with time
-	// if (fmod(entity_time, 0.5) == 0) {
-	// 	if(health > 0) health-= 5;
-	// } 
 
 	update_boost();
 
@@ -122,6 +125,18 @@ void Player::Update(){
 	}
 
 	handle_spell_collisions();
+
+
+	// health with time
+	if (!snitch_caught) {
+		if (fmod(entity_time, 1.0) == 0) {
+			decrease_health(health_dps);
+		}
+	}
+	cout << health << endl;
+	// if (health == 0) {
+	// 	Delete();
+	// }
 
 
 
