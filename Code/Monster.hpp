@@ -23,4 +23,15 @@ public:
 	bool chase = 1;
 	void set_target();
 	void set_scary_target();
+	void handle_spell_collisions();
+
+	int spell_collision_counter = 0;
+	int spell_collision_time = 0;
+	bool spell_scared = 0;
+
+	void spell_collision_time_update();
+	void reset_spell_collision_time();
+
+	void determine_scared(); 
+
 };

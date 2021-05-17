@@ -174,7 +174,7 @@ void handle_spell_collisions();
 
 Entity * nearest_player ();
 
-
+bool spell_collision = 0;
 
 
 // protected:

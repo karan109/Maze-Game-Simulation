@@ -101,7 +101,7 @@ int Game::broom_starting_node = 25; //( Game::rows/2 ) * (Game::cols) + (Game::c
 int Game::monster1_starting_node = 299; // change to Game::rows * Game::cols - 1
 int Game::player1_starting_node = 0;
 int Game::snitch_starting_node = 20;
-
+int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 // ----------------------------------------------------------------------------------------------------------------
@@ -148,7 +148,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	if(Game::task == 1){
 		// must add player before monster
  		add_player(player1_starting_node);
-		add_monster(monster1_starting_node, 0.5, 1);
+		// add_monster(monster1_starting_node, 0.5, 1);
+		add_monster(monster2_starting_node, 0.3, 0);
+
 		add_snitch(snitch_starting_node);
 
 	}

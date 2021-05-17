@@ -136,9 +136,12 @@ public:
 
 
 	static int monster1_starting_node;
+	static int monster2_starting_node;
 	static int player1_starting_node;
 	static int broom_starting_node;
 	static int snitch_starting_node;
+
+
 
 	static int broom_apparatation_time;
 	static int broom_disapparation_time;

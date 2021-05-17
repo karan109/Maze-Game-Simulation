@@ -346,6 +346,7 @@ void Entity::update_position() {
 // }
 
 void Entity::handle_spell_collisions() {
+	spell_collision = 0;
 	for(auto & spell: * Game::entities->spells){
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
 		if (dir != 0) {
@@ -358,7 +359,7 @@ void Entity::handle_spell_collisions() {
 				case 3: spell->head = R.y; break;
 				case 4: spell->head = R.y + R.h; break;
 			}
-
+			spell_collision = 1;
 			// spell->head_v = 0;
 			// update this ki health
 		}
