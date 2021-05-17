@@ -13,6 +13,10 @@ public:
 	void update();
 	void render();
 	void clean();
+	static string message;
+	static double message_t;
+	static int message_counter;
+	static void display_message(string text);
 	bool running(){
 		return isRunning;
 	}

@@ -42,6 +42,9 @@ bool Game::isRunning = false;
 int Game::seed = time(0);
 // int Game::response = 0;
 // int Game::send = 0;
+string Game::message = "ok";
+double Game::message_t = 2.5;
+int Game::message_counter = 0;
 int Game::FPS = 60;
 int Game::frameDelay = 1000 / FPS;
 int Game::window_h = Game::wall_thickness + Game::menu + block_h * rows + (rows - 1) * wall_thickness;
@@ -108,6 +111,9 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 SDL_Texture * background;
+SDL_Surface* surfaceMessage;
+SDL_Texture* Message;
+SDL_Rect Message_rect;
 
 Game::Game(){
 
@@ -156,6 +162,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 		add_snitch(snitch_starting_node);
 
+		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
+		Message = Texture::LoadTexture(surfaceMessage);
+		Message_rect.w = 15 * message.size();
+		Message_rect.h = 20;
+		Message_rect.y = 20;
+		Message_rect.x = window_w/2 - Message_rect.w / 2;
 	}
 	
 
@@ -311,7 +323,17 @@ void Game::handleEvents(){
 
 
 void Game::update(){
-
+	message_counter++;
+	if(message_counter > FPS * message_t){
+		message_counter = 0;
+		message = "";
+		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
+		Message = Texture::LoadTexture(surfaceMessage);
+		Message_rect.w = 15 * message.size();
+		Message_rect.h = 20;
+		Message_rect.y = 20;
+		Message_rect.x = window_w/2 - Message_rect.w / 2;
+	}
 	if (paused) {
 		return;
 	}
@@ -415,7 +437,7 @@ void Game::render(){
 	    Message_rect.x = window_w / 2 - Message_rect.w / 2;
 	    SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
 	}
-
+	SDL_RenderCopy(Game::renderer, Message, NULL, & Message_rect);
 	SDL_RenderPresent(renderer);
 
 }
@@ -677,4 +699,8 @@ void Game::print_queue(queue<int> q){
 	}
 	// cout << endl;
 	cout<<endl<<endl<<endl;
+}
+void Game::display_message(string text){
+	message = text;
+	message_counter = 0;
 }
