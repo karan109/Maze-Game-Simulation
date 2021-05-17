@@ -83,11 +83,11 @@ double Game::player_broom_collision_pause = 0;
 
 
 double Game::monster_original_speed = 2.5;
-double Game::snitch_original_speed = 2.5;
+double Game::snitch_original_speed = 1.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
-double Game::player_boost_time_limit = 30;
+double Game::player_boost_time_limit = 100;
 
 int Game::broom_apparatation_time = 10;
 int Game::broom_disapparation_time = 100; // so 110 pe disappears
@@ -153,7 +153,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// 0 is the number_param
  		add_player(player1_starting_node, 0);
 		add_monster(monster1_starting_node, 0.5, 1, 0); 
-		// add_monster(monster2_starting_node, 0.3, 0, 0);
+		add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -539,6 +539,7 @@ void Game::start_game_collision () {
 		collided_snitch-> caught = 1;
 		collided_snitch-> transform();
 		//increase lives of player
+		collided_player->health = 1;
 	}
 }
 
@@ -567,6 +568,8 @@ void Game::collision_updates() {
 		collided_monster->increase_health(0.1);
 	}
 	if (collision_code == "player_snitch") {
+		collided_player->health_box->Update();
+		collided_player->static_health_box->Update();
 		collided_player->increase_health(0.5);
 	}
 	if (collision_code == "player_broom") {
@@ -604,7 +607,7 @@ void Game::reset_collided_entities() {
 	}
 	else if (collision_code == "player_snitch") {
 
-		// collided_snitch->Delete();
+		collided_snitch->Delete();
 
 	}
 	else if (collision_code == "player_broom") {
