@@ -22,8 +22,14 @@ int main(int argc, char* argv[]){
 
         // game->player1 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0, 1, 6, 100);
         // Game::entities->Add(game->player1);
-        game->player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 5, 2, 6, 100);
-        Game::entities->Add(game->player2);
+        if(Game::client){
+            game->player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, 0, 2, 6, 100);
+            Game::entities->Add(game->player2);
+        }
+        else if(Game::server){
+            game->player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100);
+            Game::entities->Add(game->player2);
+        }
         // game->monster->set_mode(0, game->player1);
         // game->monster->scary_target = game->player1;
 
@@ -36,11 +42,12 @@ int main(int argc, char* argv[]){
         frameStart = SDL_GetTicks();
         // cout<<Game::send<<endl;
         cout<<Game::response<<endl;
+        string delim = ",";
         if(Game::server){
             if (Game::response < 0) Game::response = 0;
             int sent = Game::send;
-            // string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
-            string pos = to_string(sent);
+            string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
+            // string pos = to_string(sent);
             // if(prevSend != sent){
                 int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
                 if(sendRes == -1){
@@ -63,15 +70,21 @@ int main(int argc, char* argv[]){
                 // return 0;
             }
             string command = string(buf, 0, bytesRecv);
+            vector<string> process;
+            tokenize(command, delim, process);
+            game->player2->xpos = stoi(process[0]);
+            game->player2->ypos = stoi(process[1]);
+            game->player2->xv = stoi(process[2]);
+            game->player2->yv = stoi(process[3]);
             // cout<<command<<endl;
-            if(command.size()>0)
-                Game::response = stoi(command);
+            // if(command.size()>0)
+                // Game::response = stoi(command);
         }
         else if(Game::client){
             if (Game::response < 0) Game::response = 0;
             string command = to_string(Game::send);
-            // string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
-            string pos = command;
+            string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
+            // string pos = command;
             int sent = Game::send;
             // if(prevSend != sent){
                 int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
@@ -85,15 +98,15 @@ int main(int argc, char* argv[]){
             memset(buf, 0, 4096);
             int bytesRecv = recv(sock, buf, 4096, 0);
             string response = string(buf, bytesRecv);
-            // cout<<response<<endl;
-            // vector<string> process;
-            // tokenize(response, delim, process);
-            // game->player2->xpos = stoi(process[0]);
-            // game->player2->ypos = stoi(process[1]);
-            // game->player2->xv = stoi(process[2]);
-            // game->player2->yv = stoi(process[3]);
-            if(response.size()>0)
-                Game::response = stoi(response);
+            cout<<response<<endl;
+            vector<string> process;
+            tokenize(response, delim, process);
+            game->player2->xpos = stoi(process[0]);
+            game->player2->ypos = stoi(process[1]);
+            game->player2->xv = stoi(process[2]);
+            game->player2->yv = stoi(process[3]);
+            // if(response.size()>0)
+                // Game::response = stoi(response);
             // receive = true;
         }
         game->handleEvents();

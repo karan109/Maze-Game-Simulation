@@ -39,7 +39,7 @@ int create_server(){
         cout<<"Can't listen"<<endl;
         return -3;
     }
-    fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
+    // fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
     return 0;
 }
 int wait_connect(){
@@ -83,7 +83,7 @@ int wait_connect(){
     // send(clientSocket, buf, bytesRecv + 1, 0);
     if(command_rec == "start"){
         srand(time(0));
-        Game::seed = rand()%100000;
+        // Game::seed = rand()%100000;
         cout<<Game::seed<<endl;
         string command_send = to_string(Game::seed);
         int sendRes = send(clientSocket, command_send.c_str(), command_send.size()+1, 0);
