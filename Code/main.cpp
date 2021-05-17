@@ -75,7 +75,7 @@ int main(int argc, char* argv[]){
     Button * button6 = new Button(renderer, "ron", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 + sprite_width / 2 + sprite_margin, 200, sprite_width, sprite_height});
     while(true){
         SDL_RenderClear(renderer);
-        Texture::Draw(renderer, background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, 1000, 600});
+        Texture::Draw(renderer, background, SDL_Rect{0, 0, 533, 300}, SDL_Rect{0, 0, 1000, 600});
         SDL_Event event;
         SDL_PollEvent(& event);
         if(event.type == SDL_QUIT){

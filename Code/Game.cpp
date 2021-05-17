@@ -383,7 +383,7 @@ void Game::render(){
 	SDL_RenderClear(renderer);
 	if(task == 1){
 		
-		Texture::Draw(background, SDL_Rect{0, 0, 1280, 720}, SDL_Rect{0, 0, width, height});
+		Texture::Draw(background, SDL_Rect{0, 0, 533, 300}, SDL_Rect{0, 0, width, height});
 	}
 	else{
 		// auto background = Texture::LoadTexture("../Images/bg2.webp");
