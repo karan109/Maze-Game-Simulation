@@ -8,7 +8,7 @@ void Monster::Delete() {
 	Game::entities->Delete(this);
 }
 
-Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start = 1) : Automated("../Images/dragon.png", srcR_param, start){
+Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_param) : Automated("../Images/dragon.png", srcR_param, start){
 
 	original_mode = 0;
 	original_speed = Game::monster_original_speed;
@@ -17,9 +17,20 @@ Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start = 1) : Automat
 	chase = chase_start;
 	set_target();
 	set_scary_target();
+	number = number_param;
+
+	showHealth = true;
+	health = 100;
+	number = number_param;
+	if(showHealth){
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
+		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
+	}
 }
 
-Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param, bool chase_start = 1) : Automated("../Images/dragon.png", srcR_param, start){
+Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param, bool chase_start, int number_param) : Automated("../Images/dragon.png", srcR_param, start){
 	animated = true;
 	srcR.y = srcR.h * 4;
 	frames = frames_param;
@@ -32,11 +43,22 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	target = nullptr;
 	set_target();
 	set_scary_target();
+	number = number_param;
 
 	//Game::cols * Game::rows - 1; // change retreat node for different monsters
 	dest = retreat_node; //retreat_node = start in Entity constructor
 
 	// Game::print_queue(seq);
+
+	showHealth = true;
+	health = 100;
+	number = number_param;
+	if(showHealth){
+		health_box = new Health(srcR_param, this, true);
+		static_health_box = new Health(srcR_param, this, false);
+		Game::entities->Add(health_box);
+		Game::entities->Add(static_health_box);
+	}
 
 }
 
@@ -173,8 +195,8 @@ void Monster::Update() {
 
 	// Game::print_queue(seq);
 
-	// set_target();
-	// set_scary_target();
+	set_target();
+	set_scary_target();
 
 
 

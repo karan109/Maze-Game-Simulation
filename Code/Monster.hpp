@@ -2,11 +2,13 @@
 
 #include "Entity.hpp"
 #include "Automated.hpp"
+#include "Health.hpp"
+
 
 class Monster : public Automated{
 public:
-	Monster(SDL_Rect srcR_param, int start, bool chase_start);
-	Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param, bool chase_start);
+	Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_param);
+	Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_param, bool chase_start, int number_param);
 	void Update();
 	void Delete();
 	void  switch_in_scared_mode();
@@ -33,5 +35,8 @@ public:
 	void reset_spell_collision_time();
 
 	void determine_scared(); 
+
+	Health * health_box, * static_health_box;
+
 
 };

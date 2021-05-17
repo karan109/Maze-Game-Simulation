@@ -158,8 +158,8 @@ public:
 	static void print_queue(queue<int>);
 
 	static queue<int> seq_generator(double p, bool chase, int sampling_time);
-	void add_monster(int start, double p, bool chase);
-	void add_player(int start);
+	void add_monster(int start, double p, bool chase, int number_param);
+	void add_player(int start, int number_param);
 	void add_snitch(int start);
 	void add_broom(int appear_time, int start);
 

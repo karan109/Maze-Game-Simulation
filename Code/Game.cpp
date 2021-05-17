@@ -147,9 +147,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	if(Game::task == 1){
 		// must add player before monster
- 		add_player(player1_starting_node);
-		// add_monster(monster1_starting_node, 0.5, 1);
-		add_monster(monster2_starting_node, 0.3, 0);
+		// 0 is the number_param
+ 		add_player(player1_starting_node, 0);
+		add_monster(monster1_starting_node, 0.5, 1, 0); 
+		// add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -169,16 +170,16 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 // ------------------------------------------------- Add entities--------------------------------------------------
 
-void Game::add_monster(int start, double p, bool chase = 1) {
-	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase); 
+void Game::add_monster(int start, double p, bool chase = 1, int number_param = 2) {
+	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
 	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
 	monster->seq = seq_generator(p, chase, 10); 
 	// print_queue(monster->seq);
 	entities->Add(monster);
 }
-void Game::add_player(int start){
-	player = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, start, 0, 6, 100);
+void Game::add_player(int start, int number_param = 0){
+	player = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, start, number_param, 6, 100);
 	entities->Add(player); 
 
 }
@@ -539,7 +540,10 @@ void Game::start_game_collision () {
 
 void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
+
 		collided_monster->Update();
+		collided_monster->health_box->Update();
+		collided_monster->static_health_box->Update();
 	}
 	if (collision_code == "monster_player") {
 
@@ -548,6 +552,8 @@ void Game::collision_updates() {
 		collided_player->static_health_box->Update();
 
 		collided_monster->Update();
+		collided_monster->health_box->Update();
+		collided_monster->static_health_box->Update();
 	}
 	if (collision_code == "player_snitch") {
 	}
