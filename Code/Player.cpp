@@ -3,7 +3,7 @@
 #include "Collision.hpp"
 #include "Entities.hpp"
 #include "Spell.hpp"
-
+#include "Texture.hpp"
 
 void Player::Delete() {
 	SDL_DestroyTexture(objTexture);
@@ -40,7 +40,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param, int type_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
-	if(type_param == 0) Entity(("../Images/"+Game::remote_name+".png").c_str(), srcR_param, start);
+	if(type_param == 0) objTexture = Texture::LoadTexture(("../Images/"+Game::remote_name+".png").c_str());
 	original_speed = Game::player_original_speed;
 	speed = original_speed;
 	boost_speed = Game::player_boost_speed;
@@ -78,7 +78,7 @@ void Player::Update(){
 
 	update_boost();
 
-	if (casting_conditions() ) {
+	if (casting_conditions() and type == 1) {
 		// cout << 1 << endl;
 		cast_spell();
 	}

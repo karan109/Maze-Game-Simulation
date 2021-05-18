@@ -181,8 +181,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         else{
         	add_player(player1_starting_node, 1);
         }
-		add_monster(monster1_starting_node, 0.5, 1, 0); 
-		add_monster(monster2_starting_node, 0.3, 0, 0);
+		// add_monster(monster1_starting_node, 0.5, 1, 0); 
+		// add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -360,9 +360,9 @@ void Game::update(){
 		Message_rect.w = 15 * message.size();
 		Message_rect.x = window_w/2 - Message_rect.w / 2;
 	}
-	if (paused) {
-		return;
-	}
+	// if (paused) {
+	// 	return;
+	// }
 
 	if (collision_happened) {
 
@@ -383,9 +383,9 @@ void Game::update(){
 	for(auto & player : * entities->players){
 		player->Update();
 	}
-	for(auto & remote : * entities->remotes){
-		remote->Update();
-	}
+	// for(auto & remote : * entities->remotes){
+	// 	remote->Update();
+	// }
 	for(auto & monster : * entities->monsters){
 		monster->Update();
 	}
