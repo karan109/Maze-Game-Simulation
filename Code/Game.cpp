@@ -92,8 +92,8 @@ double Game::player_snitch_collision_pause = 1;
 double Game::player_broom_collision_pause = 0;
 
 
-double Game::monster_original_speed = 2.5;
-double Game::snitch_original_speed = 4.5;
+double Game::monster_original_speed = 2;
+double Game::snitch_original_speed = 2.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
@@ -179,11 +179,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
+
+
         else{
         	add_player(player1_starting_node, 1);
         }
-		// add_monster(monster1_starting_node, 0.5, 1, 0); 
-		// add_monster(monster2_starting_node, 0.3, 0, 0);
+		add_monster(monster1_starting_node, 0.5, 1, 0); 
+		add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
 
@@ -218,7 +220,7 @@ void Game::add_monster(int start, double p, bool chase = 1, int number_param = 0
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
 	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
-	monster->seq = seq_generator(p, chase, 10); 
+	monster->seq = seq_generator(p, chase, 30); 
 	// print_queue(monster->seq);
 	entities->Add(monster);
 }
@@ -289,6 +291,7 @@ void Game::switch_collision() {
 	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
 
 	if (resume) {
+		// cout << "resumes" << endl;
 		collision_happened = false;
 		collision_counter = 0;
 		collision_time = 0;
@@ -339,7 +342,8 @@ void Game::handleEvents(){
 		update_global_pause_time();
 		switch_pause();
 	}
-	if (collision_happened) {
+	else if (collision_happened) {
+		// cout << "c" << endl;
 		update_global_collision_time();
 		switch_collision();
 
@@ -487,9 +491,9 @@ void Game::handle_collisions() {
 						// Delete();
 
 						collision_code = "scary_player_monster";
-						// collided_player = player;
+						collided_player = player;
 						collided_monster = monster;
-						display_message("Nice");
+						display_message("Nice. you scared the dragon");
 						start_game_collision();
 						// collision_between(player, monster);
 					}
@@ -505,7 +509,7 @@ void Game::handle_collisions() {
 						collision_code = "monster_player";
 						collided_player = player;
 						collided_monster = monster;
-						display_message("Got ya bitch");
+						display_message("Oops! dragon got to you!");
 						start_game_collision();
 						// collision_between(player, monster);
 
@@ -527,7 +531,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
-				display_message("Snitch taken");
+				display_message("Harry Potter (change name according to collided_player's name) has caught the snitch. the resucrection stone was inside the snitch. lives = 3");
 				collision_happened = 1;				
 				return;
 
@@ -543,7 +547,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-				display_message("Broom taken");
+				display_message("Broom taken. wooosh!");
 				collision_happened = 1;
 				return;
 			}
@@ -565,8 +569,12 @@ void Game::start_game_collision () {
 	// Snitch * snitch = collided_snitch;
 
 	if (collision_code == "scary_player_monster") {
+		// cout << "before collision " << collided_monster->scatter_reached << endl;
 
 		collided_monster->start_collision();
+
+		// cout << "after collision " << collided_monster->mode << " " << collided_monster->speed << endl;
+
 	}
 
 	if (collision_code == "monster_player") {
@@ -584,6 +592,8 @@ void Game::start_game_collision () {
 	if (collision_code == "player_snitch") {
 		//player has caught the snitch
 		collided_player-> snitch_caught = 1;
+		// collided_player-> lives = 3;
+
 		collided_snitch-> caught = 1;
 		collided_snitch-> transform();
 		//increase lives of player
@@ -594,7 +604,10 @@ void Game::start_game_collision () {
 void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
 
+		// cout << "did we gwt here" << endl;
+
 		collided_monster->Update();
+		// cout << collided_monster->mode << " " << collided_monster->speed << endl;
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
 		collided_monster->decrease_health(0.1);

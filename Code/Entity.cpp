@@ -483,18 +483,55 @@ void Entity::set_path_mode3(Entity * scary_target) {
 	vector <int> temp;
 	int next = current;
 
+	// if (in_sight(this, scary_target) ||(xv == 0 and yv == 0) || graph.distance(current, scary_block) <= 7 ) {
+	// 	if (Entity::can_go_right(current)) temp.push_back(1);
+	// 	if (Entity::can_go_down(current)) temp.push_back(2);
+	// 	if (Entity::can_go_left(current)) temp.push_back(3);
+	// 	if (Entity::can_go_up(current)) temp.push_back(4);
+	// }
+	// else {
+	// 	if (xv == mag and yv == 0) {
+	// 		if (Entity::can_go_right(current)) temp.push_back(1);
+	// 		if (Entity::can_go_down(current)) temp.push_back(2);
+	// 		// if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
+	// 		if (Entity::can_go_up(current)) temp.push_back(4);
+	// 	}
+
+	// 	if (xv == -mag and yv == 0) {
+	// 		// if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
+	// 		if (Entity::can_go_down(current)) temp.push_back(2);
+	// 		if (Entity::can_go_left(current)) temp.push_back(3);
+	// 		if (Entity::can_go_up(current)) temp.push_back(4);
+	// 	}
+
+	// 	if (yv == mag and xv == 0) {
+	// 		if (Entity::can_go_right(current)) temp.push_back(1);
+	// 		if (Entity::can_go_down(current)) temp.push_back(2);
+	// 		if (Entity::can_go_left(current)) temp.push_back(3);
+	// 		// if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
+	// 	}
+
+	// 	if (yv == -mag and xv == 0) {
+	// 		if (Entity::can_go_right(current)) temp.push_back(1);
+	// 		// if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
+	// 		if (Entity::can_go_left(current)) temp.push_back(3);
+	// 		if (Entity::can_go_up(current)) temp.push_back(4);
+	// 	}
+	// }
 
 	if (Entity::can_go_right(current)) temp.push_back(1);
 	if (Entity::can_go_down(current)) temp.push_back(2);
 	if (Entity::can_go_left(current)) temp.push_back(3);
-	if (Entity::can_go_up(current)) temp.push_back(4);	
+	if (Entity::can_go_up(current)) temp.push_back(4);
+
 
 	// assert(temp.size()!=0);
 
 	// int temp_dir = temp[rand() % temp.size()];
 
 	int temp_dir = 0;
-	int max_distance = graph.distance(current, scary_block);
+	int current_distance = graph.distance(current, scary_block);
+	int max_distance = INT_MIN;
 	bool a[5] = {0};
 
 	for (int i = 0; i < temp.size() ; ++i) {
@@ -503,7 +540,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		if (dir == 1) {
 			a[1] = 1;
 			d = graph.distance(current + 1, scary_block);
-			if (d > max_distance) {
+			if (prev != current + 1 and d > max_distance) {
 				max_distance = d;
 				temp_dir = 1;
 			}
@@ -511,7 +548,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		if (dir == 2) {
 			a[2] = 1;
 			d = graph.distance(current + Game::cols, scary_block);
-			if (d > max_distance) {
+			if (prev != current + Game::cols and d > max_distance) {
 				max_distance = d;
 				temp_dir = 2;
 			}
@@ -519,7 +556,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		if (dir == 3) {
 			a[3] = 1;
 			d = graph.distance(current - 1, scary_block);
-			if (d > max_distance) {
+			if (prev != current - 1 and d > max_distance) {
 				max_distance = d;
 				temp_dir = 3;
 			}
@@ -527,7 +564,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		if (dir == 4) {
 			a[4] = 1;
 			d = graph.distance(current - Game::cols, scary_block);
-			if (d > max_distance) {
+			if (prev != current - Game::cols and d > max_distance) {
 				max_distance = d;
 				temp_dir = 4;
 			}
@@ -554,28 +591,34 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		yv = -mag;
 		xv = 0; 
 	}
-	if (temp_dir == 0) {
-		//go according to velocity if possible to go
-		if (xv == mag and a[1] == 1) {
-			next = current + 1;
-		}
-		else if (yv == mag and a[2] == 1) {
-			next = current + Game::cols;
-		}
-		else if (xv == -mag and a[3] == 1) {
-			next = current - 1;
-		}
-		else if (yv == -mag and a[4] == 1) {
-			next = current - Game::cols;
-		}
-		else {
-			int go_randomly = temp[rand() % temp.size()];
-			next = switch_dir(go_randomly, current);
-		}
-	}
+
+	// if (temp_dir == 0) {
+	// 	// bad = current;
+	// 	// go according to velocity if possible to go
+	// 	if (xv == mag and a[1] == 1) {
+	// 		next = current + 1;
+	// 	}
+	// 	else if (yv == mag and a[2] == 1) {
+	// 		next = current + Game::cols;
+	// 	}
+	// 	else if (xv == -mag and a[3] == 1) {
+	// 		next = current - 1;
+	// 	}
+	// 	else if (yv == -mag and a[4] == 1) {
+	// 		next = current - Game::cols;
+	// 	}
+	// 	else {
+	// 		int go_randomly = temp[rand() % temp.size()];
+	// 		next = switch_dir(go_randomly, current);
+	// 	}
+	// }
 	// if nothing else works just stay where you are
 	// xv = 0
 	// yv = 0
+	prev = current;
+	// if (max_distance < current_distance) {
+	// 	cout << prev << " " << next <<  " " << temp_dir << endl;
+ // 	}
 	path.push(next);
 }
 
@@ -664,26 +707,30 @@ void Entity::keepInside(){
 	auto coords = Entity::getCurrentBlockCoords();
 	if(xpos + destR.w >= Game::width - Game::wall_thickness){
 		wall_ct++;
-		if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+		if(wall_ct >= delay) {
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+		}
 		xpos = Game::width - Game::wall_thickness - Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos + destR.h >= Game::height - Game::wall_thickness){
 		wall_ct++;
-		if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+		if(wall_ct >= delay){
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+		}
 		ypos = Game::height - Game::wall_thickness - Game::block_h / 2 - destR.h / 2;
 	}
 	else if(xpos <= Game::wall_thickness){
 		wall_ct++;
-		if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+		if(wall_ct >= delay){
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+		}
 		xpos = Game::wall_thickness + Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos <= Game::menu){
 		wall_ct++;
-		if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+		if(wall_ct >= delay){
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+		}
 		ypos = Game::menu + Game::block_h / 2 - destR.h / 2;
 	}
 }
@@ -794,28 +841,28 @@ void Entity::Update_player() {
 		if(dir == 1){
 			wall_ct++;
 			if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x - Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 2){
 			wall_ct++;
 			if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x + u->getBB().w + Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 3){
 			wall_ct++;
 			if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y - Game::block_h / 2 - destR.h / 2;
 		}
 		else if(dir == 4){
 			wall_ct++;
 			if(wall_ct >= delay)
-			Mix_PlayChannel( -1, Game::gScratch, 0 );
+			// Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
 		}

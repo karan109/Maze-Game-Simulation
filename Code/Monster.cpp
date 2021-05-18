@@ -3,11 +3,14 @@
 #include "Collision.hpp"
 #include "Entities.hpp"
 
+
+int Monster::monster_i = 0;
+
 void Monster::Delete() {
 	SDL_DestroyTexture(objTexture);
 	Game::entities->Delete(this);
 }
-
+// number is needed for health
 Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_param) : Automated("../Images/dragon.png", srcR_param, start){
 
 	original_mode = 0;
@@ -18,6 +21,8 @@ Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_pa
 	set_target();
 	set_scary_target();
 	number = number_param;
+	monster_i++;
+	monster_number = monster_i;
 
 	showHealth = true;
 	health = 100;
@@ -44,6 +49,8 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	set_target();
 	set_scary_target();
 	number = number_param;
+	monster_i++;
+	monster_number = monster_i;
 
 	//Game::cols * Game::rows - 1; // change retreat node for different monsters
 	dest = retreat_node; //retreat_node = start in Entity constructor
@@ -63,24 +70,29 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 }
 
 void Monster::switch_in_scared_mode() {
-	if (distance(this, scary_target) <= 10 and mode == 2) {
+	if (collided) return;
+
+	if (distance(this, scary_target) <= 7 and mode == 2) {
 		change_mode(3);
 	}
-	else if (distance(this, scary_target) > 20 and mode == 3) {
+	else if (distance(this, scary_target) > 15 and mode == 3) {
 		change_mode(1);
 	}
 	else if (scatter_reached == true and mode == 1) {
-		// scatter_reached = false;
-		change_mode(2);
+		bool mode_changed = change_mode(2);
+		if (mode_changed)  {
+			scatter_reached = false;
+		}
 	}
 }
 
 void Monster::switch_in_not_scared_mode() {
 
-	if (distance(this, target) <= 5 and mode == 2) {
-		change_mode(0);
-		return;
-	}
+	// if (distance(this, target) <= 5 and mode == 2) {
+	// 	change_mode(0);
+	// 	return;
+	// }
+	if (collided) return;
 
 	if(seq.empty()) {
 		if (mode != 2) {
@@ -91,12 +103,14 @@ void Monster::switch_in_not_scared_mode() {
 		if (mode == 0) {
 			bool mode_changed = change_mode(2); 
 			if (mode_changed) {
+				// cout << monster_number << " " <<  mode << endl;
 				seq.pop();
 			}
 		}
 		else if (mode == 2) {
 			bool mode_changed = change_mode(0); 
 			if (mode_changed) {
+				// cout << monster_number << " " << mode << endl;
 				seq.pop();
 			}
 		}
@@ -248,13 +262,12 @@ void Monster::Update() {
 	determine_scared();
 	switch_modes();
 
-	// cout << normal_time << " " << mode << endl << endl;
-
-
+	// cout << monster_number << " " << mode << endl << endl;
+	// cout << monster_number << " " << normal_time << " " << mode << endl << endl;
 	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
 
 	if (health == 0) {
-		Delete();
+		// Delete();
 	}
 }
 

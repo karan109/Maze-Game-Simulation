@@ -180,6 +180,8 @@ bool spell_collision = 0;
 void increase_health(double x);
 void decrease_health(double x);
 
+int prev = -1;
+
 
 
 	int mag = 1; // Magnitude of velocity

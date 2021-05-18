@@ -38,5 +38,8 @@ public:
 
 	Health * health_box, * static_health_box;
 
+	static int monster_i;
+	int monster_number = 0;
+
 
 };

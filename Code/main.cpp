@@ -46,7 +46,7 @@ int main(int argc, char* argv[]){
         game->handle_collisions();
         game->render();
 
-
+        // cout << Entity::in_sight(game->entities->players->at(0),game->entities->monsters->at(1) ) << endl;
         frameTime = SDL_GetTicks() - frameStart;
 
         if(Game::frameDelay > frameTime){
