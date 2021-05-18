@@ -13,4 +13,5 @@ public:
 	int full = 100;
 	bool move, show;
 	SDL_Rect figure;
+	int counter = 0;
 };

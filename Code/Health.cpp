@@ -154,4 +154,19 @@ void Health::Render(){
 	else Message_rect.x = destR.x - thick - 10 - Message_rect.w;
 	
 	SDL_RenderCopy(Game::renderer, Message, NULL, & Message_rect);
+	if(health > 0 and health < 10 and target->number < 3){
+		colorh = SDL_Color{255, 0, 0, 255};
+		surfaceMessage = TTF_RenderText_Solid(Game::font, "Danger!!", colorh);
+		Message = Texture::LoadTexture(surfaceMessage);
+		digits = 8;
+		Message_rect.y = destR.y + destR.h / 2 - Message_rect.h / 2;
+		if(target->number % 2 == 1) Message_rect.x += 10 + Message_rect.w;
+		else Message_rect.x -= (10 + 15 * digits);
+		Message_rect.w = 15 * digits;
+		Message_rect.h = 20;
+		if(counter++ < Game::FPS/2){
+			SDL_RenderCopy(Game::renderer, Message, NULL, & Message_rect);
+		}
+		if(counter == Game::FPS) counter = 0;
+	}
 }
