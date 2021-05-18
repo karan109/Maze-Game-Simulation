@@ -120,7 +120,7 @@ int Game::snitch_starting_node = 20;
 int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
-double Game::player_health_decrement_per_second = (double)1000 / (5*60); //over in 60 seconds
+double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -639,7 +639,7 @@ void Game::collision_updates() {
 		// cout << collided_monster->mode << " " << collided_monster->speed << endl;
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
-		collided_monster->decrease_health(1);
+		collided_monster->decrease_health(0.1);
 
 		collided_player->increase_health(0.1);
 
