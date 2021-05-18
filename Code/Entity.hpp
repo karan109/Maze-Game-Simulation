@@ -184,7 +184,7 @@ int smooth_turn_distance();
 int lives = 1;
 
 
-
+	int broom_collected = 0, snitch_collected = 0, cloak_collected = 0;
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity
 	int yv; // y component of velocity

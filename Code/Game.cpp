@@ -585,6 +585,7 @@ void Game::handle_collisions() {
 				collision_code = "player_snitch";
 				collided_player = player;
 				collided_snitch = snitch;
+				player->snitch_collected = 1;
 				start_game_collision();
 				// collision_between(player, snitch);
 				Mix_PlayChannel( -1, Game::gMedium, 0 );
@@ -602,6 +603,7 @@ void Game::handle_collisions() {
 				collision_code = "player_broom";
 				collided_player = player;
 				collided_broom = broom;
+				player->broom_collected = 1;
 				start_game_collision();
 				// collision_between(player, broom);
 				Mix_PlayChannel( -1, Game::gMedium, 0 );

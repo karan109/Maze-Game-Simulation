@@ -6,6 +6,9 @@ Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param, bool
 	target = target_param;
 	white = Texture::LoadTexture("../Images/white.png");
 	black = Texture::LoadTexture("../Images/black.png");
+	snitch = Texture::LoadTexture("../Images/snitch.png");
+	broom = Texture::LoadTexture("../Images/broom.png");
+	cloak = Texture::LoadTexture("../Images/cloak.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
@@ -106,6 +109,14 @@ void Health::Render(){
 		for(int i=0;i<target->lives;i++){
 			l.x = Message_rect.x + Message_rect.w + 4 + i * 22;
 			SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & l);
+		}
+		if(target->snitch_collected){
+			l.x = Message_rect.x - 4 - 2 * 22;
+			SDL_RenderCopy(Game::renderer, snitch, new SDL_Rect{0, 0, 874, 414}, & l);
+		}
+		if(target->broom_collected){
+			l.x = Message_rect.x - 4 - 22;
+			SDL_RenderCopy(Game::renderer, broom, new SDL_Rect{0, 0, 2393, 1274}, & l);
 		}
 	}
 	else{
