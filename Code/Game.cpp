@@ -100,8 +100,21 @@ double Game::player_not_dead_collision_pause = 0;
 double Game::monster_dead_collision_pause = 2;
 
 
-
-
+// vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer);
+vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
+	srand(Game::seed);
+	vector<pair<int, int>> result;
+	int prev = 0;
+	while(1){
+		int next = rand()%max_buffer + prev;
+		if(prev != 0) next += exist_time;
+		if(next > 600) break;
+		// 600 is 10 minutes
+		result.push_back({next, rand()%N});
+		prev = next;
+	}
+	return result;
+}
 
 double Game::monster_original_speed = 2;
 double Game::snitch_original_speed = 1.5;
@@ -145,6 +158,8 @@ Game::~Game(){
 }
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
 	// cout<<"ok"<<endl;
+	// auto temp = generate_sequence(20, 30);
+	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
 	if(task == 2) no_trap = false;
 	Game::width = width;
 	Game::height = height;
