@@ -497,7 +497,7 @@ void Game::handle_collisions() {
 		// player->collided = 1; never calling player-> update
 		collision_happened = 1;
 		collided_monster = monster;
-		display_message("dragon dead");
+		display_message("Dragon dead!");
 
 		}
 	}	
@@ -519,7 +519,7 @@ void Game::handle_collisions() {
 						collision_code = "scary_player_monster";
 						collided_player = player;
 						collided_monster = monster;
-						display_message("Nice. (player name) scared the dragon");
+						display_message("Nice. "+player->player_name+" has scared the dragon");
 						start_game_collision();
 						// collision_between(player, monster);
 					}
@@ -535,7 +535,7 @@ void Game::handle_collisions() {
 						collision_code = "monster_player";
 						collided_player = player;
 						collided_monster = monster;
-						display_message("Oops! dragon got to (player name)!");
+						display_message("Oops! dragon got to "+player->player_name+"!");
 						start_game_collision();
 						// collision_between(player, monster);
 
@@ -557,7 +557,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
-				display_message("(player_name) has caught the snitch", "the resucrection stone was inside the snitch. lives = 3");
+				display_message(player->player_name+" has caught the snitch", "Resucrection stone was inside the snitch.");
 				collision_happened = 1;				
 				return;
 
@@ -573,7 +573,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-				display_message("(player name) is on the broom. Godspeed. wooosh!");
+				display_message(player->player_name+" is on the broom. Godspeed. wooosh!");
 				collision_happened = 1;
 				return;
 			}
@@ -586,10 +586,10 @@ void Game::handle_collisions() {
 			collision_happened = 1;
 			collided_player = player;
 			if (collided_player->lives != 0) {
-				display_message("I open at the close. (player name) resurrects.");
+				display_message("I open at the close. "+player->player_name+" resurrects.");
 			}
 			else {
-				display_message("(player name) dead");
+				display_message(player->player_name+" dead");
 			}
 
 		}
@@ -744,7 +744,7 @@ void Game::reset_collided_entities() {
 
 		if (collided_player-> lives == 0 ) {
 			collided_player->Delete();
-			display_message("winning msg");
+			// display_message("winning msg");
 			Game::isRunning = 0;
 		}
 

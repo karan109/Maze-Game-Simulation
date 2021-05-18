@@ -103,7 +103,7 @@ void Health::Render(){
 		l.y = Message_rect.y;
 		l.w = 20;
 		l.h = 20;
-		for(int i=0;i<3;i++){
+		for(int i=0;i<target->lives;i++){
 			l.x = Message_rect.x + Message_rect.w + 4 + i * 22;
 			SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & l);
 		}

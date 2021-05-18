@@ -40,6 +40,10 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param, int type_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
 	player_name = Game::player_name;
+	if(type_param == 0) player_name = Game::remote_name;
+	if(player_name == "harry1") player_name = "Harry";
+	if(player_name == "ron") player_name = "Ron";
+	if(player_name == "hermione") player_name = "Hermione";
 	if(type_param == 0) objTexture = Texture::LoadTexture(("../Images/"+Game::remote_name+".png").c_str());
 	original_speed = Game::player_original_speed;
 	speed = original_speed;

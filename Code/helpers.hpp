@@ -230,6 +230,11 @@ int winning_message(){
     auto harry = Texture::LoadTexture(renderer, "../Images/harrywin.png");
     auto ron = Texture::LoadTexture(renderer, "../Images/ronwin.png");
     auto hermione = Texture::LoadTexture(renderer, "../Images/hermionewin.png");
+    SDL_Texture * Character;
+    string player_name;
+    if(Game::player_name == "harry1"){Character = harry; player_name = "Harry";}
+    else if(Game::player_name == "ron"){Character = ron; player_name = "Ron";}
+    else{Character = hermione; player_name = "Hermione";}
     double scale = 0;
     int dumbw = 200, dumbh = 500;
     int ct = 0, ct2 = 0, ct3 = 0;
@@ -237,14 +242,13 @@ int winning_message(){
     while(true){
         scale = min((double)ct/(t * Game::FPS), (double)1);
         int tempw = scale * dumbw, temph = scale * dumbh;
-        // cout<<tempw<<" "<<temph<<endl;
         frameStart = SDL_GetTicks();
         SDL_RenderClear(renderer);
         if(ct2 == (t+1) * Game::FPS){
-            Texture::Draw(renderer, hermione, SDL_Rect{0, 0, 200, 500}, SDL_Rect{600, 150, 160, 400});
+            Texture::Draw(renderer, Character, SDL_Rect{0, 0, 200, 500}, SDL_Rect{600, 150, 160, 400});
         }
         if(ct3 == (t+2) * Game::FPS){
-            string message = "Well done, Harry";
+            string message = "Well done, "+player_name+"!";
             SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, message.c_str(), SDL_Color{0,0,0,255});
             SDL_Texture* Message = Texture::LoadTexture(renderer, surfaceMessage);
 
@@ -252,8 +256,8 @@ int winning_message(){
             int digits = message.size();
             Message_rect.w = 15 * digits;
             Message_rect.h = 20;
-            Message_rect.y = 300-Message_rect.h / 2;
-            Message_rect.x = 50;
+            Message_rect.y = 20;
+            Message_rect.x = 400 - Message_rect.w/2;
             SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
         }
         Texture::Draw(renderer, background, SDL_Rect{0, 0, 200, 500}, SDL_Rect{400-tempw/2, 300-temph/2, tempw, temph});
