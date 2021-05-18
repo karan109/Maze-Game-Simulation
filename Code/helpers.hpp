@@ -206,5 +206,5 @@ void client_work(){
     game->player2->ypos = stoi(process[1]);
     game->player2->xv = stoi(process[2]);
     game->player2->yv = stoi(process[3]);
-    // if(stoi(process[4])) == 1;
+    if(stoi(process[4])) == 1;
 }
