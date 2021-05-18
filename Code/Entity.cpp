@@ -477,6 +477,8 @@ void Entity::set_path_mode2() {
 
 void Entity::set_path_mode3(Entity * scary_target) {
 
+	if (scary_target == nullptr) return;
+
 	auto & graph = Game::game_maze->graph;
 
 	int current = getBlock();

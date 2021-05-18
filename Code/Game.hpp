@@ -156,6 +156,12 @@ public:
 	static double player_monster_collision_pause;
 	static double player_snitch_collision_pause;
 	static double player_broom_collision_pause;
+	static double player_dead_collision_pause;
+	static double player_not_dead_collision_pause;
+	static double monster_dead_collision_pause;
+
+
+
 
 	static int monster_cycle_time;
 	static bool spacebar_pressed;

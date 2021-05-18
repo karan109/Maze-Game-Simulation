@@ -7,8 +7,11 @@
 int Monster::monster_i = 0;
 
 void Monster::Delete() {
-	SDL_DestroyTexture(objTexture);
+	// SDL_DestroyTexture(objTexture);
+	Game::entities->Delete(health_box);
+	Game::entities->Delete(static_health_box);
 	Game::entities->Delete(this);
+
 }
 // number is needed for health
 Monster::Monster(SDL_Rect srcR_param, int start, bool chase_start, int number_param) : Automated("../Images/dragon.png", srcR_param, start){
@@ -72,6 +75,7 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 void Monster::switch_in_scared_mode() {
 	if (collided) return;
 
+	if (scary_target == nullptr) return;
 	if (distance(this, scary_target) <= 7 and mode == 2) {
 		change_mode(3);
 	}
@@ -164,6 +168,8 @@ void Monster::determine_scared() {
 		}
 
 		// change to any player scary
+		if (target == nullptr) return;
+
 		if (target->scary == true) {
 
 			if (!scared) {
@@ -286,6 +292,10 @@ void Monster::scared_time_update() {
 void Monster::set_target() {
 
 	target = nearest_player();
+	if (target == nullptr) {
+		// cout << "target nullptr" << endl;
+		mode = 2;
+	}
 
 	// target = Game::entities->players->at(0);
 
@@ -294,6 +304,10 @@ void Monster::set_target() {
 void Monster::set_scary_target() {
 
 	scary_target = nearest_player();
+	if (scary_target == nullptr) {
+		// cout << "scary_target nullptr" << endl;
+		mode = 2;
+	}
 
 	// scary_target = Game::entities->players->at(0);
 

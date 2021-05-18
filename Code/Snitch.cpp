@@ -42,6 +42,7 @@ Snitch::Snitch(SDL_Rect srcR_param, int start) : Automated("../Images/snitch.png
 }
 
 void Snitch::switch_mode() {
+	if (scary_target == nullptr) return;
 	if (distance(this, scary_target) <= switch_distance and mode == 2) {
 		mode = 3;
 	}
@@ -58,6 +59,8 @@ void Snitch::Update() {
 	}
 
 	scary_target = nearest_player();
+	if (scary_target == nullptr) mode = 2;
+
 
 	switch_mode();
 

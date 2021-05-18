@@ -90,10 +90,16 @@ double Game::collision_time = 0;
 double Game::player_monster_collision_pause = 1;
 double Game::player_snitch_collision_pause = 1;
 double Game::player_broom_collision_pause = 0;
+double Game::player_dead_collision_pause = 2;
+double Game::player_not_dead_collision_pause = 0;
+double Game::monster_dead_collision_pause = 2;
+
+
+
 
 
 double Game::monster_original_speed = 2;
-double Game::snitch_original_speed = 2.5;
+double Game::snitch_original_speed = 1.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
@@ -114,7 +120,7 @@ int Game::snitch_starting_node = 20;
 int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
-double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
+double Game::player_health_decrement_per_second = (double)1000 / (5*60); //over in 60 seconds
 
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -158,15 +164,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	}
 
 
-
-
-
-
-
 	if(Game::task == 1){
-		// must add player before monster
+		// must add player before monster (not neccessary anymore)
 		// 0 is the number_param
- 		
+
  		if(Game::server){
  			add_player(player1_starting_node, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
@@ -365,9 +366,9 @@ void Game::update(){
 		Message_rect.w = 15 * message.size();
 		Message_rect.x = window_w/2 - Message_rect.w / 2;
 	}
-	// if (paused) {
-	// 	return;
-	// }
+	if (paused) {
+		return;
+	}
 
 	if (collision_happened) {
 
@@ -476,6 +477,19 @@ void Game::handle_collisions() {
 
 	if (paused || collision_happened) return;
 
+	for(auto & monster: * Game::entities->monsters){
+
+		if (monster->health == 0) {
+		collision_code = "monster_dead";
+		// player->lives -= 1;
+		// player->collided = 1; never calling player-> update
+		collision_happened = 1;
+		collided_monster = monster;
+		display_message("dragon dead");
+
+		}
+	}	
+
 	// what if collides with another player?
 	// if collides with target then return
 	for(auto & player: * Game::entities->players){
@@ -493,7 +507,7 @@ void Game::handle_collisions() {
 						collision_code = "scary_player_monster";
 						collided_player = player;
 						collided_monster = monster;
-						display_message("Nice. you scared the dragon");
+						display_message("Nice. (player name) scared the dragon");
 						start_game_collision();
 						// collision_between(player, monster);
 					}
@@ -509,7 +523,7 @@ void Game::handle_collisions() {
 						collision_code = "monster_player";
 						collided_player = player;
 						collided_monster = monster;
-						display_message("Oops! dragon got to you!");
+						display_message("Oops! dragon got to (player name)!");
 						start_game_collision();
 						// collision_between(player, monster);
 
@@ -531,7 +545,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
-				display_message("Harry Potter (change name according to collided_player's name) has caught the snitch. the resucrection stone was inside the snitch. lives = 3");
+				display_message("(player_name) has caught the snitch. the resucrection stone was inside the snitch. lives = 3");
 				collision_happened = 1;				
 				return;
 
@@ -547,10 +561,25 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-				display_message("Broom taken. Godspeed. wooosh!");
+				display_message("(player name) is on the broom. Godspeed. wooosh!");
 				collision_happened = 1;
 				return;
 			}
+		}
+
+		if (player->health == 0) {
+			collision_code = "player_dead";
+			player->lives -= 1;
+			// player->collided = 1; never calling player-> update
+			collision_happened = 1;
+			collided_player = player;
+			if (collided_player->lives != 0) {
+				display_message("I open at the close. (player name) resurrects.");
+			}
+			else {
+				display_message("(player name) dead");
+			}
+
 		}
 	}
 
@@ -592,7 +621,7 @@ void Game::start_game_collision () {
 	if (collision_code == "player_snitch") {
 		//player has caught the snitch
 		collided_player-> snitch_caught = 1;
-		// collided_player-> lives = 3;
+		collided_player-> lives = 3;
 
 		collided_snitch-> caught = 1;
 		collided_snitch-> transform();
@@ -610,7 +639,7 @@ void Game::collision_updates() {
 		// cout << collided_monster->mode << " " << collided_monster->speed << endl;
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
-		collided_monster->decrease_health(0.1);
+		collided_monster->decrease_health(1);
 
 		collided_player->increase_health(0.1);
 
@@ -635,6 +664,17 @@ void Game::collision_updates() {
 	}
 	if (collision_code == "player_broom") {
 	}
+	if (collision_code == "player_dead") {
+		if (collided_player->lives != 0) {
+			collided_player->increase_health(0.5);
+		}
+		else {
+			// blink and stuff deletion sequence
+		}
+	}
+	if (collision_code == "monster_dead") {
+		// blink stuff
+	}
 }
 
 
@@ -649,6 +689,17 @@ bool Game::resume_safely () {
 		return (collided_player->health == 100);
 	}
 	if (collision_code == "player_broom") {
+		return 1;
+	}
+	if (collision_code == "player_dead") {
+		if (collided_player-> lives != 0) {
+			return (collided_player->health == 100);
+		}
+		else {
+			return 1;
+		}
+	}
+	if (collision_code == "monster_dead") {
 		return 1;
 	}
 	return 1;
@@ -675,6 +726,20 @@ void Game::reset_collided_entities() {
 		collided_broom->Delete();
 	}
 
+	else if (collision_code == "player_dead") {
+
+		if (collided_player-> lives == 0 ) {
+			collided_player->Delete();
+			display_message("winning msg");
+			Game::isRunning = 0;
+		}
+
+	}
+	else if (collision_code == "monster_dead") {
+		collided_monster->Delete();
+		// display_message("dragon dead");
+	}
+
 
 	collision_code = "";
 
@@ -697,6 +762,14 @@ void Game::collision_pause() {
 	}
 	else if (collision_code == "player_broom") {
 		game_pause(player_broom_collision_pause);
+
+	}
+	else if (collision_code == "player_dead") {
+		int x = (collided_player->lives == 0)? player_dead_collision_pause : player_not_dead_collision_pause;
+		game_pause(x);
+	}
+	else if (collision_code == "monster_dead") {
+		game_pause(monster_dead_collision_pause);
 
 	}
 }

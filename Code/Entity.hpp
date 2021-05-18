@@ -182,6 +182,7 @@ void decrease_health(double x);
 
 int prev = -1;
 int smooth_turn_distance();
+int lives = 1;
 
 
 
