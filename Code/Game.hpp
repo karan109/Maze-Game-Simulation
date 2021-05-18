@@ -16,7 +16,7 @@ public:
 	static string message;
 	static double message_t;
 	static int message_counter;
-	static void display_message(string text);
+	static void display_message(string text, string text2 = "");
 	bool running(){
 		return isRunning;
 	}

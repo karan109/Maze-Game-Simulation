@@ -9,7 +9,6 @@
 #include "Snitch.hpp"
 #include "Broom.hpp"
 #include "Remote.hpp"
-
 // #include "Spell.hpp"
 
 Maze * Game::game_maze = new Maze();
@@ -24,7 +23,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 12;
+int Game::cols = 25;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -38,10 +37,10 @@ int Game::original_player_w = 32;
 int Game::stone_w = 32;
 int Game::stone_h = 32;
 int Game::num_stones = 7;
-int Game::menu = 100;
+int Game::menu = 160;
 bool Game::isRunning = false;
-int Game::seed = 0;
-// int Game::seed = time(0);
+// int Game::seed = 0;
+int Game::seed = time(0);
 int Game::response = 0;
 int Game::send = 0;
 bool Game::server = false;
@@ -49,7 +48,7 @@ bool Game::client = false;
 int Game::weapon = 0;
 int Game::weapon_rec = 0;
 
-string Game::message = "ok";
+string Game::message = "";
 double Game::message_t = 2.5;
 int Game::message_counter = 0;
 int Game::FPS = 60;
@@ -98,7 +97,7 @@ double Game::snitch_original_speed = 4.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
-double Game::player_boost_time_limit = 100;
+double Game::player_boost_time_limit = 20;
 
 int Game::broom_apparatation_time = 10;
 int Game::broom_disapparation_time = 100; // so 110 pe disappears
@@ -124,6 +123,8 @@ SDL_Texture * background;
 SDL_Surface* surfaceMessage;
 SDL_Texture* Message;
 SDL_Rect Message_rect;
+int message_type = 0;
+string message_aux = "";
 
 Game::Game(){
 
@@ -182,9 +183,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         }
         else{
         	add_player(player1_starting_node, 1);
+        	srand(time(0));
+        	Game::seed = rand()%100000;
         }
-		add_monster(monster1_starting_node, 0.5, 1, 0); 
-		// add_monster(monster2_starting_node, 0.3, 0, 0);
+		add_monster(monster1_starting_node, 0.5, 1, 4); 
+		add_monster(monster2_starting_node, 0.3, 0, 3);
 
 		add_snitch(snitch_starting_node);
 
@@ -199,9 +202,10 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
 
-	if(!server and !client){
+	if(!Game::server and !Game::client){
 		rows = 12;
 		cols = 25;
+		
 		Game::N = Game::rows * Game::cols;
 	}
 
@@ -215,7 +219,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 // ------------------------------------------------- Add entities--------------------------------------------------
 
-void Game::add_monster(int start, double p, bool chase = 1, int number_param = 0) {
+void Game::add_monster(int start, double p, bool chase = 1, int number_param = 3) {
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
 	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
@@ -355,8 +359,15 @@ void Game::handleEvents(){
 void Game::update(){
 	message_counter++;
 	if(message_counter > FPS * message_t){
+		if(message_type == 0){
+			message = "";
+		}
+		else{
+			message_type = 0;
+			message = message_aux;
+			message_aux = "";
+		}
 		message_counter = 0;
-		message = "";
 		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
 		Message = Texture::LoadTexture(surfaceMessage);
 		Message_rect.w = 15 * message.size();
@@ -529,7 +540,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
-				display_message("Snitch taken");
+				display_message("Snitch taken", "Good job");
 				collision_happened = 1;				
 				return;
 
@@ -545,7 +556,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-				display_message("Broom taken");
+				display_message("Broom taken", "good");
 				collision_happened = 1;
 				return;
 			}
@@ -739,8 +750,15 @@ void Game::print_queue(queue<int> q){
 	// cout << endl;
 	cout<<endl<<endl<<endl;
 }
-void Game::display_message(string text){
+void Game::display_message(string text, string text2){
+	if(text2 == ""){
+		message_type = 0;
+	}
+	else{
+		message_type = 1;
+	}
 	message = text;
+	message_aux = text2;
 	message_counter = 0;
 	surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
 	Message = Texture::LoadTexture(surfaceMessage);

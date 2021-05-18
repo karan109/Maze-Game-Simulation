@@ -20,7 +20,6 @@ public:
 	SDL_Rect getBB();
 	// not virtual anymore
 	void Update();
-	
 
 
 
@@ -177,6 +176,8 @@ bool spell_collision = 0;
 
 void increase_health(double x);
 void decrease_health(double x);
+	bool boost = 0;
+	double boost_time_left = 0;
 
 
 
