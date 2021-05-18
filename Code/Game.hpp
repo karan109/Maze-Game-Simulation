@@ -16,6 +16,7 @@ public:
 	static string message;
 	static double message_t;
 	static int message_counter;
+	static int win;
 	static void display_message(string text, string text2 = "");
 	bool running(){
 		return isRunning;
@@ -81,6 +82,11 @@ public:
 	static Mix_Chunk * gHigh;
 	static Mix_Chunk * gMedium;
 	static Mix_Chunk * gLow;
+	static Mix_Chunk * player_hit;
+	static Mix_Chunk * player_monster;
+	static Mix_Chunk * game_win;
+	static Mix_Chunk * game_lose;
+	static Mix_Chunk * player_scary;
 
 
 	static double player_original_speed;

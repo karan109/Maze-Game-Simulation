@@ -229,6 +229,7 @@ bool Player::casting_conditions() {
 			if (Game::spacebar_pressed == 0 and type == 1) {
 				cout<<"ok"<<endl;
 				// Game::spacebar_pressed = 1;
+				Mix_PlayChannel( -1, Game::gLow, 0 );
 				Game::weapon = 1;
 				return 1;
 			}

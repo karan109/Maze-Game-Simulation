@@ -226,7 +226,11 @@ int winning_message(){
     SDL_Window * window = SDL_CreateWindow("Epilogue", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
     SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    string message;
     auto background = Texture::LoadTexture(renderer, "../Images/voldy.png");
+    if(Game::win == 1){
+        background = Texture::LoadTexture(renderer, "../Images/dumbledore.png");
+    }
     auto harry = Texture::LoadTexture(renderer, "../Images/harrywin.png");
     auto ron = Texture::LoadTexture(renderer, "../Images/ronwin.png");
     auto hermione = Texture::LoadTexture(renderer, "../Images/hermionewin.png");
@@ -248,7 +252,8 @@ int winning_message(){
             Texture::Draw(renderer, Character, SDL_Rect{0, 0, 200, 500}, SDL_Rect{600, 150, 160, 400});
         }
         if(ct3 == (t+2) * Game::FPS){
-            string message = "Well done, "+player_name+"!";
+            message = "Well done, "+player_name+"!";
+            if(Game::win == 0) message = "You lose, "+player_name+"!";
             SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, message.c_str(), SDL_Color{0,0,0,255});
             SDL_Texture* Message = Texture::LoadTexture(renderer, surfaceMessage);
 

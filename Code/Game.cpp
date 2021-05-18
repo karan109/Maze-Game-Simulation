@@ -47,7 +47,7 @@ bool Game::server = false;
 bool Game::client = false;
 int Game::weapon = 0;
 int Game::weapon_rec = 0;
-
+int Game::win = 0;
 string Game::message = "";
 double Game::message_t = 2.5;
 int Game::message_counter = 0;
@@ -67,6 +67,11 @@ Mix_Chunk * Game::gScratch = nullptr;
 Mix_Chunk * Game::gHigh = nullptr;
 Mix_Chunk * Game::gMedium = nullptr;
 Mix_Chunk * Game::gLow = nullptr;
+Mix_Chunk * Game::player_hit = nullptr;
+Mix_Chunk * Game::player_monster = nullptr;
+Mix_Chunk * Game::game_win = nullptr;
+Mix_Chunk * Game::game_lose = nullptr;
+Mix_Chunk * Game::player_scary = nullptr;
 
 int Game::original_broom_h = 1274;
 int Game::original_broom_w = 2393;
@@ -217,6 +222,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
 	gHigh = Mix_LoadWAV( "../Music/reward.wav" );
+	gMedium = Mix_LoadWAV( "../Music/collect.wav" );
+	gLow = Mix_LoadWAV( "../Music/shoot.wav" );
+	player_hit = Mix_LoadWAV( "../Music/player_hit.wav" );
+	player_monster = Mix_LoadWAV( "../Music/player_monster.wav" );
+	game_win = Mix_LoadWAV( "../Music/game_win.wav" );
+	game_lose = Mix_LoadWAV( "../Music/game_lose.wav" );
+	player_scary = Mix_LoadWAV( "../Music/player_scary.wav" );
 	background = Texture::LoadTexture("../Images/bg3.jpg");
 }
 
@@ -327,6 +339,7 @@ void Game::game_pause(double t) {
 }
 
 void Game::clean(){
+	Mix_PlayChannel( -1, Game::game_lose, 0 );
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	// Mix_Quit();
@@ -520,6 +533,7 @@ void Game::handle_collisions() {
 						collided_player = player;
 						collided_monster = monster;
 						display_message("Nice. "+player->player_name+" has scared the dragon");
+						if(player->number == 1) Mix_PlayChannel( -1, Game::player_scary, 0 );
 						start_game_collision();
 						// collision_between(player, monster);
 					}
@@ -536,6 +550,7 @@ void Game::handle_collisions() {
 						collided_player = player;
 						collided_monster = monster;
 						display_message("Oops! dragon got to "+player->player_name+"!");
+						if(player->number == 1) Mix_PlayChannel( -1, Game::player_monster, 0 );
 						start_game_collision();
 						// collision_between(player, monster);
 
@@ -557,6 +572,7 @@ void Game::handle_collisions() {
 				collided_snitch = snitch;
 				start_game_collision();
 				// collision_between(player, snitch);
+				Mix_PlayChannel( -1, Game::gMedium, 0 );
 				display_message(player->player_name+" has caught the snitch", "Resucrection stone was inside the snitch.");
 				collision_happened = 1;				
 				return;
@@ -573,6 +589,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
+				Mix_PlayChannel( -1, Game::gMedium, 0 );
 				display_message(player->player_name+" is on the broom. Godspeed. wooosh!");
 				collision_happened = 1;
 				return;
@@ -741,8 +758,15 @@ void Game::reset_collided_entities() {
 	}
 
 	else if (collision_code == "player_dead") {
-
 		if (collided_player-> lives == 0 ) {
+			if (collided_player->number == 1) {
+	            win = 0;
+	            Mix_PlayChannel( -1, Game::game_lose, 0 );
+	        }
+	        else {
+	            win = 1;
+	            Mix_PlayChannel( -1, Game::game_win, 0 );
+	        }
 			collided_player->Delete();
 			// display_message("winning msg");
 			Game::isRunning = 0;

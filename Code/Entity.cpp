@@ -720,28 +720,28 @@ void Entity::keepInside(){
 	if(xpos + destR.w >= Game::width - Game::wall_thickness){
 		wall_ct++;
 		if(wall_ct >= delay) {
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		}
 		xpos = Game::width - Game::wall_thickness - Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos + destR.h >= Game::height - Game::wall_thickness){
 		wall_ct++;
 		if(wall_ct >= delay){
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		}
 		ypos = Game::height - Game::wall_thickness - Game::block_h / 2 - destR.h / 2;
 	}
 	else if(xpos <= Game::wall_thickness){
 		wall_ct++;
 		if(wall_ct >= delay){
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		}
 		xpos = Game::wall_thickness + Game::block_w / 2 - destR.w / 2;
 	}
 	else if(ypos <= Game::menu){
 		wall_ct++;
 		if(wall_ct >= delay){
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 		}
 		ypos = Game::menu + Game::block_h / 2 - destR.h / 2;
 	}
@@ -857,28 +857,28 @@ void Entity::Update_player() {
 		if(dir == 1){
 			wall_ct++;
 			if(wall_ct >= delay)
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x - Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 2){
 			wall_ct++;
 			if(wall_ct >= delay)
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			xv = 0;
 			xpos = u->getBB().x + u->getBB().w + Game::block_w / 2 - destR.w / 2;
 		}
 		else if(dir == 3){
 			wall_ct++;
 			if(wall_ct >= delay)
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y - Game::block_h / 2 - destR.h / 2;
 		}
 		else if(dir == 4){
 			wall_ct++;
 			if(wall_ct >= delay)
-			// Mix_PlayChannel( -1, Game::gScratch, 0 );
+			Mix_PlayChannel( -1, Game::gScratch, 0 );
 			yv = 0;
 			ypos = u->getBB().y + u->getBB().h + Game::block_h / 2 - destR.h / 2;
 		}
