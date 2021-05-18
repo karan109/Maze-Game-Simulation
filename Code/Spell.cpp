@@ -22,7 +22,7 @@ Spell::Spell(Player * castee) {
 	head = tail;
 	length = 0;
 	set_velocity();
-	initialize_head_tail_velocity();	
+	initialize_head_tail_velocity();
 	destR = set_rect();
 	xpos = destR.x;
 	ypos = destR.y;
@@ -274,7 +274,12 @@ void Spell::keepInside(){
 
 
 void Spell::Render() {
+	if(wizard->player_name == "Harry")
 	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
+	else if(wizard->player_name == "Ron")
+	SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255);
+	else
+		SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
 	SDL_RenderFillRect(Game::renderer, &destR);
 }
 
