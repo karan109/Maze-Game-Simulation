@@ -106,12 +106,18 @@ bool Spell::release_conditions() {
 	if(Game::event.type == SDL_KEYUP){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
-			if (Game::spacebar_pressed == 1) {
+			if (Game::spacebar_pressed == 1 and wizard->type == 1) {
 				// Game::spacebar_pressed = 0;
+				Game::weapon = -1;
 				return 1;
 			}
 		}
 	}
+	if(Game::weapon_rec == -1 and Game::remote_spacebar_pressed == 1 and wizard->type == 0){
+		// cout<<"release"<<endl;
+		Game::weapon_rec = 0;
+		return 1;
+	} 
 	if (length >= spell_length_limit) return 1;
 	if (entity_time >= spell_time_limit) return 1;
 

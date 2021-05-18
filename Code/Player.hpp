@@ -33,7 +33,6 @@ public:
 	void handle_spell_collisions();
 	int type;
 
-
 	// Broom * my_broom = nullptr;
 
 };

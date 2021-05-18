@@ -7,6 +7,7 @@ void key_testing() {
         auto key = Game::event.key.keysym.sym;
         if(key == SDLK_SPACE)  {
             if (Game::spacebar_pressed == 0) {
+                // Game::weapon = 1;
                 Game::spacebar_pressed = 1;
             }
         }
@@ -16,9 +17,16 @@ void key_testing() {
         auto key = Game::event.key.keysym.sym;
         if(key == SDLK_SPACE)  {
             if (Game::spacebar_pressed == 1) {
+                // Game::weapon = 0;
                 Game::spacebar_pressed = 0;
             }
         }
+    }
+    if(Game::weapon_rec == 1 and Game::remote_spacebar_pressed == 0){
+        Game::remote_spacebar_pressed = 1;
+    }
+    if(Game::weapon_rec == -1 and Game::remote_spacebar_pressed == 1){
+        Game::remote_spacebar_pressed = 0;
     }
 }
 string info(Entity * ent){
@@ -161,6 +169,7 @@ int main_menu(){
 }
 void server_work(){
     if (Game::response < 0) Game::response = 0;
+    if (Game::weapon_rec < 0) Game::weapon_rec = 0;
     int sent = Game::send;
     string pos = info(game->player1)+","+to_string(Game::weapon);
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
@@ -184,12 +193,14 @@ void server_work(){
     game->player2->ypos = stoi(process[1]);
     game->player2->xv = stoi(process[2]);
     game->player2->yv = stoi(process[3]);
+    Game::weapon_rec = stoi(process[4]);
+    // cout<<Game::weapon_rec<<endl;
 }
 void client_work(){
     if (Game::response < 0) Game::response = 0;
+    if (Game::weapon_rec < 0) Game::weapon_rec = 0;
     string command = to_string(Game::send);
     string pos = info(game->player1)+","+to_string(Game::weapon);
-                    // + "," + player2->health + "," + player1->
     int sent = Game::send;
     int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
@@ -206,5 +217,6 @@ void client_work(){
     game->player2->ypos = stoi(process[1]);
     game->player2->xv = stoi(process[2]);
     game->player2->yv = stoi(process[3]);
-    if(stoi(process[4])) == 1;
+    Game::weapon_rec = stoi(process[4]);
+    // cout<<Game::weapon_rec<<endl;
 }

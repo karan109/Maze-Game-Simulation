@@ -78,7 +78,7 @@ void Player::Update(){
 
 	update_boost();
 
-	if (casting_conditions() and type == 1) {
+	if (casting_conditions()) {
 		// cout << 1 << endl;
 		cast_spell();
 	}
@@ -86,11 +86,42 @@ void Player::Update(){
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
-	if(type) Entity::Update();
-	else{
-		Entity::Update_remote();
+	if(type == 1){
+		Entity::Update();
 	}
+	else{
+		time_update();
 
+		Entity::keepInside();
+		if (mode != -1) handle_wall_collisions();
+
+		if (mode == -1) {
+			Update_remote();
+			// else{
+			// 	Update_remote();
+			// }
+		}
+
+		if (mode == 0) {
+			Update0();
+		}
+
+		if (mode == 1) {
+			Update1();
+		}
+
+		if (mode == 2) {
+			Update2();
+		}
+
+		if (mode == 3) {
+			Update3();
+		}
+
+		if (mode == 4) {
+			Update4();
+		}
+	}
 	
 	// face = 1 right facing
 	// face = 2 left facing
@@ -191,13 +222,18 @@ bool Player::casting_conditions() {
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
-			if (Game::spacebar_pressed == 0) {
+			if (Game::spacebar_pressed == 0 and type == 1) {
+				cout<<"ok"<<endl;
 				// Game::spacebar_pressed = 1;
 				Game::weapon = 1;
 				return 1;
 			}
 		}
 	}
+	if(Game::weapon_rec == 1 and Game::remote_spacebar_pressed == 0 and type == 0){
+		cout<<"throw"<<endl;
+		return 1;
+	} 
 
 	return 0;	
 }

@@ -27,6 +27,7 @@ int main(int argc, char* argv[]){
     int ct = 0;
     while(game->running()){
         frameStart = SDL_GetTicks();
+        // Game::weapon_rec = 0;
         if(Game::server){
             server_work();
         }

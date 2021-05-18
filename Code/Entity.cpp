@@ -159,6 +159,9 @@ void Entity::Update(){
 
 	if (mode == -1) {
 		Update_player();
+		// else{
+		// 	Update_remote();
+		// }
 	}
 
 	if (mode == 0) {

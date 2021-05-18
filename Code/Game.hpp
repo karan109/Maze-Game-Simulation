@@ -158,7 +158,7 @@ public:
 	static double player_broom_collision_pause;
 
 	static int monster_cycle_time;
-	static bool spacebar_pressed;
+	static bool spacebar_pressed, remote_spacebar_pressed;
 
 	static void print_queue(queue<int>);
 
@@ -171,7 +171,7 @@ public:
 	static double player_health_decrement_per_second;
 
 	static bool server, client;
-	static int weapon;
+	static int weapon, weapon_rec;
 
 private:
 	int ct = 0;

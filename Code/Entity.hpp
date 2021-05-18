@@ -18,8 +18,6 @@ public:
 	void setXV(int xv_param);
 	void setYV(int yv_param);
 	SDL_Rect getBB();
-	
-
 	// not virtual anymore
 	void Update();
 	

@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 25;
+int Game::cols = 12;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -46,8 +46,8 @@ int Game::response = 0;
 int Game::send = 0;
 bool Game::server = false;
 bool Game::client = false;
-int Game::weapon = 1;
-
+int Game::weapon = 0;
+int Game::weapon_rec = 0;
 
 string Game::message = "ok";
 double Game::message_t = 2.5;
@@ -75,6 +75,7 @@ int Game::original_broom_w = 2393;
 
 double Game::global_pause_time_variable = 0;
 bool Game::spacebar_pressed = 0;
+bool Game::remote_spacebar_pressed = 0;
 bool Game::paused = false;
 bool Game::collision_happened = false;
 
@@ -182,7 +183,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         else{
         	add_player(player1_starting_node, 1);
         }
-		// add_monster(monster1_starting_node, 0.5, 1, 0); 
+		add_monster(monster1_starting_node, 0.5, 1, 0); 
 		// add_monster(monster2_starting_node, 0.3, 0, 0);
 
 		add_snitch(snitch_starting_node);
@@ -287,7 +288,7 @@ void Game::switch_collision() {
 	// then wait for 1/2/5 sec
 	// then reset.
 	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
-
+	cout<<resume<<endl;
 	if (resume) {
 		collision_happened = false;
 		collision_counter = 0;
@@ -361,12 +362,13 @@ void Game::update(){
 		Message_rect.w = 15 * message.size();
 		Message_rect.x = window_w/2 - Message_rect.w / 2;
 	}
-	// if (paused) {
-	// 	return;
-	// }
+	if (paused) {
+		// cout<<"done"<<endl;
+		return;
+	}
 
 	if (collision_happened) {
-
+		// cout<<"ok"<<endl;
 		collision_updates();
 		return;
 	}
@@ -630,6 +632,8 @@ bool Game::resume_safely () {
 		return (collided_monster->scatter_reached);
 	}
 	if (collision_code == "monster_player") {
+		cout<<"aca"<<endl;
+		cout<<collided_player->scatter_reached<<" "<<collided_monster->scatter_reached<<endl;
 		return (collided_player->scatter_reached) && (collided_monster->scatter_reached);
 	}
 	if (collision_code == "player_snitch") {

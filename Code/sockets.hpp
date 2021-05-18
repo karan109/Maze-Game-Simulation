@@ -51,7 +51,7 @@ int create_server(){
         cout<<"Can't listen"<<endl;
         return -3;
     }
-    fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
+    // fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
     return 0;
 }
 int wait_connect(){
