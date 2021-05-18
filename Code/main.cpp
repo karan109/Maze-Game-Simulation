@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
         game->init("Client", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
     }
     else game->init("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, Game::window_w, Game::window_h, false);
-    if(Game::task == 1) Mix_PlayMusic( Game::gMusic, -1 );
+    // if(Game::task == 1) Mix_PlayMusic( Game::gMusic, -1 );
     int ct = 0;
     while(game->running()){
         frameStart = SDL_GetTicks();

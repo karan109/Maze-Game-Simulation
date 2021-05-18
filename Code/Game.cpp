@@ -46,6 +46,7 @@ int Game::response = 0;
 int Game::send = 0;
 bool Game::server = false;
 bool Game::client = false;
+int Game::weapon = 1;
 
 
 string Game::message = "ok";

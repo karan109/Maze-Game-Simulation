@@ -162,7 +162,7 @@ int main_menu(){
 void server_work(){
     if (Game::response < 0) Game::response = 0;
     int sent = Game::send;
-    string pos = info(game->player1);
+    string pos = info(game->player1)+","+to_string(Game::weapon);
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
         cout<<"Could not send through server"<<endl;
@@ -188,7 +188,7 @@ void server_work(){
 void client_work(){
     if (Game::response < 0) Game::response = 0;
     string command = to_string(Game::send);
-    string pos = info(game->player1);
+    string pos = info(game->player1)+","+to_string(Game::weapon);
                     // + "," + player2->health + "," + player1->
     int sent = Game::send;
     int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
@@ -206,4 +206,5 @@ void client_work(){
     game->player2->ypos = stoi(process[1]);
     game->player2->xv = stoi(process[2]);
     game->player2->yv = stoi(process[3]);
+    if(stoi(process[4])) == 1;
 }

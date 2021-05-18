@@ -193,6 +193,7 @@ bool Player::casting_conditions() {
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 0) {
 				// Game::spacebar_pressed = 1;
+				Game::weapon = 1;
 				return 1;
 			}
 		}

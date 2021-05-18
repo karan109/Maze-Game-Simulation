@@ -171,6 +171,7 @@ public:
 	static double player_health_decrement_per_second;
 
 	static bool server, client;
+	static int weapon;
 
 private:
 	int ct = 0;
