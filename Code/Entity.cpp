@@ -247,6 +247,13 @@ void Entity::resume_after_collision() {
 	set_pos_at_centre();
 	change_mode(mode_before_collision);
 	speed = original_speed;
+
+	// 
+	srcR.y = srcR.h * 4;
+	face = 3;
+	if(! animated) srcR.x = 0;
+	animated = true;
+
 }
 
 
@@ -829,6 +836,10 @@ void Entity::switch_next(int current, int next) {
 // ------------------------------------------------------UPDATE (MODE)--------------------------------------------------------------------------------------
 
 
+int Entity::smooth_turn_distance() {
+	return speed*10;
+}
+
 void Entity::Update_player() {
 
 	set<int> obstacles;
@@ -921,13 +932,13 @@ void Entity::Update_player() {
 
 	if(yv == 0 and xv != 0){
 		if( (xv == mag and Entity::getRight() != 1) or (xv == -mag and Entity::getLeft() != 1) ){
-			if(md <= 20)   // smooth turn
+			if(md <= smooth_turn_distance() )   // smooth turn
 				ypos = coords.first + Game::block_h / 2 - destR.h / 2;
 		}
 	}
 	if(xv == 0 and yv != 0){
 		if( (yv == mag and Entity::getDown() != 1) or (yv == -mag and Entity::getUp() != 1) ){
-			if(md <= 20)
+			if(md <= smooth_turn_distance() )
 				xpos = coords.second + Game::block_w / 2 - destR.w / 2;
 		}
 	}

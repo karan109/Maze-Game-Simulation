@@ -181,6 +181,7 @@ void increase_health(double x);
 void decrease_health(double x);
 
 int prev = -1;
+int smooth_turn_distance();
 
 
 

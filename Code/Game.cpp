@@ -547,7 +547,7 @@ void Game::handle_collisions() {
 				collided_broom = broom;
 				start_game_collision();
 				// collision_between(player, broom);
-				display_message("Broom taken. wooosh!");
+				display_message("Broom taken. Godspeed. wooosh!");
 				collision_happened = 1;
 				return;
 			}
