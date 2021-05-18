@@ -325,10 +325,10 @@ void Game::game_pause(double t) {
 void Game::clean(){
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	Mix_Quit();
-	IMG_Quit();
-	TTF_Quit();
-	SDL_Quit();
+	// Mix_Quit();
+	// IMG_Quit();
+	// TTF_Quit();
+	// SDL_Quit();
 }
 
 

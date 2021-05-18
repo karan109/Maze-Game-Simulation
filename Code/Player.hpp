@@ -12,8 +12,8 @@ public:
 	void Update(); // Update function
 	void Delete();
 
-	bool boost = 0;
-	double boost_time_left = 0;
+	
+	
 	double boost_time_limit;
 	double boost_speed;
 	void update_boost();

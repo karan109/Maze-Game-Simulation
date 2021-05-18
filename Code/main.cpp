@@ -9,8 +9,6 @@ int main(int argc, char* argv[]){
     init();
     if(main_menu() < 0) return -1;
     if(quit) return 0;
-    // srand(time(0));
-    // Game::seed = rand()%100000;
     game = new Game();
     if(Game::server){
         Game::window_h = Game::wall_thickness + Game::menu + Game::block_h * Game::rows + (Game::rows - 1) * Game::wall_thickness;
@@ -59,4 +57,10 @@ int main(int argc, char* argv[]){
 
     }
     game->clean();
+    // main_menu();
+    winning_message();
+    Mix_Quit();
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }

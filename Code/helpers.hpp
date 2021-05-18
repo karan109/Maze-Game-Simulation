@@ -220,3 +220,41 @@ void client_work(){
     Game::weapon_rec = stoi(process[4]);
     // cout<<Game::weapon_rec<<endl;
 }
+int winning_message(){
+    unsigned int frameStart;
+    int frameTime;
+    SDL_Window * window = SDL_CreateWindow("Epilogue", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
+    SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
+    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
+    auto background = Texture::LoadTexture(renderer, "../Images/dumbledore.png");
+    double scale = 0;
+    int dumbw = 200, dumbh = 500;
+    int ct = 0;
+    int t = 5;
+    while(true){
+        scale = min((double)ct/(t * Game::FPS), (double)1);
+        int tempw = scale * dumbw, temph = scale * dumbh;
+        // cout<<tempw<<" "<<temph<<endl;
+        frameStart = SDL_GetTicks();
+        SDL_RenderClear(renderer);
+        
+        Texture::Draw(renderer, background, SDL_Rect{0, 0, 190, 500}, SDL_Rect{400-tempw/2, 300-temph/2, tempw, temph});
+        SDL_Event event;
+        SDL_PollEvent(& event);
+        if(event.type == SDL_QUIT){
+            quit = true;
+            break;
+        }
+        SDL_RenderPresent(renderer);
+        frameTime = SDL_GetTicks() - frameStart;
+
+        if(Game::frameDelay > frameTime){
+            SDL_Delay(Game::frameDelay - frameTime);
+        }
+        if(ct < t * Game::FPS) ct++;
+        else ct = t * Game::FPS;
+    }
+    SDL_DestroyWindow(window);
+    SDL_DestroyRenderer(renderer);
+    return 0;
+}
