@@ -345,13 +345,6 @@ Entity * Entity::nearest_player () {
 			closest_player = player;
 		}
 	}
-	for(auto & player: * Game::entities->remotes){
-		int dis = graph.distance(current, player->getBlock());
-		if (dis < min_dis) {
-			min_dis = dis;
-			closest_player = player;
-		}
-	}
 	return closest_player;
 }
 
