@@ -59,7 +59,7 @@ int main(int argc, char* argv[]){
 
     game->clean();
     // main_menu();
-    winning_message();
+    // winning_message();
     Mix_Quit();
     IMG_Quit();
     TTF_Quit();
