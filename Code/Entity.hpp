@@ -179,6 +179,10 @@ void decrease_health(double x);
 	bool boost = 0;
 	double boost_time_left = 0;
 
+int prev = -1;
+int smooth_turn_distance();
+int lives = 1;
+
 
 
 	int mag = 1; // Magnitude of velocity

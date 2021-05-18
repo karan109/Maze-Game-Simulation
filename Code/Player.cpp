@@ -6,7 +6,7 @@
 #include "Texture.hpp"
 
 void Player::Delete() {
-	SDL_DestroyTexture(objTexture);
+	// SDL_DestroyTexture(objTexture);
 	Game::entities->Delete(health_box);
 	Game::entities->Delete(static_health_box);
 	Game::entities->Delete(this);
@@ -161,11 +161,11 @@ void Player::Update(){
 
 
 	// health with time
-	if (!snitch_caught) {
+	// if (!snitch_caught) {
 		if (fmod(entity_time, 1.0) == 0) {
 			decrease_health(health_dps);
 		}
-	}
+	// }
 	// cout << health << endl;
 	// if (health == 0) {
 	// 	Delete();
@@ -266,6 +266,27 @@ void Player::handle_spell_collisions() {
 		}
 	}
 }
+
+
+
+// void Player::Health0 () {
+// 	if (health == 0) {
+// 		lives -= 1;
+// 		collided = 1;
+// 		Game::collision_happened = 1;
+// 		Game::collided_player = this;
+// 		Game:collision_code = "player_dead";
+// 		// if (lives == 0) {
+// 		// 	// blink and stuff
+// 		// 	Delete();
+// 		// }
+// 		// else {
+// 		// 	// display_message  #lives remaining.
+// 		// 	// increase health and game pause
+// 		// }
+// 	}
+// }
+
 
 
 
