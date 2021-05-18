@@ -6,7 +6,6 @@ Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param, bool
 	target = target_param;
 	white = Texture::LoadTexture("../Images/white.png");
 	black = Texture::LoadTexture("../Images/black.png");
-	life = Texture::LoadTexture("../Images/life.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
