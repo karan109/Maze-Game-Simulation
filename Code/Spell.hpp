@@ -60,6 +60,11 @@ void handle_spell_collisions();
 int	spell_counter_limit; 
 double spell_time_limit;
 
+static int i;
+int color;
+
+void update_destR();
+
 };
 
 

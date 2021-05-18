@@ -189,8 +189,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         	srand(time(0));
         	Game::seed = rand()%100000;
         }
-		// add_monster(monster1_starting_node, 0.5, 1, 4); 
-		// add_monster(monster2_starting_node, 0.3, 0, 3);
+		add_monster(monster1_starting_node, 0.5, 1, 4); 
+		add_monster(monster2_starting_node, 0.3, 0, 3);
 
 		add_snitch(snitch_starting_node);
 

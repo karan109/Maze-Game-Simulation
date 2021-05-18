@@ -387,7 +387,7 @@ void Entity::decrease_health(double x) {
 void Entity::handle_spell_collisions() {
 	spell_collision = 0;
 	for(auto & spell: * Game::entities->spells){
-		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
 		if (dir != 0) {
 			// collided = 1;
 			SDL_Rect R = this->getBB();
@@ -399,6 +399,7 @@ void Entity::handle_spell_collisions() {
 				case 4: spell->head = R.y + R.h; break;
 			}
 			spell_collision = 1;
+			spell->update_destR();
 			// spell->head_v = 0;
 			// update this ki health
 		}

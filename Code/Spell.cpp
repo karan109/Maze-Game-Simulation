@@ -2,7 +2,7 @@
 #include "Game.hpp"
 #include "Collision.hpp"
 
-
+int Spell::i = 0;
 
 // ------------------------------------------------------constructors--------------------------------------------------------------------------------------
 
@@ -12,6 +12,8 @@ void Spell::Delete() {
 }
 
 Spell::Spell(Player * castee) {
+	i++;
+	color = i;
 	wizard = castee;
 	original_face = wizard->face;
 	face = original_face;
@@ -28,7 +30,7 @@ Spell::Spell(Player * castee) {
 	ypos = destR.y;
 	
 	released = 0;
-	spell_length_limit = 150;
+	spell_length_limit = 200;
 	spell_counter_limit = ceil ((double)spell_length_limit / speed ); 
 	spell_time_limit = (double) spell_counter_limit / Game::FPS; 
 
@@ -138,40 +140,30 @@ bool Spell::release_conditions() {
 
 
 void Spell::Update() {
-	// handle wall collision
-
-	time_update();
-	update_head();
-	update_tail();
-
-	length = abs(head - tail);
-	destR = get_rect();
-	xpos = destR.x;
-	ypos = destR.y;
-
+	
 	if (release_conditions() ) {
 		if (!released) release_spell();
 	}
 
+	time_update();
+	update_head();
+	update_tail();
+	update_destR();
 	keepInside();
 	handle_wall_collisions();
 	handle_spell_collisions();
-	handle_spell_over();
-	
-	length = abs(head - tail);
-	destR = get_rect();
-	xpos = destR.x;
-	ypos = destR.y;
+	handle_spell_over();	
+	update_destR();
 
 	if (reversal_complete()) {
-		// cout << "yaay" <<endl;
 		reverting = 0;
 	}
 
 	if (finished) {
-		// cout << "alllll" << endl;
 		Delete();
 	}
+
+	// cout << xv << " " << yv << endl;
 
 }
 
@@ -228,7 +220,7 @@ void Spell::handle_spell_over() {
 			}
 		}
 		else {
-			cout << "entity_collision" << endl;
+			// cout << "entity_collision" << endl;
 			finished = 1;
 		}
 	}
@@ -264,6 +256,7 @@ void Spell::handle_wall_collisions() {
 				case 4: head = R.y + R.h; break;
 			}
 			store_length = abs(head - tail);
+			update_destR();
 			// cout << "wall_collision" << " " << collided << " "  << reverting << " " << store_length <<  endl;
 			// head_v = 0;
 		}
@@ -294,6 +287,7 @@ void Spell::keepInside(){
 		// head_v = 0;
 	}
 	store_length = abs(head - tail);
+	update_destR();
 	
 }
 
@@ -303,7 +297,15 @@ void Spell::keepInside(){
 
 
 void Spell::Render() {
-	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
+	switch (color % 3) {
+		case 0: SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255); break;
+
+		case 1: SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255); break;
+
+		case 2:	SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
+
+	}
+	// SDL_SetRenderDrawColor(Game::renderer, color, 0, 0, 255);
 	SDL_RenderFillRect(Game::renderer, &destR);
 }
 
@@ -323,6 +325,7 @@ void Spell::handle_spell_collisions() {
 				case 4: spell->head = R.y + R.h; break;
 			}
 			spell_collision = 1;
+			spell->update_destR();
 		}
 	}
 }
@@ -347,4 +350,12 @@ void Spell::set_v() {
 		case 4: head_v = -1; xv = 0; yv = -1;break;
 	}
 	tail_v = head_v;
+}
+
+
+void Spell::update_destR() {
+	length = abs(head - tail);
+	destR = get_rect();
+	xpos = destR.x;
+	ypos = destR.y;
 }

@@ -227,7 +227,7 @@ bool Player::casting_conditions() {
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 0 and type == 1) {
-				cout<<"ok"<<endl;
+				// cout<<"ok"<<endl;
 				// Game::spacebar_pressed = 1;
 				Game::weapon = 1;
 				return 1;
@@ -254,10 +254,14 @@ void Player::cast_spell() {
 void Player::handle_spell_collisions() {
 	spell_collision = 0;
 	for(auto & spell: * Game::entities->spells){
-		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		if (spell->wizard == this and spell->released == 0) continue;
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
+		SDL_Rect R = this->getBB();
+		// SDL_Rect S = spell->getBB();
+		// cout << "R " << R.x << " " << R.x + R.w << " " << R.y << " " << R.y + R.h << endl;
+		// cout << "S " << S.x << " " << S.x + S.w << " " << S.y << " " << S.y + S.h << " " << spell->xv << " " << spell-> yv << " " << dir << endl ;
 		if (dir != 0) {
 			// collided = 1;
-			SDL_Rect R = this->getBB();
 			// assert (dir == face)
 			switch (spell->face) {
 				case 1: spell->head = R.x; break;
@@ -267,6 +271,7 @@ void Player::handle_spell_collisions() {
 			}
 			spell_collision = 1;
 			decrease_health(0.5);
+			spell->update_destR();
 		}
 	}
 }
