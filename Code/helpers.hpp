@@ -225,11 +225,14 @@ int winning_message(){
     int frameTime;
     SDL_Window * window = SDL_CreateWindow("Epilogue", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false);
     SDL_Renderer * renderer = SDL_CreateRenderer(window, -1, 0);
-    SDL_SetRenderDrawColor(renderer, 255, 255, 0, 255);
-    auto background = Texture::LoadTexture(renderer, "../Images/dumbledore.png");
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    auto background = Texture::LoadTexture(renderer, "../Images/voldy.png");
+    auto harry = Texture::LoadTexture(renderer, "../Images/harrywin.png");
+    auto ron = Texture::LoadTexture(renderer, "../Images/ronwin.png");
+    auto hermione = Texture::LoadTexture(renderer, "../Images/hermionewin.png");
     double scale = 0;
     int dumbw = 200, dumbh = 500;
-    int ct = 0;
+    int ct = 0, ct2 = 0, ct3 = 0;
     int t = 5;
     while(true){
         scale = min((double)ct/(t * Game::FPS), (double)1);
@@ -237,8 +240,23 @@ int winning_message(){
         // cout<<tempw<<" "<<temph<<endl;
         frameStart = SDL_GetTicks();
         SDL_RenderClear(renderer);
-        
-        Texture::Draw(renderer, background, SDL_Rect{0, 0, 190, 500}, SDL_Rect{400-tempw/2, 300-temph/2, tempw, temph});
+        if(ct2 == (t+1) * Game::FPS){
+            Texture::Draw(renderer, hermione, SDL_Rect{0, 0, 200, 500}, SDL_Rect{600, 150, 160, 400});
+        }
+        if(ct3 == (t+2) * Game::FPS){
+            string message = "Well done, Harry";
+            SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, message.c_str(), SDL_Color{0,0,0,255});
+            SDL_Texture* Message = Texture::LoadTexture(renderer, surfaceMessage);
+
+            SDL_Rect Message_rect;
+            int digits = message.size();
+            Message_rect.w = 15 * digits;
+            Message_rect.h = 20;
+            Message_rect.y = 300-Message_rect.h / 2;
+            Message_rect.x = 50;
+            SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
+        }
+        Texture::Draw(renderer, background, SDL_Rect{0, 0, 200, 500}, SDL_Rect{400-tempw/2, 300-temph/2, tempw, temph});
         SDL_Event event;
         SDL_PollEvent(& event);
         if(event.type == SDL_QUIT){
@@ -253,6 +271,10 @@ int winning_message(){
         }
         if(ct < t * Game::FPS) ct++;
         else ct = t * Game::FPS;
+        if(ct2 < (t+1) * Game::FPS) ct2++;
+        else ct2 = (t+1) * Game::FPS;
+        if(ct3 < (t+2) * Game::FPS) ct3++;
+        else ct3 = (t+2) * Game::FPS;
     }
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);

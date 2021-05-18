@@ -32,7 +32,7 @@ public:
 
 	void handle_spell_collisions();
 	int type;
-
+	string player_name = "";
 	// Broom * my_broom = nullptr;
 
 };

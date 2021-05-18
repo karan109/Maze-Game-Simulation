@@ -14,7 +14,6 @@ void Player::Delete() {
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Images/pacman.png", srcR_param, start){
-
 	original_speed = Game::player_original_speed;
 	speed = original_speed;
 	boost_speed = Game::player_boost_speed;
@@ -40,6 +39,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 }
 
 Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param, int type_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
+	player_name = Game::player_name;
 	if(type_param == 0) objTexture = Texture::LoadTexture(("../Images/"+Game::remote_name+".png").c_str());
 	original_speed = Game::player_original_speed;
 	speed = original_speed;
