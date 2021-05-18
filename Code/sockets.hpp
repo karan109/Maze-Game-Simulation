@@ -51,7 +51,7 @@ int create_server(){
         cout<<"Can't listen"<<endl;
         return -3;
     }
-    // fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
+    fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
     return 0;
 }
 int wait_connect(){
@@ -96,7 +96,7 @@ int wait_connect(){
     // send(clientSocket, buf, bytesRecv + 1, 0);
     if(command_rec == "harry1" or command_rec == "ron" or command_rec == "hermione"){
         srand(time(0));
-        // Game::seed = rand()%100000;
+        Game::seed = rand()%100000;
         Game::remote_name = command_rec;
         cout<<Game::seed<<endl;
         string command_send = to_string(Game::seed)+","+Game::player_name;
@@ -116,6 +116,7 @@ int create_client(){
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
     inet_pton(AF_INET, ipAddress.c_str(), & hint.sin_addr);
+    // fcntl(sock, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
     int connectRes = connect(sock, (struct sockaddr * ) & hint, sizeof(hint));
     if(connectRes == -1){
         return -1;

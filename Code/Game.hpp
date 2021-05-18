@@ -70,7 +70,7 @@ public:
 	
 	Broom * broom;
 	Player * player1;
-	Remote * player2;
+	Player * player2;
 	Drone * drone;
 	Monster * monster;
 	Stone * stone;

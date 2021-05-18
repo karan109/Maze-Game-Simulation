@@ -157,6 +157,7 @@ int current;
 
 // player mode = -1
 void Update_player();
+void Update_remote();
 
 int original_mode;
 double original_speed;

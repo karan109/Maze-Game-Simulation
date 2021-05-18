@@ -21,6 +21,9 @@ void key_testing() {
         }
     }
 }
+string info(Entity * ent){
+    return to_string(ent->xpos)+","+to_string(ent->ypos)+","+to_string(ent->xv)+","+to_string(ent->yv);
+}
 void init(){
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
         Game::isRunning = true;
@@ -159,7 +162,7 @@ int main_menu(){
 void server_work(){
     if (Game::response < 0) Game::response = 0;
     int sent = Game::send;
-    string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
+    string pos = info(game->player1);
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
         cout<<"Could not send through server"<<endl;
@@ -174,6 +177,7 @@ void server_work(){
         cout<<"Client disconnected"<<endl;
     }
     string command = string(buf, 0, bytesRecv);
+    if(command.size() == 0) return;
     vector<string> process;
     tokenize(command, delim, process);
     game->player2->xpos = stoi(process[0]);
@@ -184,7 +188,8 @@ void server_work(){
 void client_work(){
     if (Game::response < 0) Game::response = 0;
     string command = to_string(Game::send);
-    string pos = to_string(game->player1->xpos)+","+to_string(game->player1->ypos)+","+to_string(game->player1->xv)+","+to_string(game->player1->yv);
+    string pos = info(game->player1);
+                    // + "," + player2->health + "," + player1->
     int sent = Game::send;
     int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
@@ -194,6 +199,7 @@ void client_work(){
     memset(buf, 0, 4096);
     int bytesRecv = recv(sock, buf, 4096, 0);
     string response = string(buf, bytesRecv);
+    if(response.size() == 0) return;
     vector<string> process;
     tokenize(response, delim, process);
     game->player2->xpos = stoi(process[0]);

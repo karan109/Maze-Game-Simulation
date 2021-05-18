@@ -39,8 +39,8 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param) : Entity("../Im
 	}
 }
 
-Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
-	
+Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_param, int speed_param, int type_param) : Entity(("../Images/"+Game::player_name+".png").c_str(), srcR_param, start){
+	if(type_param == 0) Entity(("../Images/"+Game::remote_name+".png").c_str(), srcR_param, start);
 	original_speed = Game::player_original_speed;
 	speed = original_speed;
 	boost_speed = Game::player_boost_speed;
@@ -49,7 +49,7 @@ Player::Player(SDL_Rect srcR_param, int start, int number_param, int frames_para
 	set_mode(original_mode); //mode = -1;
 	dest = retreat_node;
 	boost_time_left = 0;
-
+	type = type_param;
 
 	animated = true;
 	srcR.y = srcR.h * 4;
@@ -86,7 +86,10 @@ void Player::Update(){
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
-	Entity::Update();
+	if(type) Entity::Update();
+	else{
+		Entity::Update_remote();
+	}
 
 	
 	// face = 1 right facing

@@ -24,7 +24,7 @@ TTF_Font* Game::font;
 int Game::width;
 int Game::height;
 int Game::rows = 12;
-int Game::cols = 25;
+int Game::cols = 12;
 int Game::original_h = 32;
 int Game::original_w = 32;
 int Game::block_h = 32;
@@ -92,7 +92,7 @@ double Game::player_broom_collision_pause = 0;
 
 
 double Game::monster_original_speed = 2.5;
-double Game::snitch_original_speed = 1.5;
+double Game::snitch_original_speed = 4.5;
 double Game::player_original_speed = 3.5;
 
 double Game::player_boost_speed = 5;
@@ -145,7 +145,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 			SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
 		}
 	}
-	// srand(seed);
+	srand(Game::seed);
 	Game::game_maze = new Maze();
 	if(Game::task == 2){
 		for(int i=0;i<num_stones;i++){
@@ -168,13 +168,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
  		
  		if(Game::server){
  			add_player(player1_starting_node, 1);
-            player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100);
+            player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
         else if(Game::client){
         	add_player(Game::cols-1, 1);
-            player2 = new Remote(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100);
+            player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100, 0);
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
