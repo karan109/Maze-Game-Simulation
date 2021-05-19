@@ -12,6 +12,7 @@
 #include "Health.hpp"
 #include "Broom.hpp"
 #include "Spell.hpp"
+#include "Wand.hpp"
 
 
 
@@ -29,6 +30,9 @@ public:
 	vector<Health * > * healths;
 	vector<Broom * > * brooms;
 	vector<Spell * > * spells;
+	vector<Wand * > * wands;
+
+
 
 
 	Entities(){
@@ -42,6 +46,8 @@ public:
 		healths = new vector<Health *>(0);
 		brooms = new vector<Broom *>(0);
 		spells = new vector<Spell *>(0);
+		wands = new vector<Wand *>(0);
+
 
 
 	}
@@ -75,6 +81,16 @@ public:
 
 	void Add(Spell * spell){
 		spells->push_back(spell);
+	}
+
+
+	void Add(Wand * wand){
+		wands->push_back(wand);
+	}
+
+	void Delete(Wand * wand){
+		auto position = find (wands->begin(), wands->end(), wand);
+		if (position != wands->end()) wands->erase(position);
 	}
 
 	void Delete(Spell * spell){

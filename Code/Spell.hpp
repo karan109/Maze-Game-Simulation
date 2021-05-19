@@ -23,6 +23,15 @@ bool finished = 0;
 int	head_v;
 int	tail_v;
 
+int check = 0;
+bool reverting = 0;
+bool collided = 0;
+int store_length = 0;
+
+void set_v();
+void face_revert();
+bool reversal_complete();
+
 Spell(Player * castee);
 void Delete();
 
@@ -50,6 +59,11 @@ void handle_spell_collisions();
 
 int	spell_counter_limit; 
 double spell_time_limit;
+
+static int i;
+int color;
+
+void update_destR();
 
 };
 

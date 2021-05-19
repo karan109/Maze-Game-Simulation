@@ -78,8 +78,28 @@ void Player::Update(){
 	// cout << xpos << " " << destR.x << " " << ypos << " " <<destR.y << endl;
 
 	// time_update();
+	if (! collided) {
 
 
+		if (getBlock() == Game::cloak_node) {
+			invisible = 1;
+			Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+			animated = false;
+			Game::cloak_node = -1;
+			Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
+
+		}
+
+		for(auto & wand: * Game::entities->wands){
+			int dir = Collision::close_AABB(wand->getBB(), getBB(), wand->getXV(), wand->getYV(), getXV(), getYV());
+			if(dir != 0) {
+				wand_caught = 1;
+				wand->Delete();
+				Game::display_message(player_name+" has the power of the elder wand!");
+			}
+		}
+
+	}
 	update_boost();
 
 	if (casting_conditions()) {
@@ -131,54 +151,46 @@ void Player::Update(){
 	// face = 2 left facing
 	// face = 3 down facing
 	// face = 4 up facing
-	if(yv > 0){
-		srcR.y = srcR.h * 4;
-		face = 3;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(yv < 0){
-		srcR.y = srcR.h * 7;
-		face = 4;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv > 0){
-		srcR.y = srcR.h * 6;
-		face = 1;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv < 0){
-		srcR.y = srcR.h * 5;
-		face = 2;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else{
-		// srcR.y = srcR.h * 4;
-		// srcR.x = srcR.w * 7;
-		animated = false;
-	}
-
-	handle_spell_collisions();
-
-
-	// health with time
-	// if (!snitch_caught) {
-		if (fmod(entity_time, 1.0) == 0) {
-			decrease_health(health_dps);
+	if (! invisible) {
+		if(yv > 0){
+			srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
 		}
-	// }
-	// cout << health << endl;
-	// if (health == 0) {
-	// 	Delete();
-	// }
+		else if(yv < 0){
+			srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
+		}
+	}
 
 	handle_spell_collisions();
 
 
+	if (fmod(entity_time, 1.0) == 0) {
+		decrease_health(health_dps);
+	}
 
+	handle_spell_collisions();
 }
 
 
@@ -219,7 +231,7 @@ void Player::update_boost() {
 
 bool Player::casting_conditions() {
 	// if wand is not caught
-	// if (!wanded) return;
+	if (!wand_caught) return 0 ;
 	// cout << " player casting condition used";
 
 
@@ -227,7 +239,7 @@ bool Player::casting_conditions() {
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 0 and type == 1) {
-				cout<<"ok"<<endl;
+				// cout<<"ok"<<endl;
 				// Game::spacebar_pressed = 1;
 				Mix_PlayChannel( -1, Game::gLow, 0 );
 				Game::weapon = 1;
@@ -254,11 +266,18 @@ void Player::cast_spell() {
 
 void Player::handle_spell_collisions() {
 	spell_collision = 0;
+
+	if (invisible) return;
+	
 	for(auto & spell: * Game::entities->spells){
-		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		if (spell->wizard == this and spell->released == 0) continue;
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
+		SDL_Rect R = this->getBB();
+		// SDL_Rect S = spell->getBB();
+		// cout << "R " << R.x << " " << R.x + R.w << " " << R.y << " " << R.y + R.h << endl;
+		// cout << "S " << S.x << " " << S.x + S.w << " " << S.y << " " << S.y + S.h << " " << spell->xv << " " << spell-> yv << " " << dir << endl ;
 		if (dir != 0) {
 			// collided = 1;
-			SDL_Rect R = this->getBB();
 			// assert (dir == face)
 			switch (spell->face) {
 				case 1: spell->head = R.x; break;
@@ -268,6 +287,7 @@ void Player::handle_spell_collisions() {
 			}
 			spell_collision = 1;
 			decrease_health(0.5);
+			spell->update_destR();
 		}
 	}
 }

@@ -10,6 +10,8 @@
 #include "Broom.hpp"
 #include "Remote.hpp"
 // #include "Spell.hpp"
+#include "Wand.hpp"
+
 
 Maze * Game::game_maze = new Maze();
 SDL_Renderer * Game::renderer = nullptr;
@@ -57,8 +59,10 @@ int Game::window_h = Game::wall_thickness + Game::menu + block_h * rows + (rows 
 int Game::window_w = 2 * Game::wall_thickness + block_w * cols + (cols - 1) * wall_thickness;
 int Game::N = Game::rows * Game::cols;
 
-int Game::original_snitch_h = 414;
 int Game::original_snitch_w = 874;
+int Game::original_snitch_h = 414;
+int Game::original_wand_w = 860;
+int Game::original_wand_h = 900;
 int Game::task;
 string Game::player_name = "";
 string Game::remote_name = "";
@@ -139,9 +143,13 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
-
+int Game::cloak_node = random_number();
+int Game::wand_starting_node = random_number();
 // ----------------------------------------------------------------------------------------------------------------
 
+int Game::random_number() {
+	return rand() % Game::N;
+}
 
 SDL_Texture * background;
 SDL_Surface* surfaceMessage;
@@ -160,6 +168,9 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// cout<<"ok"<<endl;
 	// auto temp = generate_sequence(20, 30);
 	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
+	cout << "wand_starting_node " << wand_starting_node << endl;
+	cout << "cloak_node " << cloak_node << endl;
+
 	if(task == 2) no_trap = false;
 	Game::width = width;
 	Game::height = height;
@@ -213,6 +224,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		add_monster(monster2_starting_node, 0.3, 0, 3);
 
 		add_snitch(snitch_starting_node);
+		add_wand(wand_starting_node);
+
 
 		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
 		Message = Texture::LoadTexture(surfaceMessage);
@@ -267,6 +280,11 @@ void Game::add_snitch(int start){
 	// snitch->scary_target = player1; // set in snitch constructor
 	entities->Add(snitch);
 }
+void Game::add_wand(int start){
+	wand = new Wand(SDL_Rect{0, 0, original_wand_w, original_wand_h}, start);
+	entities->Add(wand);
+}
+
 void Game::add_broom(int appear_time, int start) {
 	if (global_time == appear_time) {
 		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
@@ -449,6 +467,10 @@ void Game::update(){
 		broom->Update();
 	}
 
+	for(auto & wand : * entities->wands){
+		wand->Update();
+	}
+
 }
 
 
@@ -494,6 +516,9 @@ void Game::render(){
 	}
 	for(auto & spell : * entities->spells){
 		spell->Render();
+	}
+	for(auto & wand : * entities->wands){
+		wand->Render();
 	}
 	
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

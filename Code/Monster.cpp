@@ -318,7 +318,7 @@ void Monster::set_scary_target() {
 void Monster::handle_spell_collisions() {
 	spell_collision = 0;
 	for(auto & spell: * Game::entities->spells){
-		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
+		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
 		if (dir != 0) {
 			// collided = 1;
 			SDL_Rect R = this->getBB();
@@ -333,6 +333,7 @@ void Monster::handle_spell_collisions() {
 
 			// update monster ki health
 			decrease_health(0.5);
+			spell->update_destR();
 
 			// monster mode change
 			// when to revert back?
