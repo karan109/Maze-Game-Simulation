@@ -8,7 +8,7 @@
 #include "Stone.hpp"
 #include "Snitch.hpp"
 #include "Broom.hpp"
-#include "Remote.hpp"
+// #include "Remote.hpp"
 // #include "Spell.hpp"
 #include "Wand.hpp"
 
@@ -503,9 +503,9 @@ void Game::render(){
 	for(auto & player : * entities->players){
 		player->Render();
 	}
-	for(auto & remote : * entities->remotes){
-		remote->Render();
-	}
+	// for(auto & remote : * entities->remotes){
+	// 	remote->Render();
+	// }
 	for(auto & monster : * entities->monsters){
 		monster->Render();
 	}
