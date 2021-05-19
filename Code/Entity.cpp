@@ -261,7 +261,7 @@ void Entity::resume_after_collision() {
 	// cout << "resuming collision mode_before_collision: " <<  mode_before_collision << endl;
 
 	// 
-	srcR.y = srcR.h * 4;
+	if (!invisible) srcR.y = srcR.h * 4;
 	face = 3;
 	if(! animated) srcR.x = 0;
 	animated = true;
