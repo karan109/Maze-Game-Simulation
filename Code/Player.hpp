@@ -30,5 +30,6 @@ public:
 	int type;
 	string player_name = "";
 	// Broom * my_broom = nullptr;
+	void animated_stuff();
 
 };

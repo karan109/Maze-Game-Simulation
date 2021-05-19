@@ -24,6 +24,7 @@ int main(int argc, char* argv[]){
     if(Game::task == 1) Mix_PlayMusic( Game::gMusic, -1 );
     int ct = 0;
     while(game->running()){
+        // cout << Game::global_time << endl;
         frameStart = SDL_GetTicks();
         if(Game::server){
             server_work();

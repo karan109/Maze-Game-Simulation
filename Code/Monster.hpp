@@ -35,6 +35,7 @@ public:
 	void reset_spell_collision_time();
 
 	void determine_scared(); 
+	void animated_stuff();
 
 	Health * health_box, * static_health_box;
 

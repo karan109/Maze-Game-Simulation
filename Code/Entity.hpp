@@ -172,6 +172,8 @@ void handle_spell_collisions();
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 Entity * nearest_player ();
+Entity * nearest_visible_player ();
+
 
 bool spell_collision = 0;
 

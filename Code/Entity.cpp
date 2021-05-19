@@ -205,7 +205,8 @@ bool Entity::change_mode(int mode_id) {
 	}
 
 	if (mode_id == 0) {
-		set_mode(0, target);
+		if (target != nullptr) set_mode(0, target);
+		else change_mode(2);
 	}
 	if (mode_id == 1) {
 		set_mode(1, dest);
@@ -216,7 +217,8 @@ bool Entity::change_mode(int mode_id) {
 	}
 
 	if (mode_id == 3) {
-		set_mode(3, scary_target);
+		if (scary_target != nullptr) set_mode(3, scary_target);
+		else change_mode(2);
 	}
 
 	if (mode_id == 4) {
@@ -238,11 +240,13 @@ void Entity::restart() {
 void Entity::start_collision() {
 	collided = 1;
 	mode_before_collision = mode;
-	// cout << "mmmmmmmmmmmmmmmmmm "<< mode;
 	set_pos_at_centre();
 	dest = start_node;
+	// cout << "mode before collision " << mode_before_collision << endl; 
 	change_mode(1);
 	speed = 5;
+	// cout << "mode changes " << mode << endl;
+
 }
 
 
@@ -251,8 +255,10 @@ void Entity::resume_after_collision() {
 	scatter_reached = 0;
 	collided = 0;
 	set_pos_at_centre();
+	// cout << "resuming collision mode_before_collision: " <<  mode_before_collision << endl;
 	change_mode(mode_before_collision);
 	speed = original_speed;
+	// cout << "resuming collision mode_before_collision: " <<  mode_before_collision << endl;
 
 	// 
 	srcR.y = srcR.h * 4;
@@ -312,6 +318,7 @@ void Entity::set_dest(int dest_param){
 }
 
 void Entity::set_dest(Entity * target_param){
+	if (target_param == nullptr) return;
 	while (!path.empty()){
 		path.pop();
 	}
@@ -345,7 +352,7 @@ void Entity::update_position() {
 }
 
 
-Entity * Entity::nearest_player () {
+Entity * Entity::nearest_visible_player () {
 	auto & graph = Game::game_maze->graph;
 
 	int current = getBlock();
@@ -361,6 +368,22 @@ Entity * Entity::nearest_player () {
 	}
 	return closest_player;
 }
+Entity * Entity::nearest_player () {
+	auto & graph = Game::game_maze->graph;
+
+	int current = getBlock();
+	int min_dis = INT_MAX;
+	Entity * closest_player = nullptr;
+	for(auto & player: * Game::entities->players){
+		int dis = graph.distance(current, player->getBlock());
+		if (dis < min_dis) {
+			min_dis = dis;
+			closest_player = player;
+		}
+	}
+	return closest_player;
+}
+
 
 
 void Entity::increase_health(double x) {
@@ -1063,7 +1086,7 @@ void Entity::Update1() {
 
 void Entity::Update2() {
 
-	srand(Game::seed);
+	srand(time(0));
 
 	int current = getBlock();
 	int next = getNext();

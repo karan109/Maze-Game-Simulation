@@ -114,13 +114,24 @@ vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
 	while(1){
 		int next = rand()%max_buffer + prev;
 		if(prev != 0) next += exist_time;
-		if(next > 600) break;
+		if(next > 2000) break;
 		// 600 is 10 minutes
 		result.push_back({next, rand()%N});
 		prev = next;
 	}
 	return result;
 }
+
+int Game::broom_seq_counter = 0;
+vector<pair<int, int>> Game::broom_seq;
+void Game::show(vector<pair<int, int>> a) {
+	cout << "[ ";
+	for (int i = 0; i < a.size() ; ++i) {
+		cout << "(" << a[i].first << ", " << a[i].second << ")  ";
+	}
+	cout << " ]";
+	cout << endl << endl;
+} 
 
 double Game::monster_original_speed = 2;
 double Game::snitch_original_speed = 1.5;
@@ -130,8 +141,7 @@ double Game::player_boost_speed = 5;
 double Game::player_boost_time_limit = 20;
 
 int Game::broom_apparatation_time = 10;
-int Game::broom_disapparation_time = 100; // so 110 pe disappears
-
+int Game::broom_disapparation_time = 20; 
 int Game::monster_cycle_time = 30;
 
 // ------------------------------------------------- variables --------------------------------------------------
@@ -145,14 +155,16 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
-int Game::cloak_node = random_number();
-// int Game::cloak_node = 1;
+// int Game::cloak_node = random_number();
+int Game::cloak_node = 1;
 int Game::wand_starting_node = random_number();
 // ----------------------------------------------------------------------------------------------------------------
 
 int Game::random_number() {
 	return rand() % Game::N;
 }
+
+
 
 SDL_Texture * background;
 SDL_Surface* surfaceMessage;
@@ -171,8 +183,11 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// cout<<"ok"<<endl;
 	// auto temp = generate_sequence(20, 30);
 	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
-	cout << "wand_starting_node " << wand_starting_node << endl;
+	// cout << "wand_starting_node " << wand_starting_node << endl;
 	cout << "cloak_node " << cloak_node << endl;
+
+	broom_seq = Game::generate_sequence(25, 20);
+	// show(broom_seq);
 
 	if(task == 2) no_trap = false;
 	Game::width = width;
@@ -205,32 +220,32 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// 0 is the number_param
 
  		if(Game::server){
- 			message = "Kill the other player!";
+ 			message = "Defeat the other player!";
  			add_player(player1_starting_node, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
         else if(Game::client){
-        	message = "Kill the other player!";
+        	message = "Defeat the other player!";
         	add_player(Game::cols-1, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100, 0);
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
 
-
         else{
-        	message = "Collect the broom, snitch and cloak!";
+
+        	message = "Collect the wand, snitch and cloak!";
         	add_player(player1_starting_node, 1);
         	srand(time(0));
         	Game::seed = rand()%100000;
         }
 		add_monster(monster1_starting_node, 0.5, 1, 4);
-		add_monster(monster2_starting_node, 0.3, 0, 3);
-
+		// add_monster(monster2_starting_node, 0.3, 0, 3);
 		add_snitch(snitch_starting_node);
 		add_wand(wand_starting_node);
+        
 
 
 		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
@@ -294,19 +309,19 @@ void Game::add_wand(int start){
 	entities->Add(wand);
 }
 
-void Game::add_broom(int appear_time, int start) {
-	if (global_time == appear_time) {
-		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
-		entities->Add(broom);
-		// broom_exists = 1;
-	}
+void Game::add_broom(int start) {
+	broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
+	entities->Add(broom);
 }
 
 void Game::Add_entities() {
 	// add broom
 	if(task == 1){
-		add_broom(Game::broom_apparatation_time,broom_starting_node);
-
+		if (broom_seq_counter < broom_seq.size() and global_time == broom_seq[broom_seq_counter].first ) {
+			display_message("a broom just apparated");
+			add_broom(broom_seq[broom_seq_counter].second);
+			broom_seq_counter++;
+		}
 	}
 }
 
@@ -349,16 +364,13 @@ void Game::switch_collision() {
 	// then wait for 1/2/5 sec
 	// then reset.
 	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
-	cout<<resume<<endl;
 	if (resume) {
-		// cout << "resumes" << endl;
 		collision_happened = false;
 		collision_counter = 0;
 		collision_time = 0;
 
 		collision_pause();
 		// reset_collided_entities(); //done in switch_pause now
-		// game_pause(1);
 	}
 }
 
@@ -406,7 +418,6 @@ void Game::handleEvents(){
 		switch_pause();
 	}
 	else if (collision_happened) {
-		// cout << "c" << endl;
 		update_global_collision_time();
 		switch_collision();
 
@@ -419,6 +430,7 @@ void Game::handleEvents(){
 
 
 void Game::update(){
+
 	message_counter++;
 	if(message_counter > FPS * message_t){
 		if(message_type == 0){
@@ -440,7 +452,6 @@ void Game::update(){
 	}
 
 	if (collision_happened) {
-		// cout<<"ok"<<endl;
 		collision_updates();
 		return;
 	}
@@ -715,10 +726,8 @@ void Game::start_game_collision () {
 void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
 
-		// cout << "did we gwt here" << endl;
 
 		collided_monster->Update();
-		// cout << collided_monster->mode << " " << collided_monster->speed << endl;
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
 		collided_monster->decrease_health(0.1);
@@ -765,8 +774,8 @@ bool Game::resume_safely () {
 		return (collided_monster->scatter_reached);
 	}
 	if (collision_code == "monster_player") {
-		cout<<"aca"<<endl;
-		cout<<collided_player->scatter_reached<<" "<<collided_monster->scatter_reached<<endl;
+		// cout<<"aca"<<endl;
+		// cout<<collided_player->scatter_reached<<" "<<collided_monster->scatter_reached<<endl;
 		return (collided_player->scatter_reached) && (collided_monster->scatter_reached);
 	}
 	if (collision_code == "player_snitch") {

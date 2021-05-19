@@ -165,37 +165,8 @@ void Player::Update(){
 	// face = 2 left facing
 	// face = 3 down facing
 	// face = 4 up facing
-	if (! invisible) {
-		if(yv > 0){
-			srcR.y = srcR.h * 4;
-			face = 3;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(yv < 0){
-			srcR.y = srcR.h * 7;
-			face = 4;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(xv > 0){
-			srcR.y = srcR.h * 6;
-			face = 1;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(xv < 0){
-			srcR.y = srcR.h * 5;
-			face = 2;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else{
-			// srcR.y = srcR.h * 4;
-			// srcR.x = srcR.w * 7;
-			animated = false;
-		}
-	}
+
+	animated_stuff();
 
 	handle_spell_collisions();
 
@@ -281,9 +252,10 @@ void Player::cast_spell() {
 void Player::handle_spell_collisions() {
 	spell_collision = 0;
 
-	if (invisible) return;
+	// detect spell collisions when invisible?
+	// if (invisible) return;
 	
-	for(auto & spell: * Game::entities->spells){
+	for(auto & spell: * Game::entities->spells){ 
 		if (spell->wizard == this and spell->released == 0) continue;
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
 		SDL_Rect R = this->getBB();
@@ -327,8 +299,70 @@ void Player::handle_spell_collisions() {
 // 	}
 // }
 
-
-
+void Player::animated_stuff() {
+	if (!invisible) {
+		if(yv > 0){
+			srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(yv < 0){
+			srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
+		}
+	}
+	else{
+		if(yv > 0){
+			// srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(yv < 0){
+			// srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			// srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			// srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
+		}
+	}
+}
 
 
 

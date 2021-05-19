@@ -13,6 +13,8 @@ void Broom::Delete() {
 	objTexture = vanish_texture;
 
 	exists = 0;
+
+	Game::display_message("broom disapparated");
 	// if (caught) {
 
 	// 	my_player->scary = 0;
