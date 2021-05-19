@@ -133,8 +133,8 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 // int Game::cloak_node = random_number();
-int Game::cloak_node = 1;
-int Game::wand_starting_node = random_number();
+int Game::cloak_node = 10;
+int Game::wand_starting_node = 184;
 // ----------------------------------------------------------------------------------------------------------------
 
 int Game::random_number() {
@@ -188,7 +188,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// auto temp = generate_sequence(20, 30);
 	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
 	// cout << "wand_starting_node " << wand_starting_node << endl;
-	cout << "cloak_node " << cloak_node << endl;
+	// cout << "cloak_node " << cloak_node << endl;
 
 	broom_seq = Game::generate_sequence(25, 20);
 	wand_seq = Game::generate_sequence(30, 30);
