@@ -37,5 +37,24 @@ This builds the executable ./game
 ```bash
 ./game
 ```
+Initially a menu will appear giving the choice of
+* Single Player Game
+* Multi Player Game
+* Run Simulation  
+
+and the character sprite (Harry/Ron/Hermione).
+
+The game has 2 modes - 
+1. **Single Player**
+* The game objective is to collect all 3 objects - the Resurrection Stone (within the Snitch), Broom and Invisibilitiy Cloak.
+* Dragons will try to prevent the user from collecting these items.
+* The user can collect a Wand to shoot spells.
+2. **Multi Player**
+* Two players compete against each other in a death-match.
+* Most of the game is similar to the Single Player version.
+
+For the **Simulation** - 
+* A drone's objective is to collect all the stones and reach the end of the maze.
+
 ## License
 MIT

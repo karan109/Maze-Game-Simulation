@@ -72,7 +72,7 @@ int main_menu(){
     Button * button1 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height, button_width, button_height}, 2, "Single Player");
     Button * button2 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + button_height + margin, button_width, button_height}, 2, "Server");
     Button * button7 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + 2 * (button_height + margin), button_width, button_height}, 2, "Client");
-    Button * button3 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + 3 * (button_height + margin), button_width, button_height}, 2, "Task 2");
+    Button * button3 = new Button(SDL_Rect{500 - button_width / 2, 250 + margin + sprite_height + 3 * (button_height + margin), button_width, button_height}, 2, "Simulation");
     Button * button4 = new Button(renderer, "harry", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 - sprite_width / 2, 200, sprite_width, sprite_height});
     Button * button5 = new Button(renderer, "hermione", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 - sprite_width * 3 / 2 - sprite_margin, 200, sprite_width, sprite_height});
     Button * button6 = new Button(renderer, "ron", SDL_Rect{32 * 7, 32 * 4, 32, 32}, SDL_Rect{500 + sprite_width / 2 + sprite_margin, 200, sprite_width, sprite_height});
@@ -114,7 +114,9 @@ int main_menu(){
                 }
                 else if(button7->isInside(x, y)){
                     Game::task = 1;
-                    if(create_client() < 0) continue;
+                    if(create_client() < 0){
+                        continue;
+                    }
                     Game::client = true;
                     wait_connect_client();
                     break;

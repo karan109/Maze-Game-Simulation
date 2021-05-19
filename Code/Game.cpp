@@ -166,7 +166,6 @@ Game::~Game(){
 
 }
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
-	// cout<<"ok"<<endl;
 	// auto temp = generate_sequence(20, 30);
 	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
 	cout << "wand_starting_node " << wand_starting_node << endl;
@@ -342,7 +341,6 @@ void Game::switch_collision() {
 	// then wait for 1/2/5 sec
 	// then reset.
 	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
-	cout<<resume<<endl;
 	if (resume) {
 		collision_happened = false;
 		collision_counter = 0;
@@ -364,7 +362,6 @@ void Game::handle_quit_game () {
 		isRunning = false;
 	}
 	quit = 1;
-	// cout<<"quit badddd"<<endl;
 }
 
 
@@ -725,8 +722,6 @@ bool Game::resume_safely () {
 		return (collided_monster->scatter_reached);
 	}
 	if (collision_code == "monster_player") {
-		cout<<"aca"<<endl;
-		cout<<collided_player->scatter_reached<<" "<<collided_monster->scatter_reached<<endl;
 		return (collided_player->scatter_reached) && (collided_monster->scatter_reached);
 	}
 	if (collision_code == "player_snitch") {
