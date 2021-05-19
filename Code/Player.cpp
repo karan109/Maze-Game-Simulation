@@ -282,6 +282,7 @@ void Player::handle_spell_collisions() {
 		if (dir != 0) {
 			// collided = 1;
 			// assert (dir == face)
+			if(number == 1) Mix_PlayChannel( -1, Game::player_hit, 0 );
 			switch (spell->face) {
 				case 1: spell->head = R.x; break;
 				case 2: spell->head = R.x + R.w; break;

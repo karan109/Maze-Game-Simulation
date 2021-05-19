@@ -144,6 +144,7 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 int Game::cloak_node = random_number();
+// int Game::cloak_node = 1;
 int Game::wand_starting_node = random_number();
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -546,7 +547,7 @@ void Game::handle_collisions() {
 
 	for(auto & monster: * Game::entities->monsters){
 
-		if (monster->health == 0) {
+		if (int(monster->health) == 0) {
 		collision_code = "monster_dead";
 		// player->lives -= 1;
 		// player->collided = 1; never calling player-> update
@@ -640,7 +641,7 @@ void Game::handle_collisions() {
 			}
 		}
 
-		if (player->health == 0) {
+		if (int(player->health) == 0) {
 			collision_code = "player_dead";
 			player->lives -= 1;
 			// player->collided = 1; never calling player-> update

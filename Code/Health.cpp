@@ -8,7 +8,7 @@ Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param, bool
 	black = Texture::LoadTexture("../Images/black.png");
 	snitch = Texture::LoadTexture("../Images/snitch.png");
 	broom = Texture::LoadTexture("../Images/broom.png");
-	cloak = Texture::LoadTexture("../Images/cloak.png");
+	cloak = Texture::LoadTexture("../Images/cloak_black.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
@@ -108,15 +108,49 @@ void Health::Render(){
 		l.h = 20;
 		for(int i=0;i<target->lives;i++){
 			l.x = Message_rect.x + Message_rect.w + 4 + i * 22;
+			if(target->number<3){
+				fig.y = 4 * 32;
+				fig.x = 0;
+				fig.w = fig.h = 32;
+			}
+			// cout<<fig.x<<"ao"<<endl;
+			// cout<<target->number<<endl;
 			SDL_RenderCopy(Game::renderer, target->staticObjTexture, & fig, & l);
 		}
+		l.y += 10;
+		SDL_Rect r;
+		r.h = l.h;
+		r.y = l.y;
 		if(target->snitch_collected){
-			l.x = Message_rect.x - 4 - 2 * 22;
-			SDL_RenderCopy(Game::renderer, snitch, new SDL_Rect{0, 0, 874, 414}, & l);
+			l.x = Message_rect.x - 4 - 3 * 25;
+			r.x = l.x;
+			r.w = l.x+l.w-r.x;
 		}
 		if(target->broom_collected){
-			l.x = Message_rect.x - 4 - 22;
-			SDL_RenderCopy(Game::renderer, broom, new SDL_Rect{0, 0, 2393, 1274}, & l);
+			l.x = Message_rect.x - 4 - 2 * 25;
+			if(target->snitch_collected == 0) r.x = l.x;
+			r.w = l.x+l.w-r.x;
+		}
+		if(target->invisible){
+			l.x = Message_rect.x - 4 - 25;
+			if(target->snitch_collected == 0 and target->broom_collected == 0) r.x = l.x;
+			r.w = l.x+l.w-r.x;
+		}
+		if(Game::server == 0 and Game::client == 0){
+			SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
+			SDL_RenderFillRect(Game::renderer, &r);
+			if(target->snitch_collected){
+				l.x = Message_rect.x - 4 - 3 * 25;
+				SDL_RenderCopy(Game::renderer, snitch, new SDL_Rect{0, 0, 874, 414}, & l);
+			}
+			if(target->broom_collected){
+				l.x = Message_rect.x - 4 - 2 * 25;
+				SDL_RenderCopy(Game::renderer, broom, new SDL_Rect{0, 0, 2393, 1274}, & l);
+			}
+			if(target->invisible){
+				l.x = Message_rect.x - 4 - 25;
+				SDL_RenderCopy(Game::renderer, cloak, new SDL_Rect{0, 0, 728, 508}, & l);
+			}
 		}
 	}
 	else{
@@ -144,11 +178,17 @@ void Health::Render(){
 		Message_rect.w = 15 * digits;
 		Message_rect.h = 20;
 		Message_rect.y = destR.y + 5 + destR.h + 25;
-		Message_rect.x = destR.x + length / 2 - Message_rect.w / 2;
+		Message_rect.x = destR.x + length / 2 - Message_rect.w / 2 + 5;
 		SDL_RenderCopy(Game::renderer, Message, NULL, & Message_rect);
 	}
-	if(target->number<3)
+	if(target->number<3){
+		if(target->number<3){
+			fig.y = 4 * 32;
+			fig.x = 0;
+			fig.w = fig.h = 32;
+		}
 		SDL_RenderCopy(Game::renderer, target->staticObjTexture, & fig, & figure);
+	}
 	else
 		SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & figure);
 	SDL_Color colorh = SDL_Color{255, 255, 255, 255};

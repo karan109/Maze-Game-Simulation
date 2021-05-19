@@ -196,7 +196,7 @@ void server_work(){
     else{
         pos += ",0";
     }
-    cout<<pos<<endl;
+    // cout<<pos<<endl;
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
         cout<<"Could not send through server"<<endl;
