@@ -58,21 +58,22 @@ void Health::Update(){
 	destR.w = length * health / full;
 }
 void Health::Render(){
-	if(target->invisible and target->number == 2) return;
+	bool check = false;
+	if(target->invisible and target->number == 2) check = true;
 	if(!show) return;
 	int health = target->health;
 	int c1 = min((full - health) * 2 * 255 / full, 255);
 	int c2 = min(health * 2 * 255 / full, 255);
 	SDL_SetRenderDrawColor(Game::renderer, c1, c2, 0, 255);
-	SDL_RenderFillRect(Game::renderer, &destR);
+	if((check and !move) or !check) SDL_RenderFillRect(Game::renderer, &destR);
 	int thick = 2;
 	auto color = white;
 	// if(! move) color = black;
-	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, length + 2 * thick, thick});
-	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y + destR.h, length + 2 * thick, thick});
-	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, thick, destR.h + thick * 2});
-	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + length, destR.y - thick, thick, destR.h + thick * 2});
-	Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + destR.w, destR.y, length - destR.w, destR.h});
+	if((check and !move) or !check) Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, length + 2 * thick, thick});
+	if((check and !move) or !check) Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y + destR.h, length + 2 * thick, thick});
+	if((check and !move)or !check) Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x - thick, destR.y - thick, thick, destR.h + thick * 2});
+	if((check and !move)or !check) Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + length, destR.y - thick, thick, destR.h + thick * 2});
+	if((check and !move)or !check) Texture::Draw(color, SDL_Rect{0, 0, 32, 32}, SDL_Rect{destR.x + destR.w, destR.y, length - destR.w, destR.h});
 	if(move) return;
 	SDL_Rect fig = target->srcR;
 	if(target->number % 2 == 1){
@@ -136,18 +137,20 @@ void Health::Render(){
 			if(target->snitch_collected == 0 and target->broom_collected == 0) r.x = l.x;
 			r.w = l.x+l.w-r.x;
 		}
-		if(Game::server == 0 and Game::client == 0){
+		if(true){
 			SDL_SetRenderDrawColor(Game::renderer, 255, 255, 255, 255);
-			SDL_RenderFillRect(Game::renderer, &r);
-			if(target->snitch_collected){
+			// SDL_RenderFillRect(Game::renderer, &r);
+			
+			if(target->snitch_collected == 1){
+				// cout<<target->snitch_collected<<" "<<target->number<<endl;
 				l.x = Message_rect.x - 4 - 3 * 25;
 				SDL_RenderCopy(Game::renderer, snitch, new SDL_Rect{0, 0, 874, 414}, & l);
 			}
-			if(target->elder_wand_caught){
+			if(target->elder_wand_caught == 1){
 				l.x = Message_rect.x - 4 - 2 * 25;
 				SDL_RenderCopy(Game::renderer, wand, new SDL_Rect{0, 0, 860, 900}, & l);
 			}
-			if(target->invisible){
+			if(target->invisible == 1){
 				l.x = Message_rect.x - 4 - 25;
 				SDL_RenderCopy(Game::renderer, cloak, new SDL_Rect{0, 0, 728, 508}, & l);
 			}

@@ -130,7 +130,7 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 // int Game::cloak_node = random_number();
-int Game::cloak_node = 10;
+int Game::cloak_node = 50;
 int Game::wand_starting_node = 120;
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -138,8 +138,10 @@ int Game::random_number() {
 	return rand() % Game::N;
 }
 // vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer);
-vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
-	srand(Game::seed);
+vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer, int mod){
+	int x = Game::seed;
+	x += x * mod;
+	srand(x);
 	vector<pair<int, int>> result;
 	int prev = 0;
 	while(1){
@@ -187,8 +189,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// cout << "cloak_node " << cloak_node << endl;
 
 	broom_seq = Game::generate_sequence(25, 20);
-	wand_seq = Game::generate_sequence(5, 10);
-
+	wand_seq = Game::generate_sequence(30, 30, 1);
+	// show(wand_seq);
 	// show(broom_seq);
 
 	if(task == 2) no_trap = false;
@@ -318,10 +320,12 @@ void Game::Add_entities() {
 			add_broom(broom_seq[broom_seq_counter].second);
 			broom_seq_counter++;
 		}
-
 		if (wand_seq_counter < wand_seq.size() and global_time == wand_seq[wand_seq_counter].first and unwanded_player_exists() and entities->wands->size() == 0) {
 			display_message("we have another wand for you");
 			add_wand(wand_seq[wand_seq_counter].second);
+			wand_seq_counter++;
+		}
+		else if(global_time > wand_seq[wand_seq_counter].first){
 			wand_seq_counter++;
 		}
 
@@ -330,7 +334,7 @@ void Game::Add_entities() {
 bool Game::unwanded_player_exists() {
 	for(auto & player : * entities->players){
 		if (player->wand_caught == 0) {
-			return 0;
+			return 1;
 		}
 	}
 }

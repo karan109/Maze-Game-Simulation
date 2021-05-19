@@ -136,7 +136,7 @@ public:
 	static int collision_counter;
 	static double collision_time;
 	static bool collision_happened;
-	static vector<pair<int, int>> generate_sequence(int exist_time, int max_buffer);
+	static vector<pair<int, int>> generate_sequence(int exist_time, int max_buffer, int mod = 0);
 
 	void update_global_running_time();
 	void update_global_pause_time();
