@@ -248,7 +248,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 	Game::game_maze->DrawMaze();
 
-	gMusic = Mix_LoadMUS( "../Music/bgm.wav" );
+	gMusic = Mix_LoadMUS( "../Music/bgm2.wav" );
 	gScratch = Mix_LoadWAV( "../Music/wall_collide.wav" );
 	gHigh = Mix_LoadWAV( "../Music/reward.wav" );
 	gMedium = Mix_LoadWAV( "../Music/collect.wav" );
