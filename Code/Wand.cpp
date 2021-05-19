@@ -11,7 +11,7 @@ void Wand::Delete() {
 }
 
 
-Wand::Wand (SDL_Rect srcR_param, int start) : Entity("../Images/cute_wand.png", srcR_param, start){
+Wand::Wand (SDL_Rect srcR_param, int start) : Entity("../Images/wand.png", srcR_param, start){
 
 }
 void Wand::Update() {

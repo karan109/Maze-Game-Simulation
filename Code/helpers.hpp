@@ -49,7 +49,7 @@ void init(){
     else{
         Game::isRunning = false;
     }
-    Game::font = TTF_OpenFont("../Fonts/arial.ttf", 100);
+    Game::font = TTF_OpenFont("../Fonts/harry.ttf", 100);
 }
 int main_menu(){
     unsigned int frameStart;
@@ -140,11 +140,11 @@ int main_menu(){
             }
         }
         if(Game::player_name == "") Game::player_name = "harry1";
-        SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, "Game", SDL_Color{255, 255, 0, 255});
+        SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Game::font, "Harry Potter and the Deathly Hallows", SDL_Color{255, 255, 0, 255});
         SDL_Texture* Message = Texture::LoadTexture(renderer, surfaceMessage);
 
         SDL_Rect Message_rect;
-        Message_rect.w = 150;
+        Message_rect.w = 500;
         Message_rect.h = 50;
         Message_rect.y = 10;
         Message_rect.x = 500 - Message_rect.w / 2;
@@ -234,6 +234,7 @@ int winning_message(){
     auto harry = Texture::LoadTexture(renderer, "../Images/harrywin.png");
     auto ron = Texture::LoadTexture(renderer, "../Images/ronwin.png");
     auto hermione = Texture::LoadTexture(renderer, "../Images/hermionewin.png");
+    auto hallow = Texture::LoadTexture(renderer, "../Images/hallow2.png");
     SDL_Texture * Character;
     string player_name;
     if(Game::player_name == "harry1"){Character = harry; player_name = "Harry";}
@@ -265,7 +266,8 @@ int winning_message(){
             Message_rect.x = 400 - Message_rect.w/2;
             SDL_RenderCopy(renderer, Message, NULL, & Message_rect);
         }
-        Texture::Draw(renderer, background, SDL_Rect{0, 0, 200, 500}, SDL_Rect{400-tempw/2, 300-temph/2, tempw, temph});
+        Texture::Draw(renderer, hallow, SDL_Rect{0, 0, 514, 485}, SDL_Rect{20, 300 - 150, 300, 300});
+        Texture::Draw(renderer, background, SDL_Rect{0, 0, 200, 500}, SDL_Rect{400-tempw/2 + 20, 300-temph/2, tempw, temph});
         SDL_Event event;
         SDL_PollEvent(& event);
         if(event.type == SDL_QUIT){
