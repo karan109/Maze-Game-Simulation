@@ -90,6 +90,7 @@ public:
 	static Mix_Chunk * game_win;
 	static Mix_Chunk * game_lose;
 	static Mix_Chunk * player_scary;
+	static Mix_Music * ending;
 
 
 	static double player_original_speed;

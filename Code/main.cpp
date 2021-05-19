@@ -59,7 +59,10 @@ int main(int argc, char* argv[]){
     Mix_HaltMusic();
     game->clean();
     // main_menu();
-    winning_message();
+    if(Game::task == 1){
+        Mix_PlayMusic( Game::ending, -1 );
+        winning_message();
+    }
     Mix_Quit();
     IMG_Quit();
     TTF_Quit();

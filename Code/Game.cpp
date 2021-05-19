@@ -76,6 +76,7 @@ Mix_Chunk * Game::player_monster = nullptr;
 Mix_Chunk * Game::game_win = nullptr;
 Mix_Chunk * Game::game_lose = nullptr;
 Mix_Chunk * Game::player_scary = nullptr;
+Mix_Music * Game::ending = nullptr;
 
 int Game::original_broom_h = 1274;
 int Game::original_broom_w = 2393;
@@ -259,6 +260,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	game_lose = Mix_LoadWAV( "../Music/game_lose.wav" );
 	player_scary = Mix_LoadWAV( "../Music/player_scary.wav" );
 	background = Texture::LoadTexture("../Images/bg3.jpg");
+	ending = Mix_LoadMUS( "../Music/ending.wav" );
 }
 
 // ------------------------------------------------- Add entities--------------------------------------------------
