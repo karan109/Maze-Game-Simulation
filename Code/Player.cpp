@@ -86,9 +86,19 @@ void Player::Update(){
 
 		if (getBlock() == Game::cloak_node) {
 			invisible = 1;
-			Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+			if(Game::server == 0 and Game::client == 0)
+				Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+			else{
+				if(number == 1)
+					Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+				else{
+					Entity::change_objTexture("../Images/empty.png", SDL_Rect{0, 0, 32, 32}, destR);
+					// health_box->show = false;
+				}
+			}
 			animated = false;
 			Game::cloak_node = -1;
+			Mix_PlayChannel( -1, Game::gMedium, 0 );
 			Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
 
 		}
@@ -98,6 +108,7 @@ void Player::Update(){
 			if(dir != 0) {
 				wand_caught = 1;
 				wand->Delete();
+				Mix_PlayChannel( -1, Game::gMedium, 0 );
 				Game::display_message(player_name+" has the power of the elder wand!");
 			}
 		}

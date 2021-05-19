@@ -57,6 +57,7 @@ void Health::Update(){
 	destR.w = length * health / full;
 }
 void Health::Render(){
+	if(target->invisible and target->number == 2) return;
 	if(!show) return;
 	int health = target->health;
 	int c1 = min((full - health) * 2 * 255 / full, 255);
