@@ -131,7 +131,7 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
 // int Game::cloak_node = random_number();
 int Game::cloak_node = 10;
-int Game::wand_starting_node = 184;
+int Game::wand_starting_node = 120;
 // ----------------------------------------------------------------------------------------------------------------
 
 int Game::random_number() {
@@ -187,7 +187,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	// cout << "cloak_node " << cloak_node << endl;
 
 	broom_seq = Game::generate_sequence(25, 20);
-	wand_seq = Game::generate_sequence(30, 30);
+	wand_seq = Game::generate_sequence(5, 10);
 
 	// show(broom_seq);
 
@@ -235,14 +235,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
         }
 
         else{
-
         	message = "Collect the wand, stone and the cloak!";
         	add_player(player1_starting_node, 1);
         	srand(time(0));
         	Game::seed = rand()%100000;
         }
 		add_monster(monster1_starting_node, 0.5, 1, 4);
-		// add_monster(monster2_starting_node, 0.3, 0, 3);
+		add_monster(monster2_starting_node, 0.3, 0, 3);
 		add_snitch(snitch_starting_node);
 		add_wand(wand_starting_node);
         
