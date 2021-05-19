@@ -108,7 +108,7 @@ void Health::Render(){
 		l.h = 20;
 		for(int i=0;i<target->lives;i++){
 			l.x = Message_rect.x + Message_rect.w + 4 + i * 22;
-			SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & l);
+			SDL_RenderCopy(Game::renderer, target->staticObjTexture, & fig, & l);
 		}
 		if(target->snitch_collected){
 			l.x = Message_rect.x - 4 - 2 * 22;
@@ -147,7 +147,10 @@ void Health::Render(){
 		Message_rect.x = destR.x + length / 2 - Message_rect.w / 2;
 		SDL_RenderCopy(Game::renderer, Message, NULL, & Message_rect);
 	}
-	SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & figure);
+	if(target->number<3)
+		SDL_RenderCopy(Game::renderer, target->staticObjTexture, & fig, & figure);
+	else
+		SDL_RenderCopy(Game::renderer, target->objTexture, & fig, & figure);
 	SDL_Color colorh = SDL_Color{255, 255, 255, 255};
 	if(health < 10){
 		colorh = SDL_Color{255, 0, 0, 255};

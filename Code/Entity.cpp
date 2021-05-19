@@ -16,6 +16,7 @@ Entity::Entity(){}
 // Constructor when start node number is given (for moving entities)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 	objTexture = Texture::LoadTexture(texturesheet);
+	staticObjTexture = Texture::LoadTexture(texturesheet);
 	auto coords = getAutoBlockCoords(start);
 	destR.x = coords.second + Game::block_w / 2 - Game::player_w / 2;
 	destR.y = coords.first + Game::block_h / 2 - Game::player_h / 2;
@@ -35,6 +36,7 @@ Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, int start){
 // Constructor when start coordinates are given as Rect (destR_param)
 Entity::Entity(const char * texturesheet, SDL_Rect srcR_param, SDL_Rect destR_param){
 	objTexture = Texture::LoadTexture(texturesheet);
+	staticObjTexture = Texture::LoadTexture(texturesheet);
 	srcR = srcR_param;
 	destR = destR_param;
 	xpos = destR.x;

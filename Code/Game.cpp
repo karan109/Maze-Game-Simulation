@@ -264,6 +264,8 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 void Game::add_monster(int start, double p, bool chase = 1, int number_param = 3) {
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
+	if(number_param == 3) monster1 = monster;
+	else monster2 = monster;
 	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
 	monster->seq = seq_generator(p, chase, 30); 

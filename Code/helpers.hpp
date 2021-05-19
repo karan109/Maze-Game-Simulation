@@ -30,7 +30,14 @@ void key_testing() {
     }
 }
 string info(Entity * ent){
-    return to_string(ent->xpos)+","+to_string(ent->ypos)+","+to_string(ent->xv)+","+to_string(ent->yv);
+    return to_string(ent->xpos)+","+to_string(ent->ypos)+","+to_string(ent->xv)+","+to_string(ent->yv)+","+to_string(ent->health);
+}
+void getinfo(Entity * ent, int ind, vector<string> & process){
+    ent->xpos = stoi(process[ind++]);
+    ent->ypos = stoi(process[ind++]);
+    ent->xv = stoi(process[ind++]);
+    ent->yv = stoi(process[ind++]);
+    ent->health = stod(process[ind++]);
 }
 void init(){
     if(SDL_Init(SDL_INIT_EVERYTHING) == 0){
@@ -171,7 +178,25 @@ void server_work(){
     if (Game::response < 0) Game::response = 0;
     if (Game::weapon_rec < 0) Game::weapon_rec = 0;
     int sent = Game::send;
-    string pos = info(game->player1)+","+to_string(Game::weapon);
+    int remain_monster = 0;
+    if(game->monster1 != nullptr) remain_monster++;
+    if(game->monster2 != nullptr) remain_monster++;
+    string pos = info(game->player1)+","+to_string(Game::weapon)+","+to_string(remain_monster);
+    if(game->monster1 != nullptr) pos += ",1";
+    if(game->monster2 != nullptr) pos += ",2";
+    if(game->monster1 != nullptr){
+        pos += ","+info(game->monster1);
+    }
+    if(game->monster2 != nullptr){
+        pos += ","+info(game->monster2);
+    }
+    if(game->snitch != nullptr){
+        pos += ",1,"+info(game->snitch);
+    }
+    else{
+        pos += ",0";
+    }
+    cout<<pos<<endl;
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
         cout<<"Could not send through server"<<endl;
@@ -193,7 +218,8 @@ void server_work(){
     game->player2->ypos = stoi(process[1]);
     game->player2->xv = stoi(process[2]);
     game->player2->yv = stoi(process[3]);
-    Game::weapon_rec = stoi(process[4]);
+    game->player2->health = stod(process[4]);
+    Game::weapon_rec = stoi(process[5]);
     // cout<<Game::weapon_rec<<endl;
 }
 void client_work(){
@@ -213,11 +239,32 @@ void client_work(){
     if(response.size() == 0) return;
     vector<string> process;
     tokenize(response, delim, process);
-    game->player2->xpos = stoi(process[0]);
-    game->player2->ypos = stoi(process[1]);
-    game->player2->xv = stoi(process[2]);
-    game->player2->yv = stoi(process[3]);
-    Game::weapon_rec = stoi(process[4]);
+    getinfo(game->player2, 0, process);
+    Game::weapon_rec = stoi(process[5]);
+    int num_monsters = stoi(process[6]);
+    if(num_monsters == 1){
+        if(stoi(process[7]) == 1){
+            getinfo(game->monster1, 8, process);
+        }
+        else{
+            getinfo(game->monster2, 8, process);
+        }
+        if(stoi(process[13]) == 1){
+            getinfo(game->snitch, 14, process);
+        }
+    }
+    else if(num_monsters == 2){
+        getinfo(game->monster1, 9, process);
+        getinfo(game->monster2, 14, process);
+        if(stoi(process[19]) == 1){
+            getinfo(game->snitch, 20, process);
+        }
+    }
+    else{
+        if(stoi(process[7]) == 1){
+            getinfo(game->snitch, 8, process);
+        }
+    }
     // cout<<Game::weapon_rec<<endl;
 }
 int winning_message(){

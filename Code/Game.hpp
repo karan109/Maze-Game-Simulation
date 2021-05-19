@@ -75,7 +75,7 @@ public:
 	Player * player1;
 	Player * player2;
 	Drone * drone;
-	Monster * monster;
+	Monster * monster, * monster1, * monster2;
 	Stone * stone;
 	Snitch * snitch;
 	Wand * wand;

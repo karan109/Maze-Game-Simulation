@@ -195,5 +195,5 @@ int lives = 1;
 	int xv; // x component of velocity
 	int yv; // y component of velocity
 	SDL_Rect srcR, destR; // destR is bounding box of entity
-	SDL_Texture * objTexture; // Texture
+	SDL_Texture * objTexture, * staticObjTexture; // Texture
 };
