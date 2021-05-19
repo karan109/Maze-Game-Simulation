@@ -31,6 +31,7 @@ int main(int argc, char* argv[]){
         else if(Game::client){
             client_work();
         }
+        // if(!Game::isRunning) break;
         game->handleEvents();
         if(Game::task == 1){
             game->update();
@@ -59,10 +60,13 @@ int main(int argc, char* argv[]){
     game->clean();
     if(Game::client == 1 and Game::quit == 1){
         string message = "quit";
+        for(int i=0;i<20;i++)
         int sendRes = send(sock, message.c_str(), message.size()+1, 0);
     }
     else if(Game::server == 1 and Game::quit == 1){
         string message = "quit";
+        cout<<"ok"<<endl;
+        for(int i=0;i<20;i++)
         int sendRes = send(clientSocket, message.c_str(), message.size()+1, 0);
     }
     else if(Game::quit == 1 or Game::win == 0){

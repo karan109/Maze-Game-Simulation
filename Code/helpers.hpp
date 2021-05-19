@@ -244,12 +244,19 @@ void client_work(){
     int bytesRecv = recv(sock, buf, 4096, 0);
     string response = string(buf, bytesRecv);
     if(response.size() == 0) return;
-    if(response == "quit"){
-        cout<<"quit"<<endl;
+    if(response[0] == 'q'){
+        // cout<<"quit"<<endl;
         Game::isRunning = false;
         Game::win = true;
         return;
     }
+    // if(response.size()<5 and response.size()>0){
+    //     cout<<response<<endl;
+    //     Game::isRunning = false;
+    //     Game::win = true;
+    //     return;
+    // }
+    // cout<<response<<endl;
     vector<string> process;
     tokenize(response, delim, process);
     getinfo(game->player2, 0, process);

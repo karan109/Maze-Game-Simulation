@@ -205,12 +205,14 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// 0 is the number_param
 
  		if(Game::server){
+ 			message = "Kill the other player!";
  			add_player(player1_starting_node, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
             entities->Add(player2);
             // player_health_decrement_per_second = 0;
         }
         else if(Game::client){
+        	message = "Kill the other player!";
         	add_player(Game::cols-1, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100, 0);
             entities->Add(player2);
@@ -219,6 +221,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 
 
         else{
+        	message = "Collect the broom, snitch and cloak!";
         	add_player(player1_starting_node, 1);
         	srand(time(0));
         	Game::seed = rand()%100000;
@@ -369,7 +372,7 @@ void Game::handle_quit_game () {
 		isRunning = false;
 	}
 	quit = 1;
-	cout<<Game::quit<<endl;
+	// cout<<"quit badddd"<<endl;
 }
 
 
@@ -819,6 +822,8 @@ void Game::reset_collided_entities() {
 	        }
 			collided_player->Delete();
 			// display_message("winning msg");
+			cout<<"baddd"<<endl;
+			Game::quit = 1;
 			Game::isRunning = 0;
 		}
 
