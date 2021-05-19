@@ -9,6 +9,7 @@ Health::Health(SDL_Rect srcR_param, Entity * target_param, bool move_param, bool
 	snitch = Texture::LoadTexture("../Images/snitch.png");
 	broom = Texture::LoadTexture("../Images/broom.png");
 	cloak = Texture::LoadTexture("../Images/cloak_black.png");
+	wand = Texture::LoadTexture("../Images/wand.png");
 	int health = target->health;
 	auto target_rect = target->getBB();
 	move = move_param;
@@ -114,8 +115,6 @@ void Health::Render(){
 				fig.x = 0;
 				fig.w = fig.h = 32;
 			}
-			// cout<<fig.x<<"ao"<<endl;
-			// cout<<target->number<<endl;
 			SDL_RenderCopy(Game::renderer, target->staticObjTexture, & fig, & l);
 		}
 		l.y += 10;
@@ -127,7 +126,7 @@ void Health::Render(){
 			r.x = l.x;
 			r.w = l.x+l.w-r.x;
 		}
-		if(target->broom_collected){
+		if(target->elder_wand_caught){
 			l.x = Message_rect.x - 4 - 2 * 25;
 			if(target->snitch_collected == 0) r.x = l.x;
 			r.w = l.x+l.w-r.x;
@@ -144,9 +143,9 @@ void Health::Render(){
 				l.x = Message_rect.x - 4 - 3 * 25;
 				SDL_RenderCopy(Game::renderer, snitch, new SDL_Rect{0, 0, 874, 414}, & l);
 			}
-			if(target->broom_collected){
+			if(target->elder_wand_caught){
 				l.x = Message_rect.x - 4 - 2 * 25;
-				SDL_RenderCopy(Game::renderer, broom, new SDL_Rect{0, 0, 2393, 1274}, & l);
+				SDL_RenderCopy(Game::renderer, wand, new SDL_Rect{0, 0, 860, 900}, & l);
 			}
 			if(target->invisible){
 				l.x = Message_rect.x - 4 - 25;
