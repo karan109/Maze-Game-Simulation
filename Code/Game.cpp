@@ -61,8 +61,8 @@ int Game::N = Game::rows * Game::cols;
 
 int Game::original_snitch_w = 874;
 int Game::original_snitch_h = 414;
-int Game::original_wand_w = 840;
-int Game::original_wand_h = 859;
+int Game::original_wand_w = 860;
+int Game::original_wand_h = 900;
 int Game::task;
 string Game::player_name = "";
 string Game::remote_name = "";

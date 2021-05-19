@@ -78,15 +78,28 @@ void Player::Update(){
 	// cout << xpos << " " << destR.x << " " << ypos << " " <<destR.y << endl;
 
 	// time_update();
-	if (getBlock() == Game::cloak_node) {
-		invisible = 1;
-		Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
-		animated = false;
-		Game::cloak_node = -1;
-		Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
+	if (! collided) {
+
+
+		if (getBlock() == Game::cloak_node) {
+			invisible = 1;
+			Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+			animated = false;
+			Game::cloak_node = -1;
+			Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
+
+		}
+
+		for(auto & wand: * Game::entities->wands){
+			int dir = Collision::close_AABB(wand->getBB(), getBB(), wand->getXV(), wand->getYV(), getXV(), getYV());
+			if(dir != 0) {
+				wand_caught = 1;
+				wand->Delete();
+				Game::display_message(player_name+" has the power of the elder wand!");
+			}
+		}
 
 	}
-
 	update_boost();
 
 	if (casting_conditions()) {
@@ -218,7 +231,7 @@ void Player::update_boost() {
 
 bool Player::casting_conditions() {
 	// if wand is not caught
-	// if (!wanded) return;
+	if (!wand_caught) return 0 ;
 	// cout << " player casting condition used";
 
 
