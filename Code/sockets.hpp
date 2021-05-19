@@ -36,7 +36,7 @@ void tokenize(std::string const &str, string delim,
 int create_server(){
 	listening = socket(AF_INET, SOCK_STREAM, 0);
     if(listening == -1){
-        cout<<"Can't create socket"<<endl;
+        // cout<<"Can't create socket"<<endl;
         return -1;
     }
     sockaddr_in hint;
@@ -44,11 +44,11 @@ int create_server(){
     hint.sin_port = htons(54000);
     inet_pton(AF_INET, "0.0.0.0", & hint.sin_addr); // 127.0.0.1
     if(::bind(listening, (struct sockaddr *) & hint, sizeof(hint)) == -1){
-        cout<<"Can't bind to IP port"<<endl;
+        // cout<<"Can't bind to IP port"<<endl;
         return -2;
     }
     if(listen(listening, SOMAXCONN) == -1){
-        cout<<"Can't listen"<<endl;
+        // cout<<"Can't listen"<<endl;
         return -3;
     }
     fcntl(listening, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
@@ -62,7 +62,7 @@ int wait_connect(){
     clientSocket = accept(listening, (struct sockaddr *) & client, & clientSize);
 
     if(clientSocket == -1){
-        cout<<"Problem with client connecting!"<<endl;
+        // cout<<"Problem with client connecting!"<<endl;
         return -4;
     }
 
@@ -73,32 +73,27 @@ int wait_connect(){
     int result = getnameinfo((struct sockaddr *) & client, sizeof(client), host, NI_MAXHOST, svc, NI_MAXSERV, 0);
 
     if(result){
-        cout<<host<<" connected on "<<svc<<endl;
+        // cout<<host<<" connected on "<<svc<<endl;
     }
     else{
         inet_ntop(AF_INET, & client.sin_addr, host, NI_MAXHOST);
-        cout<<host<<" connected on "<<ntohs(client.sin_port)<<endl;
+        // cout<<host<<" connected on "<<ntohs(client.sin_port)<<endl;
     }
     memset(buf, 0, 4096);
-    cout<<"ok"<<endl;
     int bytesRecv = recv(clientSocket, buf, 4096, 0);
-    cout<<"done"<<endl;
     if(bytesRecv == -1){
-        cout<<"Connection issue"<<endl;
+        // cout<<"Connection issue"<<endl;
         return -1;
     }
     if(bytesRecv == 0){
-        cout<<"Client disconnected"<<endl;
+        // cout<<"Client disconnected"<<endl;
         return -1;
     }
     string command_rec = string(buf, 0, bytesRecv);
-    cout<<command_rec<<endl;
-    // send(clientSocket, buf, bytesRecv + 1, 0);
     if(command_rec == "harry1" or command_rec == "ron" or command_rec == "hermione"){
         srand(time(0));
         Game::seed = rand()%100000;
         Game::remote_name = command_rec;
-        cout<<Game::seed<<endl;
         string command_send = to_string(Game::seed)+","+Game::player_name;
         int sendRes = send(clientSocket, command_send.c_str(), command_send.size()+1, 0);
         return 0;
@@ -116,7 +111,6 @@ int create_client(){
     hint.sin_family = AF_INET;
     hint.sin_port = htons(port);
     inet_pton(AF_INET, ipAddress.c_str(), & hint.sin_addr);
-    // fcntl(sock, F_SETFL, fcntl(listening, F_GETFL) | O_NONBLOCK);
     int connectRes = connect(sock, (struct sockaddr * ) & hint, sizeof(hint));
     if(connectRes == -1){
         return -1;
@@ -127,7 +121,7 @@ void wait_connect_client(){
     command = Game::player_name;
     int sendRes = send(sock, command.c_str(), command.size()+1, 0);
     if(sendRes == -1){
-        cout<<"Could not send through server"<<endl;
+        // cout<<"Could not send through server"<<endl;
     }
     memset(buf, 0, 4096);
     int bytesRecv = recv(sock, buf, 4096, 0);

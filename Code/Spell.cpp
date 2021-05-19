@@ -102,14 +102,10 @@ int Spell::get_tail(){
 }
 
 bool Spell::release_conditions() {
-	// if already released??
-	// ie casting/pressed = 0
-	// cout << "idk wtf" << endl;
 	if(Game::event.type == SDL_KEYUP){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 1 and wizard->type == 1) {
-				// Game::spacebar_pressed = 0;
 				Game::weapon = -1;
 				return 1;
 			}
@@ -163,8 +159,6 @@ void Spell::Update() {
 		Delete();
 	}
 
-	// cout << xv << " " << yv << endl;
-
 }
 
 void Spell::update_head() {
@@ -193,7 +187,6 @@ SDL_Rect Spell::get_rect() {
 
 void Spell::release_spell(){
 	released = 1;
-	// cout << " released = 1" << entity_counter << " " << length << endl;
 }
 
 
@@ -208,9 +201,6 @@ void Spell::handle_spell_over() {
 			if (check == 2) {
 				collided = 0;
 				finished = 1;
-				// set_tail_velocity_0
-				//in next cycle. can cause errors if done in this loop?
-				// Delete(); 
 			}
 			else if (check == 1) {
 				collided = 0;
@@ -220,7 +210,6 @@ void Spell::handle_spell_over() {
 			}
 		}
 		else {
-			// cout << "entity_collision" << endl;
 			finished = 1;
 		}
 	}
@@ -257,8 +246,6 @@ void Spell::handle_wall_collisions() {
 			}
 			store_length = abs(head - tail);
 			update_destR();
-			// cout << "wall_collision" << " " << collided << " "  << reverting << " " << store_length <<  endl;
-			// head_v = 0;
 		}
 	}
 }
@@ -268,23 +255,19 @@ void Spell::keepInside(){
 	if(face == 1 and head >= Game::width - Game::wall_thickness){
 		collided = 1;
 		head = Game::width - Game::wall_thickness;
-		// head_v = 0;
 	}
 	else if(face == 2 and head <= Game::wall_thickness){
 		collided = 1;
 		head = Game::wall_thickness;
-		// head_v = 0;
 	}
 	else if(face == 3 and head >= Game::height - Game::wall_thickness){
 		collided = 1;
 		head = Game::height - Game::wall_thickness;
-		// head_v = 0;
 	}
 
 	else if(face == 4 and head <= Game::menu){
 		collided = 1;
 		head = Game::menu;
-		// head_v = 0;
 	}
 	store_length = abs(head - tail);
 	update_destR();
@@ -312,7 +295,6 @@ void Spell::handle_spell_collisions() {
 		if (spell == this) continue;
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV());
 		if (dir != 0) {
-			// collided = 1;
 			SDL_Rect R = this->getBB();
 			// assert (dir == face)
 			switch (spell->face) {

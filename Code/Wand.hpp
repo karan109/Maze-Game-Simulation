@@ -2,7 +2,6 @@
 
 #include "Entity.hpp"
 
-// class Player;
 class Wand: public Entity{
 public:
 

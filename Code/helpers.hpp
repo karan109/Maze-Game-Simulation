@@ -7,7 +7,6 @@ void key_testing() {
         auto key = Game::event.key.keysym.sym;
         if(key == SDLK_SPACE)  {
             if (Game::spacebar_pressed == 0) {
-                // Game::weapon = 1;
                 Game::spacebar_pressed = 1;
             }
         }
@@ -17,7 +16,6 @@ void key_testing() {
         auto key = Game::event.key.keysym.sym;
         if(key == SDLK_SPACE)  {
             if (Game::spacebar_pressed == 1) {
-                // Game::weapon = 0;
                 Game::spacebar_pressed = 0;
             }
         }
@@ -118,7 +116,6 @@ int main_menu(){
                     Game::task = 1;
                     if(create_client() < 0) continue;
                     Game::client = true;
-                    // Give message
                     wait_connect_client();
                     break;
                 }
@@ -196,24 +193,22 @@ void server_work(){
     else{
         pos += ",0";
     }
-    // cout<<pos<<endl;
     int sendRes = send(clientSocket, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
-        cout<<"Could not send through server"<<endl;
+        // cout<<"Could not send through server"<<endl;
     }
     prevSend = sent;
     memset(buf, 0, 4096);
     int bytesRecv = recv(clientSocket, buf, 4096, 0);
     if(bytesRecv == -1){
-        cout<<"Connection issue"<<endl;
+        // cout<<"Connection issue"<<endl;
     }
     if(bytesRecv == 0){
-        cout<<"Client disconnected"<<endl;
+        // cout<<"Client disconnected"<<endl;
     }
     string command = string(buf, 0, bytesRecv);
     if(command.size() == 0) return;
     if(command == "quit"){
-        cout<<"quit"<<endl;
         Game::isRunning = false;
         Game::win = true;
         return;
@@ -227,7 +222,6 @@ void server_work(){
     game->player2->yv = stoi(process[3]);
     game->player2->health = stod(process[4]);
     Game::weapon_rec = stoi(process[5]);
-    // cout<<Game::weapon_rec<<endl;
 }
 void client_work(){
     if (Game::response < 0) Game::response = 0;
@@ -237,7 +231,7 @@ void client_work(){
     int sent = Game::send;
     int sendRes = send(sock, pos.c_str(), pos.size()+1, 0);
     if(sendRes == -1){
-        cout<<"Could not send through server"<<endl;
+        // cout<<"Could not send through server"<<endl;
     }
     prevSend = stoi(command);
     memset(buf, 0, 4096);
@@ -245,18 +239,10 @@ void client_work(){
     string response = string(buf, bytesRecv);
     if(response.size() == 0) return;
     if(response[0] == 'q'){
-        // cout<<"quit"<<endl;
         Game::isRunning = false;
         Game::win = true;
         return;
     }
-    // if(response.size()<5 and response.size()>0){
-    //     cout<<response<<endl;
-    //     Game::isRunning = false;
-    //     Game::win = true;
-    //     return;
-    // }
-    // cout<<response<<endl;
     vector<string> process;
     tokenize(response, delim, process);
     getinfo(game->player2, 0, process);
@@ -285,7 +271,6 @@ void client_work(){
             getinfo(game->snitch, 8, process);
         }
     }
-    // cout<<Game::weapon_rec<<endl;
 }
 int winning_message(){
     unsigned int frameStart;

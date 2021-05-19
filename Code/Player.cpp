@@ -246,15 +246,12 @@ void Player::update_boost() {
 bool Player::casting_conditions() {
 	// if wand is not caught
 	if (!wand_caught) return 0 ;
-	// cout << " player casting condition used";
 
 
 	if(Game::event.type == SDL_KEYDOWN){
 		auto key = Game::event.key.keysym.sym;
 		if(key == SDLK_SPACE)  {
 			if (Game::spacebar_pressed == 0 and type == 1) {
-				// cout<<"ok"<<endl;
-				// Game::spacebar_pressed = 1;
 				Mix_PlayChannel( -1, Game::gLow, 0 );
 				Game::weapon = 1;
 				return 1;
@@ -262,7 +259,7 @@ bool Player::casting_conditions() {
 		}
 	}
 	if(Game::weapon_rec == 1 and Game::remote_spacebar_pressed == 0 and type == 0){
-		cout<<"throw"<<endl;
+		// cout<<"throw"<<endl;
 		return 1;
 	} 
 
@@ -287,11 +284,7 @@ void Player::handle_spell_collisions() {
 		if (spell->wizard == this and spell->released == 0) continue;
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
 		SDL_Rect R = this->getBB();
-		// SDL_Rect S = spell->getBB();
-		// cout << "R " << R.x << " " << R.x + R.w << " " << R.y << " " << R.y + R.h << endl;
-		// cout << "S " << S.x << " " << S.x + S.w << " " << S.y << " " << S.y + S.h << " " << spell->xv << " " << spell-> yv << " " << dir << endl ;
 		if (dir != 0) {
-			// collided = 1;
 			// assert (dir == face)
 			if(number == 1) Mix_PlayChannel( -1, Game::player_hit, 0 );
 			switch (spell->face) {
@@ -306,32 +299,3 @@ void Player::handle_spell_collisions() {
 		}
 	}
 }
-
-
-
-// void Player::Health0 () {
-// 	if (health == 0) {
-// 		lives -= 1;
-// 		collided = 1;
-// 		Game::collision_happened = 1;
-// 		Game::collided_player = this;
-// 		Game:collision_code = "player_dead";
-// 		// if (lives == 0) {
-// 		// 	// blink and stuff
-// 		// 	Delete();
-// 		// }
-// 		// else {
-// 		// 	// display_message  #lives remaining.
-// 		// 	// increase health and game pause
-// 		// }
-// 	}
-// }
-
-
-
-
-
-
-
-
-

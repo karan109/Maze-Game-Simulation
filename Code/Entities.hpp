@@ -7,7 +7,6 @@
 #include "Drone.hpp"
 #include "Monster.hpp"
 #include "Stone.hpp"
-// #include "Remote.hpp"
 #include "Snitch.hpp"
 #include "Health.hpp"
 #include "Broom.hpp"
@@ -25,7 +24,6 @@ public:
 	vector<Drone * > * drones;
 	vector<Monster * > * monsters;
 	vector<Stone * > * stones;
-	// vector<Remote * > * remotes;
 	vector<Snitch * > * snitches;
 	vector<Health * > * healths;
 	vector<Broom * > * brooms;
@@ -41,7 +39,6 @@ public:
 		drones = new vector<Drone *>(0);
 		monsters = new vector<Monster *>(0);
 		stones = new vector<Stone *>(0);
-		// remotes = new vector<Remote *>(0);
 		snitches = new vector<Snitch *>(0);
 		healths = new vector<Health *>(0);
 		brooms = new vector<Broom *>(0);
@@ -54,9 +51,6 @@ public:
 	void Add(Player * player){
 		players->push_back(player);
 	}
-	// void Add(Remote * remote){
-	// 	remotes->push_back(remote);
-	// }
 	void Add(Drone * drone){
 		drones->push_back(drone);
 	}
@@ -99,7 +93,6 @@ public:
 	}
 
 	void Delete (Broom * broom) {
-		// if (brooms->size() == 0) {cout << "fffffffffffffffffffffffffffffffffffffffffff" << endl ; return;}
 		auto position = find (brooms->begin(), brooms->end(), broom);
 		if (position != brooms->end()) brooms->erase(position);
 	}

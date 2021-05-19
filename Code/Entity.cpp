@@ -61,9 +61,6 @@ void Entity::change_objTexture( const char * texturesheet ,SDL_Rect srcR_param, 
 	ypos = destR.y;
 }
 
-// void Entity::Update(){
-// }
-
 void Entity::Render(){
 	SDL_RenderCopy(Game::renderer, objTexture, & srcR, & destR);
 }
@@ -161,9 +158,6 @@ void Entity::Update(){
 
 	if (mode == -1) {
 		Update_player();
-		// else{
-		// 	Update_remote();
-		// }
 	}
 
 	if (mode == 0) {
@@ -238,7 +232,6 @@ void Entity::restart() {
 void Entity::start_collision() {
 	collided = 1;
 	mode_before_collision = mode;
-	// cout << "mmmmmmmmmmmmmmmmmm "<< mode;
 	set_pos_at_centre();
 	dest = start_node;
 	change_mode(1);
@@ -375,19 +368,6 @@ void Entity::decrease_health(double x) {
 }
 // ------------------------------------------------------WAND WORK--------------------------------------------------------------------------------------
 
-// bool Entity::casting_conditions() {
-// 	if(Game::event.type == SDL_KEYDOWN){
-// 		auto key = Game::event.key.keysym.sym;
-// 		if(key == SDLK_SPACE) return 1;
-// 	}
-// 	return 0;	
-// }
-// void Entity::cast_spell() {
-// 	spell = new Spell(Entity * castee);
-// 	Game::entities->Add(spell);
-// 	// add spell to entities
-// }
-
 void Entity::handle_spell_collisions() {
 	spell_collision = 0;
 	for(auto & spell: * Game::entities->spells){
@@ -474,9 +454,6 @@ void Entity::set_path_mode2() {
 	yv = 0;
 
 	int next = switch_dir(temp_dir, current);
-
-
-	// cout << "block: " << current << " xv: " << xv << " yv: " << yv << " next: " << next << " " << temp_dir << endl;
 	
 	path.push(next);
 }
@@ -500,51 +477,11 @@ void Entity::set_path_mode3(Entity * scary_target) {
 	vector <int> temp;
 	int next = current;
 
-	// if (in_sight(this, scary_target) ||(xv == 0 and yv == 0) || graph.distance(current, scary_block) <= 7 ) {
-	// 	if (Entity::can_go_right(current)) temp.push_back(1);
-	// 	if (Entity::can_go_down(current)) temp.push_back(2);
-	// 	if (Entity::can_go_left(current)) temp.push_back(3);
-	// 	if (Entity::can_go_up(current)) temp.push_back(4);
-	// }
-	// else {
-	// 	if (xv == mag and yv == 0) {
-	// 		if (Entity::can_go_right(current)) temp.push_back(1);
-	// 		if (Entity::can_go_down(current)) temp.push_back(2);
-	// 		// if (Entity::can_go_left(current) and x!= 3) temp.push_back(3);
-	// 		if (Entity::can_go_up(current)) temp.push_back(4);
-	// 	}
-
-	// 	if (xv == -mag and yv == 0) {
-	// 		// if (Entity::can_go_right(current) and x != 1) temp.push_back(1);
-	// 		if (Entity::can_go_down(current)) temp.push_back(2);
-	// 		if (Entity::can_go_left(current)) temp.push_back(3);
-	// 		if (Entity::can_go_up(current)) temp.push_back(4);
-	// 	}
-
-	// 	if (yv == mag and xv == 0) {
-	// 		if (Entity::can_go_right(current)) temp.push_back(1);
-	// 		if (Entity::can_go_down(current)) temp.push_back(2);
-	// 		if (Entity::can_go_left(current)) temp.push_back(3);
-	// 		// if (Entity::can_go_up(current)and x!=4) temp.push_back(4);
-	// 	}
-
-	// 	if (yv == -mag and xv == 0) {
-	// 		if (Entity::can_go_right(current)) temp.push_back(1);
-	// 		// if (Entity::can_go_down(current) and x!=2) temp.push_back(2);
-	// 		if (Entity::can_go_left(current)) temp.push_back(3);
-	// 		if (Entity::can_go_up(current)) temp.push_back(4);
-	// 	}
-	// }
 
 	if (Entity::can_go_right(current)) temp.push_back(1);
 	if (Entity::can_go_down(current)) temp.push_back(2);
 	if (Entity::can_go_left(current)) temp.push_back(3);
 	if (Entity::can_go_up(current)) temp.push_back(4);
-
-
-	// assert(temp.size()!=0);
-
-	// int temp_dir = temp[rand() % temp.size()];
 
 	int temp_dir = 0;
 	int current_distance = graph.distance(current, scary_block);
@@ -609,33 +546,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 		xv = 0; 
 	}
 
-	// if (temp_dir == 0) {
-	// 	// bad = current;
-	// 	// go according to velocity if possible to go
-	// 	if (xv == mag and a[1] == 1) {
-	// 		next = current + 1;
-	// 	}
-	// 	else if (yv == mag and a[2] == 1) {
-	// 		next = current + Game::cols;
-	// 	}
-	// 	else if (xv == -mag and a[3] == 1) {
-	// 		next = current - 1;
-	// 	}
-	// 	else if (yv == -mag and a[4] == 1) {
-	// 		next = current - Game::cols;
-	// 	}
-	// 	else {
-	// 		int go_randomly = temp[rand() % temp.size()];
-	// 		next = switch_dir(go_randomly, current);
-	// 	}
-	// }
-	// if nothing else works just stay where you are
-	// xv = 0
-	// yv = 0
 	prev = current;
-	// if (max_distance < current_distance) {
-	// 	cout << prev << " " << next <<  " " << temp_dir << endl;
- // 	}
 	path.push(next);
 }
 
@@ -858,7 +769,6 @@ void Entity::Update_player() {
 		int dir = Collision::AABB(getBB(), u->getBB(), getXV(), getYV());
 		obstacles.insert(dir);
 		int delay = 5;
-		// cout<<wall_ct<<endl;
 		if(dir == 1){
 			wall_ct++;
 			if(wall_ct >= delay)
@@ -1032,8 +942,6 @@ void Entity::Update0() {
 	int current = getBlock();
 	int next = getNext();
 
-	// if (next == INT_MIN) return; // why idk
-
 	if(manhattan_distance() <= 4){
 		switch_next(current, next);
 	}
@@ -1157,7 +1065,6 @@ void Entity::print_path(){
 		path.push(vertex);
 	}
 	cout << endl;
-	// cout<<endl<<endl<<endl;
 }
 
 

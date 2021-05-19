@@ -7,7 +7,6 @@
 int Monster::monster_i = 0;
 
 void Monster::Delete() {
-	// SDL_DestroyTexture(objTexture);
 	Game::entities->Delete(health_box);
 	Game::entities->Delete(static_health_box);
 	Game::entities->Delete(this);
@@ -55,10 +54,7 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 	monster_i++;
 	monster_number = monster_i;
 
-	//Game::cols * Game::rows - 1; // change retreat node for different monsters
 	dest = retreat_node; //retreat_node = start in Entity constructor
-
-	// Game::print_queue(seq);
 
 	showHealth = true;
 	health = 100;
@@ -92,10 +88,6 @@ void Monster::switch_in_scared_mode() {
 
 void Monster::switch_in_not_scared_mode() {
 
-	// if (distance(this, target) <= 5 and mode == 2) {
-	// 	change_mode(0);
-	// 	return;
-	// }
 	if (collided) return;
 
 	if(seq.empty()) {
@@ -107,53 +99,27 @@ void Monster::switch_in_not_scared_mode() {
 		if (mode == 0) {
 			bool mode_changed = change_mode(2); 
 			if (mode_changed) {
-				// cout << monster_number << " " <<  mode << endl;
 				seq.pop();
 			}
 		}
 		else if (mode == 2) {
 			bool mode_changed = change_mode(0); 
 			if (mode_changed) {
-				// cout << monster_number << " " << mode << endl;
 				seq.pop();
 			}
 		}
 	}
-	// if (distance(this, target) <= 5 and mode == 0) {
-	// 	change_mode(2);
-	// }
 
 }
 void Monster::determine_scared() {
 
 	if (collided) return;
 
-	// if (spell_collision || target->scary == true ||  (!spell_collision and spell_collision_time <= 20)) {
-	// 	if (!scared) {
-	// 		bool mode_changed = change_mode(3);
-	// 		if (mode_changed)  {
-	// 			scared = true;
-	// 		}
-	// 	}
-	// }
-	// else {
-	// 	if (scared) {
-	// 		bool mode_changed = change_mode(0);
-	// 		if (mode_changed)  {
-	// 			scared = false;
-	// 			if (!spell_collision and spell_collision_time > 20) {
-	// 				reset_spell_collision_time();
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	if (spell_collision) {
 		if (!spell_scared) {
 			bool mode_changed = change_mode(3);
 			if (mode_changed)  {
 				spell_scared = true;
-				// start_spell_collision_timer();
 			}
 		}
 	}
@@ -213,8 +179,6 @@ void Monster::switch_modes() {
 
 void Monster::Update() {
 
-	// Game::print_queue(seq);
-
 	set_target();
 	set_scary_target();
 
@@ -224,12 +188,9 @@ void Monster::Update() {
 		spell_collision_time_update();
 	}
 
-	// cout << mode << endl;
-	
 	if(animated){
 		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
 	}
-	// collisions();
 	Entity::Update();
 	if(yv > 0){
 		srcR.y = srcR.h * 2;
@@ -256,21 +217,14 @@ void Monster::Update() {
 		animated = true;
 	}
 	else{
-		// srcR.y = srcR.h * 4;
-		// srcR.x = srcR.w * 7;
 		animated = false;
 	}
-
-	// if (!collided) switch_modes();
 
 	handle_spell_collisions();
 	
 	determine_scared();
 	switch_modes();
 
-	// cout << monster_number << " " << mode << endl << endl;
-	// cout << monster_number << " " << normal_time << " " << mode << endl << endl;
-	// cout << mode << " " << scared << " " << scatter_reached << "path: [ "; print_path(); cout << " ]" << endl;
 
 	if (health == 0) {
 		// Delete();
@@ -293,11 +247,8 @@ void Monster::set_target() {
 
 	target = nearest_player();
 	if (target == nullptr) {
-		// cout << "target nullptr" << endl;
 		mode = 2;
 	}
-
-	// target = Game::entities->players->at(0);
 
 }
 
@@ -305,11 +256,8 @@ void Monster::set_scary_target() {
 
 	scary_target = nearest_player();
 	if (scary_target == nullptr) {
-		// cout << "scary_target nullptr" << endl;
 		mode = 2;
 	}
-
-	// scary_target = Game::entities->players->at(0);
 
 }
 
@@ -331,12 +279,9 @@ void Monster::handle_spell_collisions() {
 			}
 			spell_collision = 1;
 
-			// update monster ki health
 			decrease_health(0.5);
 			spell->update_destR();
 
-			// monster mode change
-			// when to revert back?
 		}
 	}
 }

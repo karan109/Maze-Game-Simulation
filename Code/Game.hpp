@@ -59,9 +59,6 @@ public:
 	static int N;
 	static int quit;
 
-	// static int drone_starting_node = 
-	// static int monster_starting_node = 
-	// static int snitch_starting_node = 
 
 	static int original_snitch_h;
 	static int original_snitch_w;

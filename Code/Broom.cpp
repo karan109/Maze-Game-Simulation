@@ -13,17 +13,6 @@ void Broom::Delete() {
 	objTexture = vanish_texture;
 
 	exists = 0;
-	// if (caught) {
-
-	// 	my_player->scary = 0;
-	// 	my_player->boost = 0;
-	// 	my_player->speed = my_player->original_speed;
-
-	// 	my_player->my_broom = nullptr;
-	// 	caught = 0;
-	// 	my_player = nullptr;
-
-	// }
 	SDL_DestroyTexture(objTexture);
 	Game::entities->Delete(this);
 
@@ -48,12 +37,7 @@ Broom::Broom (SDL_Rect srcR_param, int start) : Entity("../Images/broom.png", sr
 }
 void Broom::Update() {
 
-	// srand(Game::seed); //already done in Game.cpp?
-
-	// if (caught) then get attached to player
-	
 	counter++;
-	// int one = Game::FPS;
 
 	if (counter ==  blinking_time) {
 		vanish = 1;

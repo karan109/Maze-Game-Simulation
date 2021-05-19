@@ -31,7 +31,6 @@ int main(int argc, char* argv[]){
         else if(Game::client){
             client_work();
         }
-        // if(!Game::isRunning) break;
         game->handleEvents();
         if(Game::task == 1){
             game->update();
@@ -45,7 +44,6 @@ int main(int argc, char* argv[]){
         game->handle_collisions();
         game->render();
 
-        // cout << Entity::in_sight(game->entities->players->at(0),game->entities->monsters->at(1) ) << endl;
         frameTime = SDL_GetTicks() - frameStart;
 
         if(Game::frameDelay > frameTime){
@@ -65,7 +63,6 @@ int main(int argc, char* argv[]){
     }
     else if(Game::server == 1 and Game::quit == 1){
         string message = "quit";
-        cout<<"ok"<<endl;
         for(int i=0;i<20;i++)
         int sendRes = send(clientSocket, message.c_str(), message.size()+1, 0);
     }
@@ -75,7 +72,6 @@ int main(int argc, char* argv[]){
     else{
         Mix_PlayChannel( -1, Game::game_win, 0 );
     }
-    // main_menu();
     if(Game::task == 1){
         Mix_PlayMusic( Game::ending, -1 );
         winning_message();

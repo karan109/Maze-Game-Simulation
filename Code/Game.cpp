@@ -105,8 +105,6 @@ double Game::player_dead_collision_pause = 2;
 double Game::player_not_dead_collision_pause = 0;
 double Game::monster_dead_collision_pause = 2;
 
-
-// vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer);
 vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
 	srand(Game::seed);
 	vector<pair<int, int>> result;
@@ -209,14 +207,12 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
  			add_player(player1_starting_node, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
             entities->Add(player2);
-            // player_health_decrement_per_second = 0;
         }
         else if(Game::client){
         	message = "Kill the other player!";
         	add_player(Game::cols-1, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100, 0);
             entities->Add(player2);
-            // player_health_decrement_per_second = 0;
         }
 
 
@@ -273,10 +269,8 @@ void Game::add_monster(int start, double p, bool chase = 1, int number_param = 3
 	monster = new Monster(SDL_Rect{0, 0, 191, 161}, start, 3, 100, chase, number_param); 
 	if(number_param == 3) monster1 = monster;
 	else monster2 = monster;
-	// monster_set_target(); monster_set_scary_target();done in constructor
 	monster->mode = (chase) ? 0 : 2;
 	monster->seq = seq_generator(p, chase, 30); 
-	// print_queue(monster->seq);
 	entities->Add(monster);
 }
 void Game::add_player(int start, int number_param = 0){
@@ -286,7 +280,6 @@ void Game::add_player(int start, int number_param = 0){
 }
 void Game::add_snitch(int start){
 	snitch = new Snitch(SDL_Rect{0, 0, original_snitch_w, original_snitch_h}, start);
-	// snitch->scary_target = player1; // set in snitch constructor
 	entities->Add(snitch);
 }
 void Game::add_wand(int start){
@@ -296,7 +289,7 @@ void Game::add_wand(int start){
 
 void Game::add_broom(int appear_time, int start) {
 	if (global_time == appear_time) {
-		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
+		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);
 		entities->Add(broom);
 		// broom_exists = 1;
 	}
@@ -351,7 +344,6 @@ void Game::switch_collision() {
 	bool resume = resume_safely(); //can make changes in resume safely that snitch takes 5 secs
 	cout<<resume<<endl;
 	if (resume) {
-		// cout << "resumes" << endl;
 		collision_happened = false;
 		collision_counter = 0;
 		collision_time = 0;
@@ -383,13 +375,8 @@ void Game::game_pause(double t) {
 }
 
 void Game::clean(){
-	// Mix_PlayChannel( -1, Game::game_lose, 0 );
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	// Mix_Quit();
-	// IMG_Quit();
-	// TTF_Quit();
-	// SDL_Quit();
 }
 
 
@@ -406,7 +393,6 @@ void Game::handleEvents(){
 		switch_pause();
 	}
 	else if (collision_happened) {
-		// cout << "c" << endl;
 		update_global_collision_time();
 		switch_collision();
 
@@ -440,7 +426,6 @@ void Game::update(){
 	}
 
 	if (collision_happened) {
-		// cout<<"ok"<<endl;
 		collision_updates();
 		return;
 	}
@@ -458,9 +443,6 @@ void Game::update(){
 	for(auto & player : * entities->players){
 		player->Update();
 	}
-	// for(auto & remote : * entities->remotes){
-	// 	remote->Update();
-	// }
 	for(auto & monster : * entities->monsters){
 		monster->Update();
 	}
@@ -491,9 +473,6 @@ void Game::render(){
 	if(task == 1){
 		Texture::Draw(background, SDL_Rect{0, 0, 533, 300}, SDL_Rect{0, 0, width, height});
 	}
-	else{
-		
-	}
 	auto black = Texture::LoadTexture("../Images/black.png");
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu - wall_thickness, width, wall_thickness});
 	Texture::Draw(black, SDL_Rect{0, 0, 32, 32}, SDL_Rect{0, menu, wall_thickness, height - menu});
@@ -506,9 +485,6 @@ void Game::render(){
 	for(auto & player : * entities->players){
 		player->Render();
 	}
-	// for(auto & remote : * entities->remotes){
-	// 	remote->Render();
-	// }
 	for(auto & monster : * entities->monsters){
 		monster->Render();
 	}
@@ -594,16 +570,13 @@ void Game::handle_collisions() {
 						// monster will continue? not sure
 						// monster will emit fire
 						// monster will retreat?
-						// handle game stuck case
 						// change player health decrement 1 life
-						// cout << "got ya bitch ";
 						collision_code = "monster_player";
 						collided_player = player;
 						collided_monster = monster;
 						display_message("Oops! dragon got to "+player->player_name+"!");
 						if(player->number == 1) Mix_PlayChannel( -1, Game::player_monster, 0 );
 						start_game_collision();
-						// collision_between(player, monster);
 
 		
 					}	
@@ -664,8 +637,6 @@ void Game::handle_collisions() {
 
 		}
 	}
-
-	//monster and automated stuff collision
 }
 
 
@@ -674,17 +645,10 @@ void Game::handle_collisions() {
 
 void Game::start_game_collision () {
 
-	// Broom * broom = collided_broom;
-	// Player * player = collided_player;
-	// Monster * monster = collided_monster;
-	// Snitch * snitch = collided_snitch;
 
 	if (collision_code == "scary_player_monster") {
-		// cout << "before collision " << collided_monster->scatter_reached << endl;
 
 		collided_monster->start_collision();
-
-		// cout << "after collision " << collided_monster->mode << " " << collided_monster->speed << endl;
 
 	}
 
@@ -715,10 +679,7 @@ void Game::start_game_collision () {
 void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
 
-		// cout << "did we gwt here" << endl;
-
 		collided_monster->Update();
-		// cout << collided_monster->mode << " " << collided_monster->speed << endl;
 		collided_monster->health_box->Update();
 		collided_monster->static_health_box->Update();
 		collided_monster->decrease_health(0.1);
@@ -751,7 +712,6 @@ void Game::collision_updates() {
 			collided_player->increase_health(0.5);
 		}
 		else {
-			// blink and stuff deletion sequence
 		}
 	}
 	if (collision_code == "monster_dead") {
@@ -821,8 +781,6 @@ void Game::reset_collided_entities() {
 	            Mix_PlayChannel( -1, Game::game_win, 0 );
 	        }
 			collided_player->Delete();
-			// display_message("winning msg");
-			cout<<"baddd"<<endl;
 			Game::quit = 1;
 			Game::isRunning = 0;
 		}
@@ -830,7 +788,7 @@ void Game::reset_collided_entities() {
 	}
 	else if (collision_code == "monster_dead") {
 		collided_monster->Delete();
-		// display_message("dragon dead");
+		display_message("Dragon dead!");
 	}
 
 
@@ -911,7 +869,6 @@ void Game::print_queue(queue<int> q){
 	for(auto vertex : temp){
 		q.push(vertex);
 	}
-	// cout << endl;
 	cout<<endl<<endl<<endl;
 }
 void Game::display_message(string text, string text2){

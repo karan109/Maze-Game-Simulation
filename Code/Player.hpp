@@ -21,7 +21,6 @@ public:
 	void boost_off();
 	void update_boost_time_left();
 	bool casting_conditions();
-	// bool release_conditions();
 	void cast_spell();
 
 	double health_dps;
@@ -29,6 +28,4 @@ public:
 	void handle_spell_collisions();
 	int type;
 	string player_name = "";
-	// Broom * my_broom = nullptr;
-
 };
