@@ -52,7 +52,7 @@ The game has 2 modes -
 * Dragons will try to kill the player.
 * The player can collect the Wand to shoot spells.
 * Collecting the resurection stone will increase player lives to 3.
-* The cloak makes the player invisible to the dragons.
+* The cloak renders the player invisible.
 * Brooms enable heightened abilities such as boost speed and the power to kill dragons.
 
 2. **Multi Player**
