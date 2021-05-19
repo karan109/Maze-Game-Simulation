@@ -46,12 +46,20 @@ and the character sprite (Harry/Ron/Hermione).
 
 The game has 2 modes - 
 1. **Single Player**
-* The game objective is to collect all 3 objects - the Resurrection Stone (within the Snitch), Broom and Invisibilitiy Cloak.
-* Dragons will try to prevent the user from collecting these items.
-* The user can collect a Wand to shoot spells.
+* The game objective is to collect all 3 deathly hallows - the Elder Wand, the Resurrection Stone(within the snitch) and the Invisibilitiy Cloak.
+* Doing so makes the player the master of death. Thus, the player wins. 
+* Player loses if she dies. This happens when her health becomes zero.
+* Dragons will try to kill the player and prevent her from collecting these items.
+* The player can collect the Wand to shoot spells.
+* Collecting the resurection stone will increase player lives to 3.
+* The cloak makes the player invisible to the dragons.
+* Brooms enable heightened abilities such as boost speed and the power to kill dragons.
+
 2. **Multi Player**
-* Two players compete against each other in a death-match.
-* Most of the game is similar to the Single Player version.
+* Two players compete against each other in collecting the deathly hallows.
+* A player wins if the oponent dies or she collects all 3 hallows and becomes the master of death.
+* Rest of the game is similar to the Single Player version.
+
 
 For the **Simulation** - 
 * A drone's objective is to collect all the stones and reach the end of the maze.
