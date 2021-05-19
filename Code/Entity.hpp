@@ -65,6 +65,7 @@ public:
 	int retreat_node;
 	bool caught = 0;
 
+
 	// void set_pos_at_centre();
 	// void set_pos (int start);
 	// void set_velocity_zero();
@@ -182,6 +183,11 @@ void decrease_health(double x);
 int prev = -1;
 int smooth_turn_distance();
 int lives = 1;
+
+
+	bool wand_caught = 0;
+	bool snitch_caught = 0;
+	bool invisible = 0;
 
 
 

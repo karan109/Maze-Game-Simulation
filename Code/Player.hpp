@@ -26,10 +26,6 @@ public:
 
 	double health_dps;
 
-	bool wand_caught = 0;
-	bool snitch_caught = 0;
-	bool cloak_caught = 0;
-
 	void handle_spell_collisions();
 	int type;
 	string player_name = "";

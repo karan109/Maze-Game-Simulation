@@ -63,6 +63,8 @@ public:
 
 	static int original_snitch_h;
 	static int original_snitch_w;
+	static int original_wand_w;
+	static int original_wand_h;
 
 	static int original_broom_h;
 	static int original_broom_w;
@@ -75,6 +77,7 @@ public:
 	Monster * monster;
 	Stone * stone;
 	Snitch * snitch;
+	Wand * wand;
 
 	static Mix_Music * gMusic;
 	static Mix_Chunk * gScratch;
@@ -173,11 +176,16 @@ public:
 	void add_player(int start, int number_param);
 	void add_snitch(int start);
 	void add_broom(int appear_time, int start);
+	void add_wand(int start);
 
 	static double player_health_decrement_per_second;
 
 	static bool server, client;
 	static int weapon, weapon_rec;
+
+	static int random_number();
+	static int cloak_node;
+	static int wand_starting_node;
 
 private:
 	int ct = 0;

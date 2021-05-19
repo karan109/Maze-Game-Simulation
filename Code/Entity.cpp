@@ -236,6 +236,7 @@ void Entity::restart() {
 void Entity::start_collision() {
 	collided = 1;
 	mode_before_collision = mode;
+	// cout << "mmmmmmmmmmmmmmmmmm "<< mode;
 	set_pos_at_centre();
 	dest = start_node;
 	change_mode(1);
@@ -349,6 +350,7 @@ Entity * Entity::nearest_player () {
 	int min_dis = INT_MAX;
 	Entity * closest_player = nullptr;
 	for(auto & player: * Game::entities->players){
+		if (player->invisible) continue;
 		int dis = graph.distance(current, player->getBlock());
 		if (dis < min_dis) {
 			min_dis = dis;

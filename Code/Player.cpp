@@ -78,7 +78,14 @@ void Player::Update(){
 	// cout << xpos << " " << destR.x << " " << ypos << " " <<destR.y << endl;
 
 	// time_update();
+	if (getBlock() == Game::cloak_node) {
+		invisible = 1;
+		Entity::change_objTexture("../Images/cloak.png", SDL_Rect{0, 0, 512, 512}, destR);
+		animated = false;
+		Game::cloak_node = -1;
+		Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
 
+	}
 
 	update_boost();
 
@@ -131,54 +138,46 @@ void Player::Update(){
 	// face = 2 left facing
 	// face = 3 down facing
 	// face = 4 up facing
-	if(yv > 0){
-		srcR.y = srcR.h * 4;
-		face = 3;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(yv < 0){
-		srcR.y = srcR.h * 7;
-		face = 4;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv > 0){
-		srcR.y = srcR.h * 6;
-		face = 1;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv < 0){
-		srcR.y = srcR.h * 5;
-		face = 2;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else{
-		// srcR.y = srcR.h * 4;
-		// srcR.x = srcR.w * 7;
-		animated = false;
-	}
-
-	handle_spell_collisions();
-
-
-	// health with time
-	// if (!snitch_caught) {
-		if (fmod(entity_time, 1.0) == 0) {
-			decrease_health(health_dps);
+	if (! invisible) {
+		if(yv > 0){
+			srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
 		}
-	// }
-	// cout << health << endl;
-	// if (health == 0) {
-	// 	Delete();
-	// }
+		else if(yv < 0){
+			srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
+		}
+	}
 
 	handle_spell_collisions();
 
 
+	if (fmod(entity_time, 1.0) == 0) {
+		decrease_health(health_dps);
+	}
 
+	handle_spell_collisions();
 }
 
 
@@ -253,6 +252,9 @@ void Player::cast_spell() {
 
 void Player::handle_spell_collisions() {
 	spell_collision = 0;
+
+	if (invisible) return;
+	
 	for(auto & spell: * Game::entities->spells){
 		if (spell->wizard == this and spell->released == 0) continue;
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
