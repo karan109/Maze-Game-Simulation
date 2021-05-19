@@ -212,6 +212,13 @@ void server_work(){
     }
     string command = string(buf, 0, bytesRecv);
     if(command.size() == 0) return;
+    if(command == "quit"){
+        cout<<"quit"<<endl;
+        Game::isRunning = false;
+        Game::win = true;
+        return;
+    }
+    
     vector<string> process;
     tokenize(command, delim, process);
     game->player2->xpos = stoi(process[0]);
@@ -237,6 +244,12 @@ void client_work(){
     int bytesRecv = recv(sock, buf, 4096, 0);
     string response = string(buf, bytesRecv);
     if(response.size() == 0) return;
+    if(response == "quit"){
+        cout<<"quit"<<endl;
+        Game::isRunning = false;
+        Game::win = true;
+        return;
+    }
     vector<string> process;
     tokenize(response, delim, process);
     getinfo(game->player2, 0, process);

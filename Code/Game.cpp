@@ -41,6 +41,7 @@ int Game::stone_h = 32;
 int Game::num_stones = 7;
 int Game::menu = 160;
 bool Game::isRunning = false;
+int Game::quit = 0;
 // int Game::seed = 0;
 int Game::seed = time(0);
 int Game::response = 0;
@@ -144,8 +145,8 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
-// int Game::cloak_node = random_number();
-int Game::cloak_node = 1;
+int Game::cloak_node = random_number();
+// int Game::cloak_node = 1;
 int Game::wand_starting_node = random_number();
 // ----------------------------------------------------------------------------------------------------------------
 
@@ -367,6 +368,8 @@ void Game::handle_quit_game () {
 	if(event.type == SDL_QUIT){
 		isRunning = false;
 	}
+	quit = 1;
+	cout<<Game::quit<<endl;
 }
 
 
@@ -377,7 +380,7 @@ void Game::game_pause(double t) {
 }
 
 void Game::clean(){
-	Mix_PlayChannel( -1, Game::game_lose, 0 );
+	// Mix_PlayChannel( -1, Game::game_lose, 0 );
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 	// Mix_Quit();

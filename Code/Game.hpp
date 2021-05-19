@@ -57,6 +57,7 @@ public:
 	static int response;
 	static int send;
 	static int N;
+	static int quit;
 
 	// static int drone_starting_node = 
 	// static int monster_starting_node = 

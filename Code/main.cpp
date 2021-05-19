@@ -58,6 +58,20 @@ int main(int argc, char* argv[]){
     }
     Mix_HaltMusic();
     game->clean();
+    if(Game::client == 1 and Game::quit == 1){
+        string message = "quit";
+        int sendRes = send(sock, message.c_str(), message.size()+1, 0);
+    }
+    else if(Game::server == 1 and Game::quit == 1){
+        string message = "quit";
+        int sendRes = send(clientSocket, message.c_str(), message.size()+1, 0);
+    }
+    else if(Game::quit == 1 or Game::win == 0){
+        Mix_PlayChannel( -1, Game::game_lose, 0 );
+    }
+    else{
+        Mix_PlayChannel( -1, Game::game_win, 0 );
+    }
     // main_menu();
     if(Game::task == 1){
         Mix_PlayMusic( Game::ending, -1 );
