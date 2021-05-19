@@ -57,7 +57,7 @@ The game has 2 modes -
 
 2. **Multi Player**
 * Two players compete against each other in collecting the deathly hallows.
-* A player wins if the oponent dies or she collects all 3 hallows and becomes the master of death.
+* A player wins if the opponent dies or she becomes the master of death.
 * Rest of the game is similar to the Single Player version.
 
 
