@@ -48,7 +48,7 @@ The game has 2 modes -
 1. **Single Player**
 * The game objective is to collect all 3 deathly hallows - the Elder Wand, the Resurrection Stone(within the snitch) and the Invisibilitiy Cloak.
 * Doing so makes the player the master of death. Thus, the player wins. 
-* Player loses if she dies. This happens when her health becomes zero.
+* Player loses if she dies.
 * Dragons will try to kill the player.
 * The player can collect the Wand to shoot spells.
 * Collecting the resurection stone will increase player lives to 3.
