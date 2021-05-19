@@ -71,6 +71,14 @@ Monster::Monster(SDL_Rect srcR_param, int start, int frames_param, int speed_par
 void Monster::switch_in_scared_mode() {
 	if (collided) return;
 
+
+	if (scatter_reached == true and mode == 1) {
+		bool mode_changed = change_mode(2);
+		if (mode_changed)  {
+			scatter_reached = false;
+		}
+	}
+
 	if (scary_target == nullptr) return;
 	if (distance(this, scary_target) <= 7 and mode == 2) {
 		change_mode(3);
@@ -78,12 +86,7 @@ void Monster::switch_in_scared_mode() {
 	else if (distance(this, scary_target) > 15 and mode == 3) {
 		change_mode(1);
 	}
-	else if (scatter_reached == true and mode == 1) {
-		bool mode_changed = change_mode(2);
-		if (mode_changed)  {
-			scatter_reached = false;
-		}
-	}
+
 }
 
 void Monster::switch_in_not_scared_mode() {
@@ -134,9 +137,9 @@ void Monster::determine_scared() {
 		}
 
 		// change to any player scary
-		if (target == nullptr) return;
+		if (scary_target == nullptr) return;
 
-		if (target->scary == true) {
+		if (scary_target->scary == true) {
 
 			if (!scared) {
 				bool mode_changed = change_mode(3);
@@ -144,20 +147,15 @@ void Monster::determine_scared() {
 			}
 		}
 
-		if (target->scary == false) {	
+		if (scary_target->scary == false) {	
 
 			if (scared) {
-				bool mode_changed = change_mode(0);
+				bool mode_changed = change_mode(0);//if target == nullptr change_mode(2)
 				if (mode_changed) scared = false;
 			}
 		}
 
 	}
-
-
-
-
-
 
 }
 
@@ -179,56 +177,37 @@ void Monster::switch_modes() {
 
 void Monster::Update() {
 
+	// Game::print_queue(seq);
+
+	if(animated){
+		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
+	}
+
+	if (collided) {
+		Entity::Update();
+		animated_stuff();
+		if (spell_scared) {
+			reset_spell_collision_time();
+		}	
+		return;
+	}
+
+
 	set_target();
 	set_scary_target();
-
-
 
 	if (spell_scared) {
 		spell_collision_time_update();
 	}
 
-	if(animated){
-		srcR.x = srcR.w * ( (int) (SDL_GetTicks() / animate_speed) ) % frames;
-	}
 	Entity::Update();
-	if(yv > 0){
-		srcR.y = srcR.h * 2;
-		face = 3;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(yv < 0){
-		srcR.y = srcR.h * 0;
-		face = 4;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv > 0){
-		srcR.y = srcR.h * 1;
-		face = 1;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else if(xv < 0){
-		srcR.y = srcR.h * 3;
-		face = 2;
-		if(! animated) srcR.x = 0;
-		animated = true;
-	}
-	else{
-		animated = false;
-	}
-
+	animated_stuff();
 	handle_spell_collisions();
-	
+	// cout << "a"  << endl;
 	determine_scared();
+	// cout << "b"  << endl;
 	switch_modes();
-
-
-	if (health == 0) {
-		// Delete();
-	}
+	// cout << "c"  << endl;
 }
 
 
@@ -245,9 +224,10 @@ void Monster::scared_time_update() {
 
 void Monster::set_target() {
 
-	target = nearest_player();
+	target = nearest_visible_player();
 	if (target == nullptr) {
-		mode = 2;
+		// cout << "target nullptr" << endl;
+		if (mode == 0) mode = 2;
 	}
 
 }
@@ -256,7 +236,9 @@ void Monster::set_scary_target() {
 
 	scary_target = nearest_player();
 	if (scary_target == nullptr) {
-		mode = 2;
+		// cout << "scary_target nullptr" << endl;
+		if (mode == 1 || mode == 3) mode = 2;
+		if (scared) scared = 0;
 	}
 
 }
@@ -297,3 +279,36 @@ void Monster::reset_spell_collision_time() {
 }
 
 
+
+void Monster::animated_stuff() {
+	if(yv > 0){
+		srcR.y = srcR.h * 2;
+		face = 3;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(yv < 0){
+		srcR.y = srcR.h * 0;
+		face = 4;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv > 0){
+		srcR.y = srcR.h * 1;
+		face = 1;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else if(xv < 0){
+		srcR.y = srcR.h * 3;
+		face = 2;
+		if(! animated) srcR.x = 0;
+		animated = true;
+	}
+	else{
+		// srcR.y = srcR.h * 4;
+		// srcR.x = srcR.w * 7;
+		animated = false;
+	}
+
+}

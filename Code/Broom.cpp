@@ -60,6 +60,7 @@ void Broom::Update() {
 	}
 	else if(counter == disapparation_time){
 		// delete the broom
+		Game::display_message("broom disapparated");
 		Delete();
 	}
 

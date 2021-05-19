@@ -166,6 +166,8 @@ void handle_spell_collisions();
 // ---------------------------------------------------------------------------------------------------------------------------------
 
 Entity * nearest_player ();
+Entity * nearest_visible_player ();
+
 
 bool spell_collision = 0;
 
@@ -182,8 +184,10 @@ int lives = 1;
 	int broom_collected = 0, snitch_collected = 0, cloak_collected = 0;
 
 	bool wand_caught = 0;
+	bool elder_wand_caught = 0;
 	bool snitch_caught = 0;
 	bool invisible = 0;
+	int num_hallows_caught = 0;
 
 	int mag = 1; // Magnitude of velocity
 	int xv; // x component of velocity

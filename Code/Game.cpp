@@ -104,21 +104,8 @@ double Game::player_broom_collision_pause = 0;
 double Game::player_dead_collision_pause = 2;
 double Game::player_not_dead_collision_pause = 0;
 double Game::monster_dead_collision_pause = 2;
+double Game::win_pause = 2;
 
-vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
-	srand(Game::seed);
-	vector<pair<int, int>> result;
-	int prev = 0;
-	while(1){
-		int next = rand()%max_buffer + prev;
-		if(prev != 0) next += exist_time;
-		if(next > 600) break;
-		// 600 is 10 minutes
-		result.push_back({next, rand()%N});
-		prev = next;
-	}
-	return result;
-}
 
 double Game::monster_original_speed = 2;
 double Game::snitch_original_speed = 1.5;
@@ -128,8 +115,7 @@ double Game::player_boost_speed = 5;
 double Game::player_boost_time_limit = 20;
 
 int Game::broom_apparatation_time = 10;
-int Game::broom_disapparation_time = 100; // so 110 pe disappears
-
+int Game::broom_disapparation_time = 20; 
 int Game::monster_cycle_time = 30;
 
 // ------------------------------------------------- variables --------------------------------------------------
@@ -143,14 +129,43 @@ int Game::monster2_starting_node = Game::N - Game::cols; //bottom left corner
 
 
 double Game::player_health_decrement_per_second = (double)100 / (5*60); //over in 60 seconds
-int Game::cloak_node = random_number();
-// int Game::cloak_node = 1;
-int Game::wand_starting_node = random_number();
+// int Game::cloak_node = random_number();
+int Game::cloak_node = 10;
+int Game::wand_starting_node = 184;
 // ----------------------------------------------------------------------------------------------------------------
 
 int Game::random_number() {
 	return rand() % Game::N;
 }
+// vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer);
+vector<pair<int, int>> Game::generate_sequence(int exist_time, int max_buffer){
+	srand(Game::seed);
+	vector<pair<int, int>> result;
+	int prev = 0;
+	while(1){
+		int next = rand()%max_buffer + prev;
+		if(prev != 0) next += exist_time;
+		if(next > 2000) break;
+		// 600 is 10 minutes
+		result.push_back({next, rand()%N});
+		prev = next;
+	}
+	return result;
+}
+
+int Game::broom_seq_counter = 0;
+vector<pair<int, int>> Game::broom_seq;
+int Game::wand_seq_counter = 0;
+vector<pair<int, int>> Game::wand_seq;
+void Game::show(vector<pair<int, int>> a) {
+	cout << "[ ";
+	for (int i = 0; i < a.size() ; ++i) {
+		cout << "(" << a[i].first << ", " << a[i].second << ")  ";
+	}
+	cout << " ]";
+	cout << endl << endl;
+} 
+
 
 SDL_Texture * background;
 SDL_Surface* surfaceMessage;
@@ -168,8 +183,13 @@ Game::~Game(){
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscrean){
 	// auto temp = generate_sequence(20, 30);
 	// for(auto u:temp)cout<<u.first<<" "<<u.second<<endl;
-	cout << "wand_starting_node " << wand_starting_node << endl;
-	cout << "cloak_node " << cloak_node << endl;
+	// cout << "wand_starting_node " << wand_starting_node << endl;
+	// cout << "cloak_node " << cloak_node << endl;
+
+	broom_seq = Game::generate_sequence(25, 20);
+	wand_seq = Game::generate_sequence(30, 30);
+
+	// show(broom_seq);
 
 	if(task == 2) no_trap = false;
 	Game::width = width;
@@ -202,30 +222,30 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		// 0 is the number_param
 
  		if(Game::server){
- 			message = "Kill the other player!";
+ 			message = "Defeat the other player!";
  			add_player(player1_starting_node, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, Game::cols-1, 2, 6, 100, 0);
             entities->Add(player2);
         }
         else if(Game::client){
-        	message = "Kill the other player!";
+        	message = "Defeat the other player!";
         	add_player(Game::cols-1, 1);
             player2 = new Player(SDL_Rect{0, 0, Game::original_player_h, Game::original_player_w}, player1_starting_node, 2, 6, 100, 0);
             entities->Add(player2);
         }
 
-
         else{
-        	message = "Collect the broom, snitch and cloak!";
+
+        	message = "Collect the wand, stone and the cloak!";
         	add_player(player1_starting_node, 1);
         	srand(time(0));
         	Game::seed = rand()%100000;
         }
 		add_monster(monster1_starting_node, 0.5, 1, 4);
-		add_monster(monster2_starting_node, 0.3, 0, 3);
-
+		// add_monster(monster2_starting_node, 0.3, 0, 3);
 		add_snitch(snitch_starting_node);
 		add_wand(wand_starting_node);
+        
 
 
 		surfaceMessage = TTF_RenderText_Solid(Game::font, (message).c_str(), SDL_Color{255, 255, 255, 255});
@@ -286,22 +306,35 @@ void Game::add_wand(int start){
 	entities->Add(wand);
 }
 
-void Game::add_broom(int appear_time, int start) {
-	if (global_time == appear_time) {
-		broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);
-		entities->Add(broom);
-		// broom_exists = 1;
-	}
+void Game::add_broom(int start) {
+	broom = new Broom(SDL_Rect{0, 0, original_broom_w, original_broom_h}, start);//(Game::rows * Game::cols / 2)
+	entities->Add(broom);
 }
 
 void Game::Add_entities() {
 	// add broom
 	if(task == 1){
-		add_broom(Game::broom_apparatation_time,broom_starting_node);
+		if (broom_seq_counter < broom_seq.size() and global_time == broom_seq[broom_seq_counter].first ) {
+			display_message("a broom just apparated");
+			add_broom(broom_seq[broom_seq_counter].second);
+			broom_seq_counter++;
+		}
+
+		if (wand_seq_counter < wand_seq.size() and global_time == wand_seq[wand_seq_counter].first and unwanded_player_exists() and entities->wands->size() == 0) {
+			display_message("we have another wand for you");
+			add_wand(wand_seq[wand_seq_counter].second);
+			wand_seq_counter++;
+		}
 
 	}
 }
-
+bool Game::unwanded_player_exists() {
+	for(auto & player : * entities->players){
+		if (player->wand_caught == 0) {
+			return 0;
+		}
+	}
+}
 
 // ------------------------------------------------- update running times--------------------------------------------------
 void Game::update_global_running_time() {
@@ -348,7 +381,6 @@ void Game::switch_collision() {
 
 		collision_pause();
 		// reset_collided_entities(); //done in switch_pause now
-		// game_pause(1);
 	}
 }
 
@@ -402,6 +434,7 @@ void Game::handleEvents(){
 
 
 void Game::update(){
+
 	message_counter++;
 	if(message_counter > FPS * message_t){
 		if(message_type == 0){
@@ -529,13 +562,13 @@ void Game::handle_collisions() {
 	for(auto & monster: * Game::entities->monsters){
 
 		if (int(monster->health) == 0) {
-		collision_code = "monster_dead";
-		// player->lives -= 1;
-		// player->collided = 1; never calling player-> update
-		collision_happened = 1;
-		collided_monster = monster;
-		display_message("Dragon dead!");
-
+			collision_code = "monster_dead";
+			// player->lives -= 1;
+			// player->collided = 1; never calling player-> update
+			collision_happened = 1;
+			collided_monster = monster;
+			display_message("Dragon dead!");
+			return;
 		}
 	}	
 
@@ -595,7 +628,7 @@ void Game::handle_collisions() {
 				start_game_collision();
 				// collision_between(player, snitch);
 				Mix_PlayChannel( -1, Game::gMedium, 0 );
-				display_message(player->player_name+" has caught the snitch", "Resucrection stone was inside the snitch.");
+				display_message(player->player_name+" has caught the golden snitch", "Resucrection stone was inside the snitch.");
 				collision_happened = 1;				
 				return;
 
@@ -631,6 +664,13 @@ void Game::handle_collisions() {
 			else {
 				display_message(player->player_name+" dead");
 			}
+			return;
+		}
+		if (player->num_hallows_caught == 3) {
+			collision_code = "master_of_death";
+			collision_happened = 1;
+			collided_player = player;
+			display_message(player->player_name+" is the master of death.");
 
 		}
 	}
@@ -664,6 +704,8 @@ void Game::start_game_collision () {
 	if (collision_code == "player_snitch") {
 		//player has caught the snitch
 		collided_player-> snitch_caught = 1;
+		collided_player-> num_hallows_caught++;
+
 		collided_player-> lives = 3;
 
 		collided_snitch-> caught = 1;
@@ -675,6 +717,7 @@ void Game::start_game_collision () {
 
 void Game::collision_updates() {
 	if (collision_code == "scary_player_monster") {
+
 
 		collided_monster->Update();
 		collided_monster->health_box->Update();
@@ -785,6 +828,12 @@ void Game::reset_collided_entities() {
 		collided_monster->Delete();
 		display_message("Dragon dead!");
 	}
+	else if (collision_code == "master_of_death") {
+		Game::win = (collided_player->number == 1) ? 1 : 0;
+		Game::quit = 1;
+		Game::isRunning = 0;
+
+	}
 
 
 	collision_code = "";
@@ -817,6 +866,9 @@ void Game::collision_pause() {
 	else if (collision_code == "monster_dead") {
 		game_pause(monster_dead_collision_pause);
 
+	}
+	else if (collision_code == "master_of_death") {
+		game_pause(win_pause);
 	}
 }
 

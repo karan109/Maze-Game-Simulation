@@ -100,16 +100,32 @@ void Player::Update(){
 			Game::cloak_node = -1;
 			Mix_PlayChannel( -1, Game::gMedium, 0 );
 			Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
+			num_hallows_caught++;
 
 		}
 
 		for(auto & wand: * Game::entities->wands){
 			int dir = Collision::close_AABB(wand->getBB(), getBB(), wand->getXV(), wand->getYV(), getXV(), getYV());
 			if(dir != 0) {
-				wand_caught = 1;
-				wand->Delete();
-				Mix_PlayChannel( -1, Game::gMedium, 0 );
-				Game::display_message(player_name+" has the power of the elder wand!");
+				if (wand_caught) {
+					Game::display_message(player_name+" already has a wand");
+					wand->Delete();
+					Mix_PlayChannel( -1, Game::gMedium, 0 );
+				}
+				else {
+					wand_caught = 1;
+					Mix_PlayChannel( -1, Game::gMedium, 0 );
+					if (wand->wand_number == 1) {
+						num_hallows_caught++;
+						elder_wand_caught = 1;
+						Game::display_message(player_name+" has the power of the elder wand!");
+					}
+					else {
+						Game::display_message(player_name+" can now cast spells as well!");
+					}
+					wand->Delete();
+				}
+
 			}
 		}
 
@@ -165,37 +181,8 @@ void Player::Update(){
 	// face = 2 left facing
 	// face = 3 down facing
 	// face = 4 up facing
-	if (! invisible) {
-		if(yv > 0){
-			srcR.y = srcR.h * 4;
-			face = 3;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(yv < 0){
-			srcR.y = srcR.h * 7;
-			face = 4;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(xv > 0){
-			srcR.y = srcR.h * 6;
-			face = 1;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else if(xv < 0){
-			srcR.y = srcR.h * 5;
-			face = 2;
-			if(! animated) srcR.x = 0;
-			animated = true;
-		}
-		else{
-			// srcR.y = srcR.h * 4;
-			// srcR.x = srcR.w * 7;
-			animated = false;
-		}
-	}
+
+	animated_stuff();
 
 	handle_spell_collisions();
 
@@ -278,9 +265,10 @@ void Player::cast_spell() {
 void Player::handle_spell_collisions() {
 	spell_collision = 0;
 
-	if (invisible) return;
+	// detect spell collisions when invisible?
+	// if (invisible) return;
 	
-	for(auto & spell: * Game::entities->spells){
+	for(auto & spell: * Game::entities->spells){ 
 		if (spell->wizard == this and spell->released == 0) continue;
 		int dir = Collision::AABB(getBB(), spell->getBB(), getXV(), getYV(), spell->getXV(), spell->getYV());
 		SDL_Rect R = this->getBB();
@@ -296,6 +284,71 @@ void Player::handle_spell_collisions() {
 			spell_collision = 1;
 			decrease_health(0.5);
 			spell->update_destR();
+		}
+	}
+}
+
+void Player::animated_stuff() {
+	if (!invisible) {
+		if(yv > 0){
+			srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(yv < 0){
+			srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
+		}
+	}
+	else{
+		if(yv > 0){
+			// srcR.y = srcR.h * 4;
+			face = 3;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(yv < 0){
+			// srcR.y = srcR.h * 7;
+			face = 4;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv > 0){
+			// srcR.y = srcR.h * 6;
+			face = 1;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else if(xv < 0){
+			// srcR.y = srcR.h * 5;
+			face = 2;
+			if(! animated) srcR.x = 0;
+			animated = true;
+		}
+		else{
+			// srcR.y = srcR.h * 4;
+			// srcR.x = srcR.w * 7;
+			animated = false;
 		}
 	}
 }

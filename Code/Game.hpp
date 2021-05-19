@@ -114,6 +114,15 @@ public:
 	void Add_entities();
 
 
+	static void show(vector<pair<int, int>> a);
+	static int broom_seq_counter;
+	static vector<pair<int, int>> broom_seq;
+	static int wand_seq_counter;
+	static vector<pair<int, int>> wand_seq;
+
+	static bool unwanded_player_exists();
+
+
 
 	static int global_counter;
 	static double global_time;
@@ -167,6 +176,8 @@ public:
 	static double player_dead_collision_pause;
 	static double player_not_dead_collision_pause;
 	static double monster_dead_collision_pause;
+	static double win_pause;
+
 
 
 
@@ -180,7 +191,7 @@ public:
 	void add_monster(int start, double p, bool chase, int number_param);
 	void add_player(int start, int number_param);
 	void add_snitch(int start);
-	void add_broom(int appear_time, int start);
+	void add_broom(int start);
 	void add_wand(int start);
 
 	static double player_health_decrement_per_second;
