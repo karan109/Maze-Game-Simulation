@@ -100,16 +100,32 @@ void Player::Update(){
 			Game::cloak_node = -1;
 			Mix_PlayChannel( -1, Game::gMedium, 0 );
 			Game::display_message(player_name+" has captured the invisibility cloak!", "Use it wisely");
+			num_hallows_caught++;
 
 		}
 
 		for(auto & wand: * Game::entities->wands){
 			int dir = Collision::close_AABB(wand->getBB(), getBB(), wand->getXV(), wand->getYV(), getXV(), getYV());
 			if(dir != 0) {
-				wand_caught = 1;
-				wand->Delete();
-				Mix_PlayChannel( -1, Game::gMedium, 0 );
-				Game::display_message(player_name+" has the power of the elder wand!");
+				if (wand_caught) {
+					Game::display_message(player_name+" already has a wand");
+					wand->Delete();
+					Mix_PlayChannel( -1, Game::gMedium, 0 );
+				}
+				else {
+					wand_caught = 1;
+					Mix_PlayChannel( -1, Game::gMedium, 0 );
+					if (wand->wand_number == 1) {
+						num_hallows_caught++;
+						elder_wand_caught = 1;
+						Game::display_message(player_name+" has the power of the elder wand!");
+					}
+					else {
+						Game::display_message(player_name+" can now cast spells as well!");
+					}
+					wand->Delete();
+				}
+
 			}
 		}
 

@@ -14,7 +14,6 @@ void Broom::Delete() {
 
 	exists = 0;
 
-	Game::display_message("broom disapparated");
 	// if (caught) {
 
 	// 	my_player->scary = 0;
@@ -78,6 +77,7 @@ void Broom::Update() {
 	}
 	else if(counter == disapparation_time){
 		// delete the broom
+		Game::display_message("broom disapparated");
 		Delete();
 	}
 

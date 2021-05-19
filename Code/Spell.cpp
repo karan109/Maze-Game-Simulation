@@ -297,12 +297,24 @@ void Spell::keepInside(){
 
 
 void Spell::Render() {
-	if(wizard->player_name == "Harry")
-	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
-	else if(wizard->player_name == "Ron")
-	SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255);
-	else
-		SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
+
+
+	// single player
+	if(Game::server == 0 and Game::client == 0) {
+		switch(color % 3) {
+			case 0: 	SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
+			case 1:		SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255);
+			case 2:		SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
+		}
+	}
+	else {
+			// multiplayer
+		if(wizard->player_name == "Harry") SDL_SetRenderDrawColor(Game::renderer, 255, 0, 0, 255);
+		else if(wizard->player_name == "Ron") SDL_SetRenderDrawColor(Game::renderer, 0, 255, 0, 255);
+		else SDL_SetRenderDrawColor(Game::renderer, 0, 0, 255, 255);
+	}
+
+
 	SDL_RenderFillRect(Game::renderer, &destR);
 }
 

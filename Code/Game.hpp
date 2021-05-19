@@ -120,8 +120,10 @@ public:
 	static void show(vector<pair<int, int>> a);
 	static int broom_seq_counter;
 	static vector<pair<int, int>> broom_seq;
+	static int wand_seq_counter;
+	static vector<pair<int, int>> wand_seq;
 
-
+	static bool unwanded_player_exists();
 
 
 
@@ -177,6 +179,8 @@ public:
 	static double player_dead_collision_pause;
 	static double player_not_dead_collision_pause;
 	static double monster_dead_collision_pause;
+	static double win_pause;
+
 
 
 
