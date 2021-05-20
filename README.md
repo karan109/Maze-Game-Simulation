@@ -70,5 +70,8 @@ make clean
 ```
 deletes all object files and the executable ./game
 
+## Online Resources Used
+* [Lazy Foo](https://lazyfoo.net/tutorials/SDL/index.php)
+
 ## License
 MIT
