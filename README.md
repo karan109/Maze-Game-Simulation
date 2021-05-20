@@ -1,5 +1,5 @@
 # Harry Potter and the Deathly Hallows
-A 2-player C++ maze game and simulation for COP290.  
+A 2-player C++ maze game and simulation for COP290. Please refer to Presentation.pdf for game features and rules. 
 ## Dependencies
 * SDL for C++  
 
@@ -63,6 +63,12 @@ The game has 2 modes -
 
 For the **Simulation** - 
 * A drone's objective is to collect all the stones and reach the end of the maze.
+
+## Clean
+```bash
+make clean
+```
+deletes all object files and the executable ./game
 
 ## License
 MIT
