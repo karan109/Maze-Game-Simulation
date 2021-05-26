@@ -7,7 +7,7 @@
 #include "Entities.hpp"
 #include "Graph.hpp"
 #include "Spell.hpp"
-
+#include "tsp.hpp"
 
 // -------------------------------------------------------CONSTRUCTOR AND RELATED FUNCTIONS-------------------------------------------------------------------------------------
 
@@ -574,7 +574,7 @@ void Entity::set_path_mode3(Entity * scary_target) {
 	path.push(next);
 }
 
-
+fstream f;
 
 void Entity::set_stones(){
 	vector<int> points;
@@ -613,10 +613,89 @@ void Entity::set_stones(){
 	}
 	current = path.front();
 	path.pop();
+	f.open("../data.txt", ios::out);
 }
 
 
-
+double Entity::compare(int ind){
+	f<<"Case "<<ind+1<<":"<<endl;
+	vector<int> points;
+	points.push_back(getBlock());
+	for(auto & stone: * Game::entities->stones){
+		points.push_back(rand()%(Game::rows * Game::cols));
+	}
+	auto adj = Game::game_maze->graph.getAdjMtr(points);
+	auto extra = points;
+	extra.push_back(Game::rows * Game::cols - 1);
+	auto adj2 = Game::game_maze->graph.getAdjMtr(extra);
+	auto estimate = tsp(adj2);
+	auto check = Game::game_maze->graph.permute(Game::entities->stones->size());
+	vector<int> indices;
+	int cost = INT_MAX;
+	vector<int> destination = {Game::rows * Game::cols - 1};
+	for(auto u : check){
+		int temp_cost = adj[0][u[0]] + Game::game_maze->graph.getDistances(points[u[u.size()-1]], destination)[0];
+		for(int i=1;i < u.size();i++){
+			temp_cost += adj[u[i]][u[i-1]];
+		}
+		if(temp_cost < cost){
+			cost = temp_cost;
+			indices = u;
+		}
+	}
+	vector<int> path_vector;
+	path_vector = Game::game_maze->graph.getPath(getBlock(), points[indices[0]]);
+	for(int i=1;i<indices.size();i++){
+		auto temp_path = Game::game_maze->graph.getPath(points[indices[i-1]], points[indices[i]]);
+		for(int j=1;j<temp_path.size();j++){
+			path_vector.push_back(temp_path[j]);
+		}
+	}
+	int x = 0;
+	for(auto vertex: Game::game_maze->graph.getPath(points[indices[indices.size()-1]], Game::rows * Game::cols - 1)){
+		if(x != 0)path_vector.push_back(vertex);
+		x++;
+	}
+	f<<"Nodes of stones to collect: ";
+	for(int i=1;i<extra.size()-1;i++){
+		f<<extra[i]<<" ";
+	}
+	f<<endl;
+	f<<"Brute Force (Optimal) Algorithm:"<<endl<<endl;
+	f<<"Order of visit calculated: "<<0<<" ";
+	for(auto u:indices){
+		f<<u<<" ";
+	}
+	f<<points.size()<<endl;
+	f<<"Path taken: "<<endl;
+	int a = path_vector.size();
+	f<<"Total distance: "<<path_vector.size()<<endl;
+	for(auto u:path_vector){
+		f<<u<<" ";
+	}
+	f<<endl<<endl;
+	f<<"Approximate Algorithm:"<<endl<<endl;
+	path_vector.assign(1, 0);
+	for(int i=0;i<estimate.size()-1;i++){
+		auto temp_path = Game::game_maze->graph.getPath(extra[estimate[i]], extra[estimate[i+1]]);
+		for(int j=1;j<temp_path.size();j++){
+			path_vector.push_back(temp_path[j]);
+		}
+	}
+	f<<"Order of visit calculated: ";
+	for(auto u:estimate){
+		f<<u<<" ";
+	}
+	f<<endl;
+	f<<"Path taken: "<<endl;
+	for(auto u:path_vector){
+		f<<u<<" ";
+	}
+	f<<endl;
+	f<<"Total distance: "<<path_vector.size()<<endl<<endl;
+	f<<"Percentage cost increase: "<<(double)((int)((double)path_vector.size() - a)*10000/a)/100<<endl<<endl<<endl;
+	return (double)((int)((double)path_vector.size() - a)*10000/a)/100;
+}
 
 
 

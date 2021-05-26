@@ -54,7 +54,7 @@ Graph.o : Graph.cpp Graph.hpp includes.hpp
 Maze.o : Maze.cpp Texture.hpp Maze.hpp Graph.hpp includes.hpp Entities.hpp Game.hpp Wall.hpp
 	$(COMPILE) -c Maze.cpp $(SDLFLAGS)
 
-Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp includes.hpp
+Entity.o : Entity.cpp Game.hpp Texture.hpp Entity.hpp includes.hpp tsp.hpp
 	$(COMPILE) -c Entity.cpp $(SDLFLAGS)
 
 Texture.o : Texture.cpp Game.hpp Texture.hpp includes.hpp

@@ -15,6 +15,7 @@ extern "C" {
 	#include <fcntl.h>
 }
 #include <iostream>
+#include <fstream>
 #include <cmath>
 #include <vector>
 #include <algorithm>

@@ -216,8 +216,15 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		}
 		drone = new Drone(SDL_Rect{144, 288, 72, 72}, 0);
 		entities->Add(drone);
+		// double sum = 0;
+		// int numsim = 20;
+		// fstream f("../data.txt", ios::app);
+		// for(int i=0;i<numsim;i++){
+		// 	sum += drone->compare(i);
+		// }
+		// f<<"Average cost percentage increase: "<<sum/numsim<<endl;
 	}
-
+	
 
 	if(Game::task == 1){
 		// must add player before monster (not neccessary anymore)

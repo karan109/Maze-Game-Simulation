@@ -114,6 +114,7 @@ void Update3();
 //mode = 4
 bool drone_reached = false;
 void set_stones();
+double compare(int ind);
 void Update4();
 
 
